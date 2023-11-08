@@ -51,7 +51,6 @@ subprojects {
         testImplementation("io.kotest:kotest-runner-junit5:5.7.0")
         testImplementation("io.kotest:kotest-assertions-core:5.7.0")
         testImplementation("org.springframework.boot:spring-boot-starter-test")
-        testImplementation("org.springframework.batch:spring-batch-test")
         testImplementation("org.springframework.security:spring-security-test")
     }
 
