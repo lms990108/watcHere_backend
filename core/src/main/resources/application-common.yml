@@ -1,0 +1,29 @@
+spring:
+    config:
+        additional-location: classpath:application-info.yml
+        activate:
+            on-profile: local
+    datasource:
+      url: jdbc:mysql://localhost:3306/elice
+      username: elice
+      password: elice
+    jpa:
+        hibernate:
+          ddl-auto: create-drop
+            # create: 시작 시 테이블 drop 후 재생성
+            # update: 시작 시 자동 migrate
+            # validate: 현재 스프링에 정의된 엔티티와 테이블을 비교, 차이가 있으면 예외 출력하고 종료
+            # none: db 그대로, Default
+            # create-drop: 시작 시 테이블 create, 종료 시 drop
+        show-sql: true
+
+---
+
+spring:
+    config:
+        activate:
+            on-profile: dev
+    datasource:
+        url: ${DB_HOST}
+        username: ${DB_USER}
+        password: ${DB_PASSWORD}

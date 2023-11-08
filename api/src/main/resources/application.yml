@@ -1,0 +1,14 @@
+spring:
+    config:
+        import: application-common.yml
+    profiles:
+        default: local
+    jackson:
+        property-naming-strategy: SNAKE_CASE
+
+---
+
+spring:
+  config:
+    activate:
+        on-profile: dev
