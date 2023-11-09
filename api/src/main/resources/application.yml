@@ -10,5 +10,5 @@ spring:
 
 spring:
   config:
-    activate:
+      activate:
         on-profile: dev

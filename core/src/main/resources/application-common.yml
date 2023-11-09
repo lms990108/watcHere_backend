@@ -1,8 +1,4 @@
 spring:
-    config:
-        additional-location: classpath:application-info.yml
-        activate:
-            on-profile: local
     datasource:
       url: jdbc:mysql://localhost:3306/elice
       username: elice
@@ -16,6 +12,8 @@ spring:
             # none: db 그대로, Default
             # create-drop: 시작 시 테이블 create, 종료 시 drop
         show-sql: true
+    profiles:
+        default: local
 
 ---
 
@@ -23,7 +21,3 @@ spring:
     config:
         activate:
             on-profile: dev
-    datasource:
-        url: ${DB_HOST}
-        username: ${DB_USER}
-        password: ${DB_PASSWORD}
