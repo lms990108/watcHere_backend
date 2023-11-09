@@ -6,6 +6,8 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "11.5.1"
     kotlin("jvm") version "1.8.22"
     kotlin("plugin.spring") version "1.8.22"
+    kotlin("plugin.allopen") version "1.8.22"
+    kotlin("plugin.noarg") version "1.8.22"
     kotlin("plugin.jpa") version "1.8.22"
 }
 
@@ -24,6 +26,8 @@ subprojects {
         plugin("kotlin")
         plugin("org.jlleitschuh.gradle.ktlint")
         plugin("org.jetbrains.kotlin.jvm")
+        plugin("org.jetbrains.kotlin.plugin.jpa")
+        plugin("org.jetbrains.kotlin.plugin.spring")
         plugin("io.spring.dependency-management")
         plugin("kotlin-spring")
     }
