@@ -5,3 +5,7 @@ allOpen {
 noArg {
     annotation("jakarta.persistence.Entity")
 }
+
+dependencies {
+    implementation("org.springframework.data:spring-data-redis")
+}

@@ -13,9 +13,14 @@ spring:
             # create-drop: 시작 시 테이블 create, 종료 시 drop
         show-sql: true
         open-in-view: true
+    data:
+      redis:
+          host: localhost
+          timeout: 3s
     profiles:
         default: local
-
+    config:
+        additional-location: application-info.yml
 ---
 
 spring:
