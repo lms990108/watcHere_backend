@@ -44,9 +44,11 @@ subprojects {
         implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
         implementation("org.springframework.boot:spring-boot-starter-security")
         implementation("org.springframework.boot:spring-boot-starter-web")
+        implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+        implementation("com.amazonaws:aws-java-sdk-s3:1.12.583")
         runtimeOnly("com.mysql:mysql-connector-j")
 
         testImplementation(platform("org.junit:junit-bom:5.10.1"))
