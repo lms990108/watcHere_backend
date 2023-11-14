@@ -1,6 +1,6 @@
-package elice.team5h.domain.content.dto
+package elice.team5th.domain.content.dto
 
-import elice.team5h.domain.content.model.Content
+import elice.team5th.domain.content.model.Content
 
 // Content 응답을 위한 DTO
 data class ContentResponseDTO(

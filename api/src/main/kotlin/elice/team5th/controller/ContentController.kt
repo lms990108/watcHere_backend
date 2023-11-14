@@ -1,13 +1,14 @@
 package elice.team5th.controller
 
-import elice.team5h.domain.content.service.ContentService
-import elice.team5h.domain.content.model.Content
+import elice.team5th.domain.content.service.ContentService
+import elice.team5th.domain.content.model.Content
+import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@ComponentScan("elice.team5h.core.domain")
+@ComponentScan("elice.team5th.domain")
 @RequestMapping("/contents")
 class ContentController(private val contentService: ContentService) {
 

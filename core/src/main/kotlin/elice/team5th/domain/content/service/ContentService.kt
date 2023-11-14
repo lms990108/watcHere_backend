@@ -1,8 +1,7 @@
-package elice.team5h.domain.content.service
+package elice.team5th.domain.content.service
 
-import elice.team5h.domain.content.model.Content
-import elice.team5h.domain.content.repository.ContentRepository
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories
+import elice.team5th.domain.content.model.Content
+import elice.team5th.domain.content.repository.ContentRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

@@ -1,4 +1,4 @@
-package elice.team5h.domain.content.model
+package elice.team5th.domain.content.model
 import jakarta.persistence.*
 
 @Entity

@@ -1,6 +1,6 @@
-package elice.team5h.domain.content.repository
+package elice.team5th.domain.content.repository
 
-import elice.team5h.domain.content.model.Content
+import elice.team5th.domain.content.model.Content
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 

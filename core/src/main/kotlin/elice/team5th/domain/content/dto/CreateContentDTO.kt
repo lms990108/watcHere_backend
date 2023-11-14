@@ -1,4 +1,4 @@
-package elice.team5h.domain.content.dto
+package elice.team5th.domain.content.dto
 
 data class CreateContentDTO(
     val title: String,

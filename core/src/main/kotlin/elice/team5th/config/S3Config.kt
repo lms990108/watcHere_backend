@@ -1,4 +1,4 @@
-package elice.team5h.config
+package elice.team5th.config
 
 /*
 
