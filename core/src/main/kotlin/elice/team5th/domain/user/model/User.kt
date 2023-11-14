@@ -1,6 +1,6 @@
 package elice.team5th.domain.user.model
 
-import elice.team5th.elice.team5h.common.model.BaseEntity
+import elice.team5th.common.model.BaseEntity
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
 import java.util.UUID

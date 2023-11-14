@@ -1,4 +1,4 @@
-package elice.team5th.elice.team5h.common.exception
+package elice.team5th.common.exception
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

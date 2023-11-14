@@ -1,4 +1,4 @@
-package elice.team5th.elice.team5h.common.model
+package elice.team5th.common.model
 
 import jakarta.persistence.EntityListeners
 import jakarta.persistence.GeneratedValue

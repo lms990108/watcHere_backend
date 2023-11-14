@@ -1,6 +1,6 @@
 package elice.team5th.common.exception
 
-import elice.team5th.elice.team5h.common.exception.ErrorType
+import elice.team5th.common.exception.ErrorType
 
 abstract class EliceException(val errorType: ErrorType, val detail: String = "") : RuntimeException(errorType.name)
 
