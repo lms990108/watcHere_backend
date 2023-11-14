@@ -1,27 +1,34 @@
 package elice.team5th.domain.content.dto
 
 import elice.team5th.domain.content.model.Content
+import java.time.LocalDateTime
 
-// Content 응답을 위한 DTO
 data class ContentResponseDTO(
     val id: Long,
     val title: String,
-    val type: String,
-    val posterImage: String?,
-    val starRating: Float,
-    val director: String?
+    val type: Int,
+    val posterImage: String,
+    val starRating: Int?,
+    val director: String,
+    val genre: String?,
+    val release: LocalDateTime?,
+    val episodeDate: String?,
+    val season: Int?
 ) {
     companion object {
         fun fromEntity(content: Content): ContentResponseDTO {
             return ContentResponseDTO(
-                id = content.id ?: throw IllegalArgumentException("Content ID cannot be null"),
+                id = content.id,
                 title = content.title,
                 type = content.type,
                 posterImage = content.posterImage,
                 starRating = content.starRating,
-                director = content.director
+                director = content.director,
+                genre = content.genre,
+                release = content.release,
+                episodeDate = content.episodeDate,
+                season = content.season
             )
         }
     }
 }
-

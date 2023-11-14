@@ -1,24 +1,38 @@
 package elice.team5th.domain.content.model
-import jakarta.persistence.*
+
+import elice.team5th.elice.team5h.common.model.BaseTimeEntity
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "content")
-class Content(
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+class Content : BaseTimeEntity() {
+    @Column(nullable = false, length = 20)
+    var title: String = "" // non-nullable로 변경
 
     @Column(nullable = false)
-    var title: String,
+    var type: Int = 0 // 1: MOVIE, 2: DRAMA, 3: ENTERTAINMENT, 4: ANIMATION
 
-    @Column(nullable = false)
-    var type: String, // 예를 들어 "MOVIE", "DRAMA", "ENTERTAINMENT" 등의 값을 가질 수 있음
+    @Column(name = "poster_image", length = 30, nullable = false)
+    var posterImage: String = "" // non-nullable로 변경
+
+    @Column(name = "star_rating", nullable = false)
+    var starRating: Int? = null
+
+    @Column(nullable = false, length = 30)
+    var director: String = "" // non-nullable로 변경
+
+    @Column(nullable = true, length = 10)
+    var genre: String? = null
 
     @Column(nullable = true)
-    var posterImage: String? = null,
+    var release: LocalDateTime? = null
 
-    @Column(nullable = false)
-    var starRating: Float,
+    @Column(name = "episode_date", nullable = true)
+    var episodeDate: String? = null
 
     @Column(nullable = true)
-    var director: String? = null,
-)
+    var season: Int? = null
+}
