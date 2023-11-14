@@ -1,66 +1,57 @@
 package elice.team5th.domain.content.service
 
-import elice.team5th.domain.content.dto.ContentResponseDTO
-import elice.team5th.domain.content.dto.CreateContentDTO
-import elice.team5th.domain.content.dto.UpdateContentDTO
-import elice.team5th.domain.content.model.Content
+import elice.team5th.domain.content.dto.ContentDto
+import elice.team5th.domain.content.dto.ContentToListDto
 import elice.team5th.domain.content.repository.ContentRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ContentService(private val contentRepository: ContentRepository) {
 
-    @Transactional
-    fun createContent(createDto: CreateContentDTO): ContentResponseDTO {
-        val content = Content().apply {
-            title = createDto.title
-            type = createDto.type
-            posterImage = createDto.posterImage
-            starRating = createDto.starRating
-            director = createDto.director
-            genre = createDto.genre
-            releaseDate = createDto.releaseDate
-            episodeDate = createDto.episodeDate
-            season = createDto.season
-        }
-        return ContentResponseDTO.fromEntity(contentRepository.save(content))
-    }
-
+    // 전체 콘텐츠를 ContentToListDto 형태로 조회 (페이지네이션 적용)
     @Transactional(readOnly = true)
-    fun getContent(id: Long): ContentResponseDTO {
-        val content = contentRepository.findById(id).orElseThrow {
-            NoSuchElementException("Content with ID $id not found")
+    fun getAllContentSummaries(pageable: Pageable): Page<ContentToListDto> {
+        return contentRepository.findAll(pageable).map { content ->
+            ContentToListDto(
+                id = content.id,
+                title = content.title,
+                posterImageUrl = content.posterImage
+            )
         }
-        return ContentResponseDTO.fromEntity(content)
     }
 
-    @Transactional
-    fun updateContent(id: Long, updateDto: UpdateContentDTO): ContentResponseDTO {
-        val content = contentRepository.findById(id).orElseThrow {
-            NoSuchElementException("Content with ID $id not found")
-        }
-
-        updateDto.title?.let { content.title = it }
-        updateDto.type?.let { content.type = it }
-        updateDto.posterImage?.let { content.posterImage = it }
-        updateDto.starRating?.let { content.starRating = it }
-        updateDto.director?.let { content.director = it }
-        updateDto.genre?.let { content.genre = it }
-        updateDto.releaseDate?.let { content.releaseDate = it }
-        updateDto.episodeDate?.let { content.episodeDate = it }
-        updateDto.season?.let { content.season = it }
-
-        return ContentResponseDTO.fromEntity(contentRepository.save(content))
+    // 콘텐츠 상세 조회
+    @Transactional(readOnly = true)
+    fun getContentById(id: Long): ContentDto? {
+        return contentRepository.findById(id).map { content ->
+            ContentDto(
+                id = content.id,
+                type = content.type,
+                title = content.title,
+                posterImageUrl = content.posterImage,
+                starRating = content.starRating ?: 0f,
+                director = content.director,
+                provider = content.provider
+            )
+        }.orElse(null)
     }
 
-    @Transactional
-    fun deleteContent(id: Long) {
-        if (!contentRepository.existsById(id)) {
-            throw NoSuchElementException("Content with ID $id not found")
+    // 제목으로 콘텐츠 검색 (페이지네이션 적용)
+    @Transactional(readOnly = true)
+    fun searchContentsByTitle(title: String, pageable: Pageable): Page<ContentToListDto> {
+        if (title.length < 2) {
+            throw IllegalArgumentException("검색어는 두 글자 이상이어야 합니다.")
         }
-        contentRepository.deleteById(id)
-    }
 
-    // Additional service methods can be added here
+        return contentRepository.findByTitleContaining(title, pageable).map { content ->
+            ContentToListDto(
+                id = content.id,
+                title = content.title,
+                posterImageUrl = content.posterImage
+            )
+        }
+    }
 }
