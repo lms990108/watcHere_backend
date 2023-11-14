@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@ComponentScan("elice.team5th.domain")
 @RequestMapping("/contents")
 class ContentController(private val contentService: ContentService) {
 
