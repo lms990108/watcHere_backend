@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 
 @MappedSuperclass
 @EntityListeners
-open class BaseTimeEntity(
+open class BaseEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     open val id: Long = 0,
