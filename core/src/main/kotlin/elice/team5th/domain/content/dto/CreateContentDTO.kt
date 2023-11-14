@@ -9,7 +9,7 @@ data class CreateContentDTO(
     val starRating: Int?, // nullable이므로 Int?로 선언
     val director: String,
     val genre: String?, // nullable 필드
-    val release: LocalDateTime?, // nullable 필드
+    val releaseDate: LocalDateTime?, // nullable 필드
     val episodeDate: String?, // nullable 필드
     val season: Int? // nullable 필드
 )

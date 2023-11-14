@@ -9,7 +9,7 @@ data class UpdateContentDTO(
     val starRating: Int?,
     val director: String?,
     val genre: String?,
-    val release: LocalDateTime?,
+    val releaseDate: LocalDateTime?,
     val episodeDate: String?,
     val season: Int?
 )

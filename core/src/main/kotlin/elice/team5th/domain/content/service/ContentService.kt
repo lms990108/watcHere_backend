@@ -20,7 +20,7 @@ class ContentService(private val contentRepository: ContentRepository) {
             starRating = createDto.starRating
             director = createDto.director
             genre = createDto.genre
-            release = createDto.release
+            releaseDate = createDto.releaseDate
             episodeDate = createDto.episodeDate
             season = createDto.season
         }
@@ -47,7 +47,7 @@ class ContentService(private val contentRepository: ContentRepository) {
         updateDto.starRating?.let { content.starRating = it }
         updateDto.director?.let { content.director = it }
         updateDto.genre?.let { content.genre = it }
-        updateDto.release?.let { content.release = it }
+        updateDto.releaseDate?.let { content.releaseDate = it }
         updateDto.episodeDate?.let { content.episodeDate = it }
         updateDto.season?.let { content.season = it }
 

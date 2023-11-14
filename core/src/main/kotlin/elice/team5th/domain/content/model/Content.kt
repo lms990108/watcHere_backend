@@ -28,7 +28,7 @@ class Content : BaseTimeEntity() {
     var genre: String? = null
 
     @Column(nullable = true)
-    var release: LocalDateTime? = null
+    var releaseDate: LocalDateTime? = null
 
     @Column(name = "episode_date", nullable = true)
     var episodeDate: String? = null

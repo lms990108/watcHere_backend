@@ -11,7 +11,7 @@ data class ContentResponseDTO(
     val starRating: Int?,
     val director: String,
     val genre: String?,
-    val release: LocalDateTime?,
+    val releaseDate: LocalDateTime?,
     val episodeDate: String?,
     val season: Int?
 ) {
@@ -25,7 +25,7 @@ data class ContentResponseDTO(
                 starRating = content.starRating,
                 director = content.director,
                 genre = content.genre,
-                release = content.release,
+                releaseDate = content.releaseDate,
                 episodeDate = content.episodeDate,
                 season = content.season
             )
