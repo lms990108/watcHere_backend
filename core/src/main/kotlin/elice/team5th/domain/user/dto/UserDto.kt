@@ -11,7 +11,7 @@ class UserDto {
         val profileImage: String?,
         val nickname: String,
         val socialProvider: ProviderType,
-        val role: RoleType,
+        val role: RoleType
 //        val favorites:
 //        val reviews
     ) {
@@ -32,11 +32,11 @@ class UserDto {
         @NotBlank
         var nickname: String,
 
-        val socialProvider: ProviderType,
+        val socialProvider: ProviderType
     )
 
     data class UpdateProfileRequest(
         var profileImage: String? = null,
-        var nickname: String? = null,
+        var nickname: String? = null
     )
 }

@@ -2,7 +2,6 @@ package elice.team5th.controller
 
 import elice.team5th.domain.user.dto.UserDto
 import elice.team5th.domain.user.service.UserService
-import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.ResponseEntity
