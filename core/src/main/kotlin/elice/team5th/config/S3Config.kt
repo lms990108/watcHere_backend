@@ -1,7 +1,5 @@
 package elice.team5th.config
 
-/*
-
 import com.amazonaws.auth.AWSStaticCredentialsProvider
 import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.regions.Regions
@@ -16,7 +14,7 @@ class S3Config(
     @Value("\${aws.s3.accessKey}")
     private val accessKey: String,
     @Value("\${aws.s3.secretKey}")
-    private val secretKey: String,
+    private val secretKey: String
 ) {
     @Bean
     fun amazonS3Client(): AmazonS3 {
@@ -28,4 +26,3 @@ class S3Config(
             .build()
     }
 }
-*/
