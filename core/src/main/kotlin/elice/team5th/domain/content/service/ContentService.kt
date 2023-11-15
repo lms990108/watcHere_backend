@@ -1,6 +1,6 @@
 package elice.team5th.domain.content.service
 
-import elice.team5th.domain.content.dto.ContentDto
+import elice.team5th.domain.content.dto.ContentDetailDto
 import elice.team5th.domain.content.dto.ContentToListDto
 import elice.team5th.domain.content.repository.ContentRepository
 import org.springframework.data.domain.Page
@@ -25,9 +25,9 @@ class ContentService(private val contentRepository: ContentRepository) {
 
     // 콘텐츠 상세 조회
     @Transactional(readOnly = true)
-    fun getContentById(id: Long): ContentDto? {
+    fun getContentById(id: Long): ContentDetailDto? {
         return contentRepository.findById(id).map { content ->
-            ContentDto(
+            ContentDetailDto(
                 id = content.id,
                 type = content.type,
                 title = content.title,
