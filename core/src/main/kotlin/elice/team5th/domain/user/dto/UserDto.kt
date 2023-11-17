@@ -7,10 +7,10 @@ import jakarta.validation.constraints.NotBlank
 
 class UserDto {
     data class Response(
-        val userId: String,
+        val userId: String?,
         val profileImage: String?,
         val nickname: String,
-        val socialProvider: ProviderType,
+        val providerType: ProviderType,
         val role: RoleType
 //        val favorites:
 //        val reviews
@@ -19,7 +19,7 @@ class UserDto {
             userId = user.userId,
             profileImage = user.profileImage,
             nickname = user.nickname,
-            socialProvider = user.socialProvider,
+            providerType = user.providerType,
             role = user.role
 //            favorites = user.favorites
 //            reviews = user.reviews
@@ -32,7 +32,7 @@ class UserDto {
         @NotBlank
         var nickname: String,
 
-        val socialProvider: ProviderType
+        val providerType: ProviderType
     )
 
     data class UpdateProfileRequest(

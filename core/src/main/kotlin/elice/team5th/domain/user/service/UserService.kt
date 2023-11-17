@@ -10,16 +10,6 @@ import org.springframework.stereotype.Service
 
 @Service
 class UserService(private val userRepository: UserRepository) {
-    fun signup(signupRequest: UserDto.SignupRequest): User {
-        return userRepository.save(
-            User(
-                profileImage = signupRequest.profileImage,
-                nickname = signupRequest.nickname,
-                socialProvider = signupRequest.socialProvider
-            )
-        )
-    }
-
     fun findAllUsers(pageable: Pageable): Page<User> {
         return userRepository.findAll(pageable)
     }
