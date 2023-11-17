@@ -1,6 +1,9 @@
 package elice.team5th.controller
 
+import elice.team5th.domain.auth.annotation.CurrentUser
+import elice.team5th.domain.auth.token.AuthTokenProvider
 import elice.team5th.domain.user.dto.UserDto
+import elice.team5th.domain.user.model.User
 import elice.team5th.domain.user.service.UserService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -17,7 +20,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/v1/users")
 class UserController(
-    private val userService: UserService
+    private val userService: UserService,
+    private val tokenProvider: AuthTokenProvider
 ) {
     @GetMapping
     fun getUsers(
@@ -26,6 +30,13 @@ class UserController(
     ): ResponseEntity<Page<UserDto.Response>> {
         val users = userService.findAllUsers(PageRequest.of(offset, limit))
         return ResponseEntity.ok().body(users.map { UserDto.Response(it) })
+    }
+
+    @GetMapping("/me")
+    fun getMe(
+        @CurrentUser user: User
+    ): ResponseEntity<UserDto.Response> {
+        return ResponseEntity.ok().body(UserDto.Response(user))
     }
 
     @GetMapping("/{userId}")

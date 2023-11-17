@@ -21,6 +21,12 @@ spring:
         default: local
     config:
         import: classpath:application-info.yml
+
+logging:
+    level:
+      org:
+          springframework:
+              security: DEBUG
 ---
 
 spring:

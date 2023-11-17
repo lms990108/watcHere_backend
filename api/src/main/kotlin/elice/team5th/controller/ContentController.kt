@@ -1,10 +1,16 @@
 package elice.team5th.controller
 
+<<<<<<< HEAD
 import elice.team5th.domain.content.dto.ContentDetailDto
 import elice.team5th.domain.content.dto.ContentToListDto
 import elice.team5th.domain.content.service.ContentService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+=======
+import elice.team5th.domain.content.model.Content
+import elice.team5th.domain.content.service.ContentService
+import org.springframework.context.annotation.ComponentScan
+>>>>>>> 5444b12 (Feat: 소셜 로그인 draft)
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
