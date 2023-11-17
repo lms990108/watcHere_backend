@@ -1,20 +1,17 @@
 package elice.team5th.common.model
 
 import jakarta.persistence.Column
-import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.persistence.Inheritance
-import jakarta.persistence.InheritanceType
+import jakarta.persistence.MappedSuperclass
 import java.time.LocalDateTime
 
-@Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-abstract class BaseChartEntity {
+@MappedSuperclass
+open class BaseChartEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
 
     @Column(nullable = false)
