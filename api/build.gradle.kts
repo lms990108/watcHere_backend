@@ -9,5 +9,3 @@ dependencies {
 tasks.bootJar {
     archiveFileName.set("elice-api.jar")
 }
-
-
