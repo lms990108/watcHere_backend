@@ -261,3 +261,4 @@ application-dev.yml
 application-info.yml
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,linux,macos,gradle,intellij,kotlin,java
+bin/

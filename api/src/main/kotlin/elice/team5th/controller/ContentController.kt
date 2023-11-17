@@ -1,52 +1,36 @@
 package elice.team5th.controller
 
+import elice.team5th.domain.content.dto.ContentDetailDto
+import elice.team5th.domain.content.dto.ContentToListDto
 import elice.team5th.domain.content.service.ContentService
-import elice.team5th.domain.content.model.Content
-import org.springframework.boot.autoconfigure.domain.EntityScan
-import org.springframework.context.annotation.ComponentScan
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@ComponentScan("elice.team5th.domain")
 @RequestMapping("/contents")
 class ContentController(private val contentService: ContentService) {
 
+    // 전체 콘텐츠 조회
     @GetMapping
-    fun getAllContents(): ResponseEntity<List<Content>> {
-        val contents = contentService.findAllContents()
+    fun getAllContentSummaries(pageable: Pageable): ResponseEntity<Page<ContentToListDto>> {
+        val contentSummaries = contentService.getAllContentSummaries(pageable)
+        return ResponseEntity.ok(contentSummaries)
+    }
+
+    // 콘텐츠 상세 조회
+    @GetMapping("/{id}")
+    fun getContentById(@PathVariable id: Long): ResponseEntity<ContentDetailDto> {
+        val content = contentService.getContentById(id)
+        return content?.let { ResponseEntity.ok(it) } ?: ResponseEntity.notFound().build()
+    }
+
+    // 제목으로 콘텐츠 검색
+    @GetMapping("/search")
+    fun searchContentsByTitle(@RequestParam title: String, pageable: Pageable): ResponseEntity<Page<ContentToListDto>> {
+        val contents = contentService.searchContentsByTitle(title, pageable)
         return ResponseEntity.ok(contents)
     }
-
-    @GetMapping("/{id}")
-    fun getContentById(@PathVariable id: Long): ResponseEntity<Content> {
-        val content = contentService.findContentById(id)
-        return if (content != null) ResponseEntity.ok(content) else ResponseEntity.notFound().build()
-    }
-
-    @PostMapping
-    fun createContent(@RequestBody content: Content): ResponseEntity<Content> {
-        val newContent = contentService.createContent(content)
-        return ResponseEntity.ok(newContent)
-    }
-
-    @PutMapping("/{id}")
-    fun updateContent(@PathVariable id: Long, @RequestBody content: Content): ResponseEntity<Content> {
-        return try {
-            val updatedContent = contentService.updateContent(id, content)
-            ResponseEntity.ok(updatedContent)
-        } catch (e: Exception) {
-            ResponseEntity.notFound().build()
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    fun deleteContent(@PathVariable id: Long): ResponseEntity<Void> {
-        return try {
-            contentService.deleteContent(id)
-            ResponseEntity.ok().build()
-        } catch (e: Exception) {
-            ResponseEntity.notFound().build()
-        }
-    }
 }
+
