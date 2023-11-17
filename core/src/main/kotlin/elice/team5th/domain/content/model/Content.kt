@@ -1,13 +1,13 @@
 package elice.team5th.domain.content.model
 
-import elice.team5th.elice.team5h.common.model.BaseTimeEntity
+import elice.team5th.common.model.BaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
 
 @Entity
 @Table(name = "content")
-class Content : BaseTimeEntity() {
+class Content : BaseEntity() {
     @Column(nullable = false, length = 20)
     var title: String = "" // 제목
 

@@ -33,4 +33,3 @@ class ContentController(private val contentService: ContentService) {
         return ResponseEntity.ok(contents)
     }
 }
-

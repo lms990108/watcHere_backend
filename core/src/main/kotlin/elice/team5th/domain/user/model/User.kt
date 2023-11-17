@@ -1,18 +1,39 @@
 package elice.team5th.domain.user.model
 
 import elice.team5th.common.model.BaseEntity
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.Table
+import org.jetbrains.annotations.NotNull
 import java.util.UUID
 
 @Entity
 @Table(name = "users")
 class User(
-    val userId: String = UUID.randomUUID().toString(),
-    var profileImage: String? = null,
+    @NotNull
+    @Column(name = "user_id", unique = true, length = 64)
+    val userId: String,
+
+    var email: String?,
+
     var nickname: String,
-    val socialProvider: ProviderType,
+
+    @Column(name = "profile_image", length = 512)
+    var profileImage: String? = null,
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    @Column(name = "provider_type", length = 20)
+    val providerType: ProviderType,
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    @Column(name = "role_type", length = 20)
     val role: RoleType = RoleType.USER,
+
+    @NotNull
     var ban: Boolean = false
 
     //  val favorites : Array<Favorite>
