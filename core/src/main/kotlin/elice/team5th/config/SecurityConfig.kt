@@ -66,8 +66,8 @@ class SecurityConfig(
         // 인증 설정
         http.authorizeHttpRequests { auth ->
             auth
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .requestMatchers("/api/**").hasAnyAuthority(RoleType.USER.code)
+                .requestMatchers("**").permitAll()
+//                .requestMatchers().hasAnyAuthority(RoleType.USER.code)
                 .anyRequest().authenticated()
         }
 
