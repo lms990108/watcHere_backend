@@ -1,5 +1,6 @@
 package elice.team5th.controller
 
+import elice.team5th.domain.tmdb.dto.ListResponseDto
 import elice.team5th.domain.tmdb.netflix.NetflixKoreaPopularService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,9 +16,9 @@ class NetflixController(private val netflixKoreaPopularService: NetflixKoreaPopu
     @GetMapping("/popular-movie")
     fun getPopularMoviesInKorea(
         @RequestParam(required = false, defaultValue = "1") page: Int
-    ): Mono<ResponseEntity<String>> {
+    ): Mono<ResponseEntity<ListResponseDto>> {
         return netflixKoreaPopularService.getPopularMoviesInKorea(page)
-            .map { ResponseEntity.ok().body(it) }
+            .map { ResponseEntity.ok(it) } // 반환 타입을 ResponseEntity<ListResponseDto>로 맞춥니다.
     }
 
 }
