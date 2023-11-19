@@ -8,9 +8,6 @@ import reactor.core.publisher.Mono
 @Service
 class NetflixKoreaPopularService(private val webClient: WebClient) {
 
-    @Value("\${tmdb.api.base-url}")
-    private lateinit var baseUrl: String
-
     @Value("\${tmdb.api.access-token}")
     private lateinit var accessToken: String
 
