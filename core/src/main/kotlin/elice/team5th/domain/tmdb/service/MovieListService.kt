@@ -1,19 +1,23 @@
-package elice.team5th.domain.tmdb.netflix
+package elice.team5th.domain.tmdb.service
 
 import elice.team5th.domain.tmdb.dto.ListInfoDto
 import elice.team5th.domain.tmdb.dto.ListResponseDto
+import elice.team5th.domain.tmdb.enumtype.ProviderType
+import elice.team5th.domain.tmdb.enumtype.SortType
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 
 @Service
-class NetflixKoreaPopularService(private val webClient: WebClient) {
+class MovieListService(private val webClient: WebClient) {
 
     @Value("\${tmdb.api.access-token}")
     private lateinit var accessToken: String
 
-    fun getPopularMoviesInKorea(page: Int): Mono<ListResponseDto> {
+    fun getPopularMoviesInKorea(page: Int, sortType: SortType, providerName: String): Mono<ListResponseDto> {
+        val providerId = providerName.let { ProviderType.getIdByName(it) }
+
         return webClient.get()
             .uri { uriBuilder ->
                 uriBuilder.path("/discover/movie")
@@ -21,9 +25,13 @@ class NetflixKoreaPopularService(private val webClient: WebClient) {
                     .queryParam("include_video", "false")
                     .queryParam("language", "ko-KR")
                     .queryParam("page", page.toString())
-                    .queryParam("sort_by", "popularity.desc")
+                    .queryParam("sort_by", sortType.queryParam)
+                    .apply {
+                        providerId?.let {
+                            queryParam("with_watch_providers", it)
+                        }
+                    }
                     .queryParam("watch_region", "KR")
-                    .queryParam("with_watch_providers", "8")
                     .build()
             }
             .header("Authorization", accessToken)
@@ -43,19 +51,3 @@ class NetflixKoreaPopularService(private val webClient: WebClient) {
             }
     }
 }
-
-
-/*
-.map { response ->
-        ListResponseDto(
-            results = response.results.map { movie ->
-                ToListDto(
-                    id = movie.id,
-                    title = movie.title,
-                    posterPath = "https://image.tmdb.org/t/p/w500${movie.poster_path}"
-                )
-            }
-        )
-    }
-
- */
