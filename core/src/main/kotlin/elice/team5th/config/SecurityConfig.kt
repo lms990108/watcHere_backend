@@ -2,7 +2,6 @@ package elice.team5th.config
 
 import elice.team5th.config.properties.AppProperties
 import elice.team5th.config.properties.CorsProperties
-import elice.team5th.domain.auth.exception.RestAuthenticationEntryPoint
 import elice.team5th.domain.auth.filter.TokenAuthenticationFilter
 import elice.team5th.domain.auth.handler.OAuth2AuthenticationFailureHandler
 import elice.team5th.domain.auth.handler.OAuth2AuthenticationSuccessHandler
@@ -11,7 +10,6 @@ import elice.team5th.domain.auth.repository.OAuth2AuthorizationRequestBasedOnCoo
 import elice.team5th.domain.auth.repository.UserRefreshTokenRepository
 import elice.team5th.domain.auth.service.CustomOAuth2UserService
 import elice.team5th.domain.auth.token.AuthTokenProvider
-import elice.team5th.domain.user.model.RoleType
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -21,11 +19,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
-import org.springframework.web.cors.CorsUtils
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
-
 
 @Configuration
 @EnableWebSecurity
@@ -35,7 +30,7 @@ class SecurityConfig(
     private val tokenProvider: AuthTokenProvider,
     private val oAuth2UserService: CustomOAuth2UserService,
     private val tokenAccessDeniedHandler: TokenAccessDeniedHandler,
-    private val userRefreshTokenRepository: UserRefreshTokenRepository,
+    private val userRefreshTokenRepository: UserRefreshTokenRepository
 ) {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
@@ -89,6 +84,7 @@ class SecurityConfig(
 
         return http.build()
     }
+
     /*
      * auth 매니저 설정
      */

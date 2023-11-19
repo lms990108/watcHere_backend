@@ -1,4 +1,4 @@
-package elice.team5th.domain.tmdb.config
+package elice.team5th.config
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -19,4 +19,3 @@ class WebClientConfig {
             .build()
     }
 }
-

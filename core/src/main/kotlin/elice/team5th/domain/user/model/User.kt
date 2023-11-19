@@ -7,7 +7,6 @@ import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.Table
 import org.jetbrains.annotations.NotNull
-import java.util.UUID
 
 @Entity
 @Table(name = "users")

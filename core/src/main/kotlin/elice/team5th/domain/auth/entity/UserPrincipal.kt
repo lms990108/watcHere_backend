@@ -5,7 +5,6 @@ import elice.team5th.domain.user.model.RoleType
 import elice.team5th.domain.user.model.User
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.oauth2.core.oidc.OidcIdToken
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
@@ -18,7 +17,7 @@ class UserPrincipal(
     val roleType: RoleType,
     private val authorities: Collection<GrantedAuthority>,
     private var attributes: Map<String, Any>? = null
-): OAuth2User, OidcUser {
+) : OAuth2User, OidcUser {
     override fun getName(): String = userId
 
     override fun getAttributes(): Map<String, Any>? {
@@ -36,10 +35,10 @@ class UserPrincipal(
 
     companion object {
         fun create(user: User): UserPrincipal = UserPrincipal(
-                user.userId,
-                user.providerType,
-                RoleType.USER,
-                listOf(SimpleGrantedAuthority(RoleType.USER.code))
+            user.userId,
+            user.providerType,
+            RoleType.USER,
+            listOf(SimpleGrantedAuthority(RoleType.USER.code))
         )
 
         fun create(user: User, attributes: Map<String, Any>): UserPrincipal {

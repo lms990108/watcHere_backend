@@ -4,7 +4,7 @@ import elice.team5th.domain.auth.info.OAuth2UserInfo
 
 class GoogleOAuth2UserInfo(
     attributes: Map<String, Any>
-): OAuth2UserInfo(attributes) {
+) : OAuth2UserInfo(attributes) {
     override fun getId(): String {
         return attributes["sub"] as String
     }

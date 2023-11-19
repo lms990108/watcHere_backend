@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest
 
-class OAuth2AuthorizationRequestBasedOnCookieRepository: AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
+class OAuth2AuthorizationRequestBasedOnCookieRepository : AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
     companion object {
         const val OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME = "oauth2_auth_request"
         const val REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri"
@@ -20,19 +20,27 @@ class OAuth2AuthorizationRequestBasedOnCookieRepository: AuthorizationRequestRep
             .orElse(null)
     }
 
-    override fun saveAuthorizationRequest(authorizationRequest: OAuth2AuthorizationRequest?, request: HttpServletRequest?, response: HttpServletResponse?) {
+    override fun saveAuthorizationRequest(
+        authorizationRequest: OAuth2AuthorizationRequest?,
+        request: HttpServletRequest?,
+        response: HttpServletResponse?
+    ) {
         if (authorizationRequest == null) {
             CookieUtil.deleteCookie(request!!, response!!, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME)
             CookieUtil.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME)
             return
         }
 
-        CookieUtil.addCookie(response!!, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME, CookieUtil.serialize(authorizationRequest), COOKIE_EXPIRE_SECONDS)
+        CookieUtil.addCookie(
+            response!!,
+            OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME,
+            CookieUtil.serialize(authorizationRequest),
+            COOKIE_EXPIRE_SECONDS
+        )
         val redirectUriAfterLogin = request!!.getParameter(REDIRECT_URI_PARAM_COOKIE_NAME)
         if (redirectUriAfterLogin != null && redirectUriAfterLogin.isNotBlank()) {
             CookieUtil.addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, redirectUriAfterLogin, COOKIE_EXPIRE_SECONDS)
         }
-
     }
 
     override fun removeAuthorizationRequest(

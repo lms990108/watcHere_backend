@@ -17,7 +17,6 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
-import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler
 import org.springframework.stereotype.Component
 import org.springframework.web.util.UriComponentsBuilder
@@ -32,7 +31,7 @@ class OAuth2AuthenticationSuccessHandler(
     private val appProperties: AppProperties,
     private val userRefreshTokenRepository: UserRefreshTokenRepository,
     private val authorizationRequestRepository: OAuth2AuthorizationRequestBasedOnCookieRepository
-): SimpleUrlAuthenticationSuccessHandler() {
+) : SimpleUrlAuthenticationSuccessHandler() {
     override fun onAuthenticationSuccess(
         request: HttpServletRequest,
         response: HttpServletResponse,
