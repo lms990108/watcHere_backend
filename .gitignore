@@ -259,6 +259,7 @@ gradle-app.setting
 *.out
 application-dev.yml
 application-info.yml
+application-api.yml
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,linux,macos,gradle,intellij,kotlin,java
 bin/

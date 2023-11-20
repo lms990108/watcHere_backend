@@ -13,8 +13,12 @@ import org.springframework.web.util.UriComponentsBuilder
 @Component
 class OAuth2AuthenticationFailureHandler(
     private val authorizationRequestRepository: OAuth2AuthorizationRequestBasedOnCookieRepository
-): SimpleUrlAuthenticationFailureHandler() {
-    override fun onAuthenticationFailure(request: HttpServletRequest, response: HttpServletResponse, exception: AuthenticationException) {
+) : SimpleUrlAuthenticationFailureHandler() {
+    override fun onAuthenticationFailure(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        exception: AuthenticationException
+    ) {
         var targetUrl = CookieUtil.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
             .map { it.value }
             .orElse(("/"))
