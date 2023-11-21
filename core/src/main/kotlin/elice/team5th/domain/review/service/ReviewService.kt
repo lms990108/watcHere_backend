@@ -102,4 +102,25 @@ class ReviewService(private val reviewRepository: ReviewRepository) {
     fun findAllReviewsOrderByLikesDesc(): List<Review> {
         return reviewRepository.findAll(Sort.by(Sort.Direction.DESC, "likes"))
     }
+
+    // 좋아요(추천) 기능
+    @Transactional
+    fun likeReview(id: Long): Review {
+        val review = reviewRepository.findById(id).orElseThrow {
+            throw RuntimeException("Review not found")
+        }
+        review.likes += 1
+        return reviewRepository.save(review)
+    }
+
+    // 신고 기능
+    @Transactional
+    fun reportReview(id: Long): Review {
+        val review = reviewRepository.findById(id).orElseThrow {
+            throw RuntimeException("Review not found")
+        }
+        review.reports += 1
+        return reviewRepository.save(review)
+    }
+
 }

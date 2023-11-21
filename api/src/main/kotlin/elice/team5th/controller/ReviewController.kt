@@ -70,4 +70,19 @@ class ReviewController(private val reviewService: ReviewService) {
         val reviewDTOs = reviews.map { ReviewDTO(it.id, it.userId, it.contentId, it.detail, it.rating, it.likes, it.reports) }
         return ResponseEntity.ok(reviewDTOs)
     }
+
+    // 추천 기능
+    @PutMapping("/{id}/like")
+    fun likeReview(@PathVariable id: Long): ResponseEntity<Void> {
+        reviewService.likeReview(id)
+        return ResponseEntity.ok().build()
+    }
+
+    // 신고 기능
+    @PutMapping("/{id}/report")
+    fun reportReview(@PathVariable id: Long): ResponseEntity<Void> {
+        reviewService.reportReview(id)
+        return ResponseEntity.ok().build()
+    }
+
 }
