@@ -23,8 +23,8 @@ spring:
         import: classpath:application-info.yml
 
 springdoc:
-  api-docs:
-    path: /api/v1/docs
+    swagger-ui:
+        path: /api/v1/swagger
 
 logging:
     level:
