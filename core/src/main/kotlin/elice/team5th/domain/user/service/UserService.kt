@@ -10,34 +10,27 @@ import org.springframework.stereotype.Service
 
 @Service
 class UserService(private val userRepository: UserRepository) {
-    fun findAllUsers(pageable: Pageable): Page<User> {
-        return userRepository.findAll(pageable)
-    }
+    fun findAllUsers(pageable: Pageable): Page<User> =
+        userRepository.findAll(pageable)
 
-    fun findUserById(userId: String): User {
-        return userRepository.findByUserId(userId) ?: throw UserNotFoundException("유저를 찾을 수 없습니다.")
-    }
+    fun findUserById(userId: String): User =
+        userRepository.findByUserId(userId) ?: throw UserNotFoundException("유저를 찾을 수 없습니다.")
 
-    fun findUserByNickname(nickname: String): User {
-        return userRepository.findUserByNickname(nickname) ?: throw UserNotFoundException(
-            "$nickname 닉네임을 가진 유저를 찾을 수 없습니다."
-        )
-    }
+    fun updateUser(userId: String, updateRequest: UserDto.UpdateRequest): User =
+        userRepository.findByUserId(userId)?.apply {
+            ban = updateRequest.ban ?: ban
+            role = updateRequest.role ?: role
+            profileImage = updateRequest.profileImage ?: profileImage
+            nickname = updateRequest.nickname ?: nickname
+        }?.let { userRepository.save(it) }
+            ?: throw UserNotFoundException("유저를 찾을 수 없습니다.")
 
-    fun updateProfile(userId: String, updateRequest: UserDto.UpdateProfileRequest): User {
-        return userRepository.findByUserId(userId)?.apply {
-            updateRequest.profileImage?.let { this.profileImage = it }
-            updateRequest.nickname?.let { this.nickname = it }
-        } ?: throw UserNotFoundException("유저를 찾을 수 없습니다.")
-    }
+    fun findUsersByBanIsTrue(pageable: Pageable): Page<User> =
+        userRepository.findByBanIsTrue(pageable)
 
-    fun findUsersByBanIsTrue(pageable: Pageable): Page<User> {
-        return userRepository.findUsersByBanIsTrue(pageable)
-    }
+    fun findUsersByNicknameStartingWith(pageable: Pageable, nicknamePrefix: String): Page<User> =
+        userRepository.findByNicknameStartingWith(pageable, nicknamePrefix)
 
-    fun banUser(userId: String): User {
-        return userRepository.findByUserId(userId)?.apply {
-            this.ban = true
-        } ?: throw UserNotFoundException("유저를 찾을 수 없습니다.")
-    }
+    fun findUsersByNicknameStartingWithAndBanIsTrue(pageable: Pageable, nicknamePrefix: String): Page<User> =
+        userRepository.findByNicknameStartingWithAndBanIsTrue(pageable, nicknamePrefix)
 }
