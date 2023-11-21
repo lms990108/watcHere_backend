@@ -54,7 +54,7 @@ class CustomOAuth2UserService(
             nickname = userinfo.getName(),
             profileImage = userinfo.getImageUrl(),
             email = userinfo.getEmail(),
-            providerType = providerType,
+            provider = providerType,
             role = RoleType.USER
         ).let { userRepository.saveAndFlush(it) }
     }

@@ -36,7 +36,7 @@ class UserPrincipal(
     companion object {
         fun create(user: User): UserPrincipal = UserPrincipal(
             user.userId,
-            user.providerType,
+            user.provider,
             RoleType.USER,
             listOf(SimpleGrantedAuthority(RoleType.USER.code))
         )
