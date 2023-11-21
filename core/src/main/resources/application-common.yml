@@ -22,6 +22,10 @@ spring:
     config:
         import: classpath:application-info.yml
 
+springdoc:
+  api-docs:
+    path: /api/v1/docs
+
 logging:
     level:
       org:
