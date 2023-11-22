@@ -1,6 +1,6 @@
 package elice.team5th.domain.review.service
 
-import elice.team5th.domain.review.dto.ReviewDTO
+import elice.team5th.domain.review.dto.CreateReviewDTO
 import elice.team5th.domain.review.model.Review
 import elice.team5th.domain.review.repository.ReviewRepository
 import org.springframework.data.domain.Page
@@ -15,26 +15,22 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class ReviewService(private val reviewRepository: ReviewRepository) {
 
-    @Transactional
-    fun createReview(reviewDTO: ReviewDTO): Review {
-        // 현재 인증된 사용자의 정보를 SecurityContext에서 가져옵니다.
-        val authentication = SecurityContextHolder.getContext().authentication
-        val user = authentication.principal as UserDetails // 여기서 UserDetails를 사용하는 것은 스프링 시큐리티 설정에 따라 달라질 수 있습니다.
-
+    fun createReview(createReviewDTO: CreateReviewDTO, user: UserDetails): Review {
         val review = Review(
-            contentId = reviewDTO.contentId,
-            userId = user.username.toLong(), // UserDetails에서 가져온 사용자 ID
-            detail = reviewDTO.detail,
-            rating = reviewDTO.rating,
-            likes = 0, // 생성 시점에는 0으로 시작
-            reports = 0 // 생성 시점에는 0으로 시작
+            contentId = createReviewDTO.contentId,
+            userId = user.username.toLong(),
+            detail = createReviewDTO.detail,
+            rating = createReviewDTO.rating,
+            likes = 0,
+            reports = 0
         )
         return reviewRepository.save(review)
     }
 
+
     // 리뷰 수정
     @Transactional
-    fun updateReview(id: Long, reviewDTO: ReviewDTO): Review {
+    fun updateReview(id: Long, createReviewDTO: CreateReviewDTO): Review {
         // 현재 인증된 사용자의 정보를 SecurityContext에서 가져옵니다.
         val authentication = SecurityContextHolder.getContext().authentication
         val currentUser = authentication.principal as UserDetails // UserDetails 사용은 스프링 시큐리티 설정에 따라 달라질 수 있습니다.
@@ -52,7 +48,7 @@ class ReviewService(private val reviewRepository: ReviewRepository) {
 
         // 리뷰의 detail 필드만 수정합니다.
         review.apply {
-            detail = reviewDTO.detail
+            detail = createReviewDTO.detail
         }
 
         // 수정된 리뷰를 저장합니다.
@@ -60,24 +56,29 @@ class ReviewService(private val reviewRepository: ReviewRepository) {
     }
 
     @Transactional
-    fun deleteReview(id: Long) {
-        // 현재 인증된 사용자의 정보를 SecurityContext에서 가져옵니다.
-        val authentication = SecurityContextHolder.getContext().authentication
-        val currentUser = authentication.principal as UserDetails // UserDetails 사용은 스프링 시큐리티 설정에 따라 달라질 수 있습니다.
-        val currentUserId = currentUser.username.toLong() // 사용자의 고유 ID를 가져옵니다.
-
-        // 리뷰를 조회합니다.
+    fun updateReview(id: Long, createReviewDTO: CreateReviewDTO, user: UserDetails): Review {
         val review = reviewRepository.findById(id).orElseThrow {
             throw RuntimeException("Review not found")
         }
+        if (review.userId != user.username.toLong()) {
+            throw RuntimeException("Not authorized to update this review")
+        }
+        review.apply {
+            detail = createReviewDTO.detail
+        }
+        return reviewRepository.save(review)
+    }
 
-        // 현재 인증된 사용자가 리뷰 작성자와 동일하거나 관리자인지 확인합니다.
-        val hasRoleAdmin = authentication.authorities.any { it.authority == "ROLE_ADMIN" }
+    @Transactional
+    fun deleteReview(id: Long, user: UserDetails) {
+        val review = reviewRepository.findById(id).orElseThrow {
+            throw RuntimeException("Review not found")
+        }
+        val currentUserId = user.username.toLong()
+        val hasRoleAdmin = user.authorities.any { it.authority == "ROLE_ADMIN" }
         if (review.userId != currentUserId && !hasRoleAdmin) {
             throw RuntimeException("You do not have permission to delete this review")
         }
-
-        // 리뷰를 삭제합니다.
         reviewRepository.deleteById(id)
     }
 
