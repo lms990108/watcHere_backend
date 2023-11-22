@@ -141,9 +141,9 @@ class SecurityConfig(
         val corsConfigSource = UrlBasedCorsConfigurationSource()
 
         val corsConfig = CorsConfiguration()
-        corsConfig.allowedHeaders = corsProperties.allowedHeaders.split(",")
-        corsConfig.allowedMethods = corsProperties.allowedMethods.split(",")
-        corsConfig.allowedOrigins = corsProperties.allowedOrigins.split(",")
+        corsConfig.allowedHeaders = mutableListOf("*")
+        corsConfig.allowedMethods = mutableListOf("*")
+        corsConfig.allowedOrigins = mutableListOf("*")
         corsConfig.allowCredentials = true
         corsConfig.maxAge = corsProperties.maxAge
 
