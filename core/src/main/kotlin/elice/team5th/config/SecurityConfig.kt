@@ -144,7 +144,7 @@ class SecurityConfig(
         corsConfig.allowedHeaders = mutableListOf("*")
         corsConfig.allowedMethods = mutableListOf("*")
         corsConfig.allowedOrigins = mutableListOf("*")
-        corsConfig.allowCredentials = true
+        corsConfig.allowCredentials = false
         corsConfig.maxAge = corsProperties.maxAge
 
         corsConfigSource.registerCorsConfiguration("/**", corsConfig)
