@@ -37,7 +37,7 @@ import java.util.*
  * - 제공된 페이지 번호, 정렬 기준, 서비스 제공업체, 콘텐츠 타입을 기반으로 TMDB API에서 인기 콘텐츠 목록을 가져옵니다.
  *
  * 예시 요청:
- * GET /api/content-list?page=2&sort=RELEASE_DATE_DESC&provider=NETFLIX&contentType=MOVIE
+ * GET /api/v1/contents?page=2&sort=RELEASE_DATE_DESC&provider=NETFLIX&contentType=MOVIE
  * - 넷플릭스에서 제공되는 영화 중 출시일 기준 내림차순으로 정렬된 두 번째 페이지의 영화 목록을 가져옵니다.
  */
 @RestController
