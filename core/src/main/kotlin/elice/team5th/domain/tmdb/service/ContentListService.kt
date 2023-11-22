@@ -16,14 +16,19 @@ class ContentListService(private val webClient: WebClient) {
     @Value("\${tmdb.api.access-token}")
     private lateinit var accessToken: String
 
-    // 이제 영화와 TV 시리즈 모두를 처리할 수 있는 메서드
     fun getPopularContent(page: Int, sortType: SortType, providerName: String, contentType: ContentType): Mono<ListResponseDto> {
         val path = when (contentType) {
             ContentType.MOVIE -> "/discover/movie"
             ContentType.TV -> "/discover/tv"
         }
 
-        val providerId = providerName.let { ProviderType.getIdByName(it) }
+        println("Path: $path") // 로그 출력
+
+        val providerId = providerName.let {
+            val id = ProviderType.getIdByName(it)
+            println("Provider ID: $id") // 로그 출력
+            id
+        }
 
         return webClient.get()
             .uri { uriBuilder ->
@@ -40,12 +45,14 @@ class ContentListService(private val webClient: WebClient) {
                     }
                     .queryParam("watch_region", "KR")
                     .build()
+                    .also { println("URI: $it") } // 로그 출력
             }
             .header("Authorization", accessToken)
             .header("accept", "application/json")
             .retrieve()
             .bodyToMono(ListResponseDto::class.java)
             .map { response ->
+                println("Response: $response") // 로그 출력
                 ListResponseDto(
                     results = response.results.map { content ->
                         ListInfoDto(
@@ -53,7 +60,7 @@ class ContentListService(private val webClient: WebClient) {
                             title = if (contentType == ContentType.MOVIE) content.title else null,
                             name = if (contentType == ContentType.TV) content.name else null,
                             poster_path = "https://image.tmdb.org/t/p/w500${content.poster_path}"
-                        )
+                        ).also { println("Mapped Content: $it") } // 로그 출력
                     }
                 )
             }

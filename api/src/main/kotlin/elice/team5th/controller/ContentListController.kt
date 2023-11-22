@@ -44,7 +44,7 @@ import java.util.*
 @RequestMapping("/api/v1/content-list")
 class ContentListController(private val contentListService: ContentListService) {
 
-    @GetMapping("")
+    @GetMapping
     fun getPopularContent(
         @RequestParam(required = false, defaultValue = "1") page: Int,
         @RequestParam(required = false, defaultValue = "POPULARITY_DESC") sort: String,

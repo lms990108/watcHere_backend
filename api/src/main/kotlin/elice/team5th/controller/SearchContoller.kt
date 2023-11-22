@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Mono
 
 @RestController
-@RequestMapping("/search")
+@RequestMapping("api/v1/search")
 class SearchController(private val searchService: SearchService) {
 
     @GetMapping
