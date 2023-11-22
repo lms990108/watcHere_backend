@@ -3,6 +3,8 @@ package elice.team5th.controller
 import elice.team5th.domain.auth.token.AuthTokenProvider
 import elice.team5th.domain.user.dto.UserDto
 import elice.team5th.domain.user.service.UserService
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.ResponseEntity
@@ -20,12 +22,13 @@ class UserController(
     private val userService: UserService,
     private val tokenProvider: AuthTokenProvider
 ) {
+    @Operation(summary = "유저 목록 조회", description = "유저 목록 페이징 조회합니다. 밴 여부, 닉네임 prefix로 필터링할 수 있습니다.")
     @GetMapping("/")
     fun getUsers(
         @RequestParam(value = "offset", defaultValue = "0") offset: Int,
         @RequestParam(value = "limit", defaultValue = "20") limit: Int,
-        @RequestParam(value = "ban", defaultValue = "false", required = false) ban: Boolean,
-        @RequestParam(value = "nickname_prefix", required = false) nicknamePrefix: String?
+        @Parameter(description = "밴 여부", example = "true/false") @RequestParam(value = "ban", defaultValue = "false", required = false) ban: Boolean,
+        @Parameter(description = "닉네임 prefix", example = "김") @RequestParam(value = "nickname_prefix", required = false) nicknamePrefix: String?
     ): ResponseEntity<Page<UserDto.Response>> {
         val pageRequest = PageRequest.of(offset, limit)
         val users = when {
@@ -47,17 +50,19 @@ class UserController(
 //        return ResponseEntity.ok().body(UserDto.Response(user))
 //    }
 
+    @Operation(summary = "단일 유저 조회", description = "유저 아이디를 통해 유저를 조회합니다.")
     @GetMapping("/{userId}")
     fun getUser(
-        @PathVariable userId: String
+        @Parameter(description = "user_id", example = "117452459527937826982") @PathVariable userId: String
     ): ResponseEntity<UserDto.Response> {
         val user = userService.findUserById(userId)
         return ResponseEntity.ok().body(UserDto.Response(user))
     }
 
+    @Operation(summary = "유저 정보 수정", description = "유저 아이디를 통해 유저 정보를 수정합니다.")
     @PutMapping("/{userId}")
     fun updateUser(
-        @PathVariable userId: String,
+        @Parameter(description = "user_id", example = "117452459527937826982") @PathVariable userId: String,
         @RequestBody updateRequest: UserDto.UpdateRequest
     ): ResponseEntity<UserDto.Response> {
         val user = userService.updateUser(userId, updateRequest)

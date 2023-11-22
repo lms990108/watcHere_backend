@@ -12,7 +12,9 @@ import org.springframework.security.oauth2.core.user.OAuth2User
 import java.util.*
 
 class UserPrincipal(
-    private val userId: String,
+    val userId: String,
+    var nickname: String,
+    var profileImage: String,
     val providerType: ProviderType,
     val roleType: RoleType,
     private val authorities: Collection<GrantedAuthority>,
@@ -20,12 +22,9 @@ class UserPrincipal(
 ) : OAuth2User, OidcUser {
     override fun getName(): String = userId
 
-    override fun getAttributes(): Map<String, Any>? {
-        return attributes
-    }
-    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        return authorities.toMutableList()
-    }
+    override fun getAttributes(): Map<String, Any>? = attributes
+
+    override fun getAuthorities(): MutableCollection<out GrantedAuthority> = authorities.toMutableList()
 
     override fun getClaims(): Map<String, Any>? = null
 
@@ -36,6 +35,8 @@ class UserPrincipal(
     companion object {
         fun create(user: User): UserPrincipal = UserPrincipal(
             user.userId,
+            user.nickname,
+            user.profileImage,
             user.provider,
             RoleType.USER,
             listOf(SimpleGrantedAuthority(RoleType.USER.code))
