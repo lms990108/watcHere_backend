@@ -1,34 +1,44 @@
 package elice.team5th.controller
 
+import elice.team5th.domain.auth.annotation.CurrentUser
+import elice.team5th.domain.review.dto.CreateReviewDTO
 import elice.team5th.domain.review.dto.ReviewDTO
 import elice.team5th.domain.review.service.ReviewService
 import org.springframework.data.domain.Page
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
-import java.security.Principal
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("api/v1/reviews")
 class ReviewController(private val reviewService: ReviewService) {
 
     // 리뷰 작성
-    @PostMapping
-    fun createReview(@RequestBody reviewDTO: ReviewDTO): ResponseEntity<ReviewDTO> {
-        val review = reviewService.createReview(reviewDTO)
+    @PostMapping("")
+    fun createReview(@RequestBody createReviewDTO: CreateReviewDTO, @CurrentUser user: UserDetails): ResponseEntity<ReviewDTO> {
+        val review = reviewService.createReview(createReviewDTO, user)
         return ResponseEntity.ok(ReviewDTO(review.id, review.userId, review.contentId, review.detail, review.rating, review.likes, review.reports))
     }
 
     // 리뷰 수정
     @PutMapping("/{id}")
-    fun updateReview(@PathVariable id: Long, @RequestBody reviewDTO: ReviewDTO, principal: Principal): ResponseEntity<ReviewDTO> {
-        val updatedReview = reviewService.updateReview(id, reviewDTO)
+    fun updateReview(@PathVariable id: Long, @RequestBody createReviewDTO: CreateReviewDTO, @CurrentUser user: UserDetails): ResponseEntity<ReviewDTO> {
+        val updatedReview = reviewService.updateReview(id, createReviewDTO, user)
         return ResponseEntity.ok(ReviewDTO(updatedReview.id, updatedReview.userId, updatedReview.contentId, updatedReview.detail, updatedReview.rating, updatedReview.likes, updatedReview.reports))
     }
 
     // 리뷰 삭제
     @DeleteMapping("/{id}")
-    fun deleteReview(@PathVariable id: Long): ResponseEntity<Void> {
-        reviewService.deleteReview(id)
+    fun deleteReview(@PathVariable id: Long, @CurrentUser user: UserDetails): ResponseEntity<Void> {
+        reviewService.deleteReview(id, user)
         return ResponseEntity.ok().build()
     }
 
