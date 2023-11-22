@@ -38,12 +38,12 @@ class ContentListService(private val webClient: WebClient) {
                     .queryParam("language", "ko-KR")
                     .queryParam("page", page.toString())
                     .queryParam("sort_by", sortType.queryParam)
+                    .queryParam("watch_region", "KR")
                     .apply {
                         providerId?.let {
                             queryParam("with_watch_providers", it)
                         }
                     }
-                    .queryParam("watch_region", "KR")
                     .build()
                     .also { println("URI: $it") } // 로그 출력
             }

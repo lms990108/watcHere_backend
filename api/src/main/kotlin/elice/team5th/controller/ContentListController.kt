@@ -41,21 +41,20 @@ import java.util.*
  * - 넷플릭스에서 제공되는 영화 중 출시일 기준 내림차순으로 정렬된 두 번째 페이지의 영화 목록을 가져옵니다.
  */
 @RestController
-@RequestMapping("/api/v1/content-list")
+@RequestMapping("/api/v1/contents")
 class ContentListController(private val contentListService: ContentListService) {
 
-    @GetMapping
+    @GetMapping("")
     fun getPopularContent(
         @RequestParam(required = false, defaultValue = "1") page: Int,
         @RequestParam(required = false, defaultValue = "POPULARITY_DESC") sort: String,
         @RequestParam(required = false, defaultValue = "NETFLIX") provider: String,
         @RequestParam(required = true) contentType: ContentType // 영화 또는 TV 시리즈 선택
     ): Mono<ResponseEntity<ListResponseDto>> {
-        val sortType = SortType
-            .values()
-            .find { it.name == sort.uppercase(Locale.getDefault()) } ?: SortType.POPULARITY_DESC
+        val sortType = SortType.valueOf(sort.uppercase(Locale.getDefault()))
         return contentListService.getPopularContent(page, sortType, provider, contentType)
             .map { ResponseEntity.ok(it) }
     }
+
 }
 
