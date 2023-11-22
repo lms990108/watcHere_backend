@@ -23,7 +23,6 @@ class UserService(private val userRepository: UserRepository) {
         userRepository.findByUserId(userId)?.apply {
             ban = updateRequest.ban ?: ban
             role = updateRequest.role ?: role
-            profileImage = updateRequest.profileImage ?: profileImage
             nickname = updateRequest.nickname ?: nickname
         }?.let { userRepository.save(it) }
             ?: throw UserNotFoundException("유저를 찾을 수 없습니다.")

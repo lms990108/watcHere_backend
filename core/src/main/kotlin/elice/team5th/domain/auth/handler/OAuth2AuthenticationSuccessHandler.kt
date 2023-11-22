@@ -89,10 +89,10 @@ class OAuth2AuthenticationSuccessHandler(
         // 이미 있는 유저라면 refresh token을 업데이트 아니면 새로 생성
         var userRefreshToken = userRefreshTokenRepository.findByUserId(userInfo.getId())
         if (userRefreshToken != null) {
-            userRefreshToken.refreshToken = refreshToken.token
+            userRefreshToken.refreshToken = refreshToken.token!!
             userRefreshTokenRepository.saveAndFlush(userRefreshToken)
         } else {
-            userRefreshToken = UserRefreshToken(userInfo.getId(), refreshToken.token)
+            userRefreshToken = UserRefreshToken(userInfo.getId(), refreshToken.token!!)
             userRefreshTokenRepository.saveAndFlush(userRefreshToken)
         }
 

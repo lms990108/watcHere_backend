@@ -24,7 +24,7 @@ class AuthTokenProvider(secret: String) {
         return AuthToken.createAuthToken(id, role, expiry, key)
     }
 
-    fun convertAuthToken(token: String): AuthToken {
+    fun convertAuthToken(token: String?): AuthToken {
         return AuthToken(token, key)
     }
 
