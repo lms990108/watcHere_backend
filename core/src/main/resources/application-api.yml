@@ -1,0 +1,5 @@
+tmdb:
+    api-key: 'f8291ced8cb50fd9c07c5332aeb4da1a'
+    api:
+        base-url: 'https://api.themoviedb.org/3'
+        access-token: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODI5MWNlZDhjYjUwZmQ5YzA3YzUzMzJhZWI0ZGExYSIsInN1YiI6IjY1NTc2YWRiZDA1MWQ5MDBhZGI1MWI3NSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.K3YF0wAdF1NqjGIt_wL0VVlDqhWNH76mYUqDAXtGs8U'

@@ -1,29 +1,41 @@
 spring:
-    config:
-        additional-location: classpath:application-info.yml
-        activate:
-            on-profile: local
     datasource:
       url: jdbc:mysql://localhost:3306/elice
       username: elice
       password: elice
     jpa:
         hibernate:
-          ddl-auto: create-drop
+          ddl-auto: create
             # create: 시작 시 테이블 drop 후 재생성
             # update: 시작 시 자동 migrate
             # validate: 현재 스프링에 정의된 엔티티와 테이블을 비교, 차이가 있으면 예외 출력하고 종료
             # none: db 그대로, Default
             # create-drop: 시작 시 테이블 create, 종료 시 drop
         show-sql: true
+        open-in-view: true
+    data:
+      redis:
+          host: localhost
+          timeout: 3s
+    profiles:
+        default: local
+    config:
+        import: classpath:application-info.yml
 
+springdoc:
+    swagger-ui:
+        path: /api/v1/api-docs
+    api-docs:
+        path: /api/v1/api-docs
+
+logging:
+    level:
+      org:
+          springframework:
+              security: DEBUG
 ---
 
 spring:
     config:
         activate:
             on-profile: dev
-    datasource:
-        url: ${DB_HOST}
-        username: ${DB_USER}
-        password: ${DB_PASSWORD}

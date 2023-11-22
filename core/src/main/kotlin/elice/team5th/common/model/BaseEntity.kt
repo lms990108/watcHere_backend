@@ -1,4 +1,4 @@
-package elice.team5th.elice.team5h.common.model
+package elice.team5th.common.model
 
 import jakarta.persistence.EntityListeners
 import jakarta.persistence.GeneratedValue
@@ -11,14 +11,14 @@ import java.time.LocalDateTime
 
 @MappedSuperclass
 @EntityListeners
-open class BaseTimeEntity(
+open class BaseEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     open val id: Long = 0,
 
     @CreatedDate
-    open var createdAt: LocalDateTime? = null,
+    open var createdAt: LocalDateTime = LocalDateTime.now(),
 
     @LastModifiedDate
-    open var updatedAt: LocalDateTime? = null
+    open var updatedAt: LocalDateTime = LocalDateTime.now()
 )
