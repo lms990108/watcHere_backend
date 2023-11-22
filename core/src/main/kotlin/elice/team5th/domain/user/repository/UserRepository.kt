@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface UserRepository : JpaRepository<User, Long> {
     fun findByUserId(userId: String): User?
-    fun findUserByNickname(nickname: String): User?
-    fun findUsersByBanIsTrue(pageable: Pageable): Page<User>
+    fun findByNicknameStartingWith(pageable: Pageable, prefix: String): Page<User>
+    fun findByBanIsTrue(pageable: Pageable): Page<User>
+    fun findByNicknameStartingWithAndBanIsTrue(pageable: Pageable, prefix: String): Page<User>
 }

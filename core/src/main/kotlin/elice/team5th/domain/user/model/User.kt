@@ -20,17 +20,15 @@ class User(
     var nickname: String,
 
     @Column(name = "profile_image", length = 512)
-    var profileImage: String? = null,
+    var profileImage: String,
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    @Column(name = "provider_type", length = 20)
-    val providerType: ProviderType,
+    val provider: ProviderType,
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    @Column(name = "role_type", length = 20)
-    val role: RoleType = RoleType.USER,
+    var role: RoleType = RoleType.USER,
 
     @NotNull
     var ban: Boolean = false
