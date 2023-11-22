@@ -27,7 +27,6 @@ class ReviewService(private val reviewRepository: ReviewRepository) {
         return reviewRepository.save(review)
     }
 
-
     // 리뷰 수정
     @Transactional
     fun updateReview(id: Long, createReviewDTO: CreateReviewDTO): Review {
@@ -123,5 +122,4 @@ class ReviewService(private val reviewRepository: ReviewRepository) {
         review.reports += 1
         return reviewRepository.save(review)
     }
-
 }

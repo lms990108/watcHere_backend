@@ -22,7 +22,7 @@ data class TVDetailsDto(
     val type: String,
     val vote_average: Double,
     val vote_count: Int
-){
+) {
     val fullBackdropPath: String
         get() = backdrop_path.prependBaseUrl()
 
@@ -44,7 +44,7 @@ data class Episode(
     val season_number: Int,
     val show_id: Int,
     val still_path: String?
-){
+) {
     val fullStillPath: String
         get() = still_path.prependBaseUrl()
 }
@@ -54,7 +54,7 @@ data class Network(
     val logo_path: String?,
     val name: String,
     val origin_country: String
-){
+) {
     val fullLogoPath: String
         get() = logo_path.prependBaseUrl()
 }
@@ -68,7 +68,7 @@ data class Season(
     val poster_path: String?,
     val season_number: Int,
     val vote_average: Double
-){
+) {
     val fullPosterPath: String
         get() = poster_path.prependBaseUrl()
 }

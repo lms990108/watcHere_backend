@@ -27,5 +27,4 @@ class Review(
     @Column(nullable = false)
     var reports: Int = 0 // 'reports'는 신고 수를 나타냄
 
-
 ) : BaseEntity() // BaseEntity의 생성자 호출

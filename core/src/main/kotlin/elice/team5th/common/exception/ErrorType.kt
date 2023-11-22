@@ -19,5 +19,5 @@ enum class ErrorType(
     USER_NOT_FOUND(3001, HttpStatus.NOT_FOUND),
 
     // 409
-    CONFLICT(4000, HttpStatus.CONFLICT),
+    CONFLICT(4000, HttpStatus.CONFLICT)
 }

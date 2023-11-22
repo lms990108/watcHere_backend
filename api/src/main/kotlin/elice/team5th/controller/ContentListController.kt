@@ -55,6 +55,4 @@ class ContentListController(private val contentListService: ContentListService) 
         return contentListService.getPopularContent(page, sortType, provider, contentType)
             .map { ResponseEntity.ok(it) }
     }
-
 }
-

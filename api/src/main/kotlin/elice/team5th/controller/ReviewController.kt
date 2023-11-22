@@ -23,16 +23,41 @@ class ReviewController(private val reviewService: ReviewService) {
 
     // 리뷰 작성
     @PostMapping("")
-    fun createReview(@RequestBody createReviewDTO: CreateReviewDTO, @CurrentUser user: UserDetails): ResponseEntity<ReviewDTO> {
+    fun createReview(@RequestBody createReviewDTO: CreateReviewDTO, @CurrentUser user: UserDetails):
+        ResponseEntity<ReviewDTO> {
         val review = reviewService.createReview(createReviewDTO, user)
-        return ResponseEntity.ok(ReviewDTO(review.id, review.userId, review.contentId, review.detail, review.rating, review.likes, review.reports))
+        return ResponseEntity.ok(
+            ReviewDTO(
+                review.id,
+                review.userId,
+                review.contentId,
+                review.detail,
+                review.rating,
+                review.likes,
+                review.reports
+            )
+        )
     }
 
     // 리뷰 수정
     @PutMapping("/{id}")
-    fun updateReview(@PathVariable id: Long, @RequestBody createReviewDTO: CreateReviewDTO, @CurrentUser user: UserDetails): ResponseEntity<ReviewDTO> {
+    fun updateReview(
+        @PathVariable id: Long,
+        @RequestBody createReviewDTO: CreateReviewDTO,
+        @CurrentUser user: UserDetails
+    ): ResponseEntity<ReviewDTO> {
         val updatedReview = reviewService.updateReview(id, createReviewDTO, user)
-        return ResponseEntity.ok(ReviewDTO(updatedReview.id, updatedReview.userId, updatedReview.contentId, updatedReview.detail, updatedReview.rating, updatedReview.likes, updatedReview.reports))
+        return ResponseEntity.ok(
+            ReviewDTO(
+                updatedReview.id,
+                updatedReview.userId,
+                updatedReview.contentId,
+                updatedReview.detail,
+                updatedReview.rating,
+                updatedReview.likes,
+                updatedReview.reports
+            )
+        )
     }
 
     // 리뷰 삭제
@@ -50,7 +75,17 @@ class ReviewController(private val reviewService: ReviewService) {
         @RequestParam(defaultValue = "10") size: Int
     ): ResponseEntity<Page<ReviewDTO>> {
         val pageOfReviews = reviewService.findReviewsByUserIdPaginated(userId, page, size)
-        val reviewDTOs = pageOfReviews.map { ReviewDTO(it.id, it.userId, it.contentId, it.detail, it.rating, it.likes, it.reports) }
+        val reviewDTOs = pageOfReviews.map {
+            ReviewDTO(
+                it.id,
+                it.userId,
+                it.contentId,
+                it.detail,
+                it.rating,
+                it.likes,
+                it.reports
+            )
+        }
         return ResponseEntity.ok(reviewDTOs)
     }
 
@@ -62,14 +97,26 @@ class ReviewController(private val reviewService: ReviewService) {
         @RequestParam(defaultValue = "10") size: Int
     ): ResponseEntity<Page<ReviewDTO>> {
         val pageOfReviews = reviewService.findReviewsByContentIdPaginated(contentId, page, size)
-        return ResponseEntity.ok(pageOfReviews.map { ReviewDTO(it.id, it.userId, it.contentId, it.detail, it.rating, it.likes, it.reports) })
+        return ResponseEntity.ok(
+            pageOfReviews.map { ReviewDTO(it.id, it.userId, it.contentId, it.detail, it.rating, it.likes, it.reports) }
+        )
     }
 
     // 최신순 리뷰 조회
     @GetMapping("/latest")
     fun getLatestReviews(): ResponseEntity<List<ReviewDTO>> {
         val reviews = reviewService.findAllReviewsOrderByCreatedAtDesc()
-        val reviewDTOs = reviews.map { ReviewDTO(it.id, it.userId, it.contentId, it.detail, it.rating, it.likes, it.reports) }
+        val reviewDTOs = reviews.map {
+            ReviewDTO(
+                it.id,
+                it.userId,
+                it.contentId,
+                it.detail,
+                it.rating,
+                it.likes,
+                it.reports
+            )
+        }
         return ResponseEntity.ok(reviewDTOs)
     }
 
@@ -77,7 +124,17 @@ class ReviewController(private val reviewService: ReviewService) {
     @GetMapping("/popular")
     fun getPopularReviews(): ResponseEntity<List<ReviewDTO>> {
         val reviews = reviewService.findAllReviewsOrderByLikesDesc()
-        val reviewDTOs = reviews.map { ReviewDTO(it.id, it.userId, it.contentId, it.detail, it.rating, it.likes, it.reports) }
+        val reviewDTOs = reviews.map {
+            ReviewDTO(
+                it.id,
+                it.userId,
+                it.contentId,
+                it.detail,
+                it.rating,
+                it.likes,
+                it.reports
+            )
+        }
         return ResponseEntity.ok(reviewDTOs)
     }
 
@@ -94,5 +151,4 @@ class ReviewController(private val reviewService: ReviewService) {
         reviewService.reportReview(id)
         return ResponseEntity.ok().build()
     }
-
 }

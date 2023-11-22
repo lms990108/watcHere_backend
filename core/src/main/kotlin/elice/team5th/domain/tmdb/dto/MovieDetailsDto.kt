@@ -16,12 +16,12 @@ data class MovieDetailsDto(
     val video: Boolean,
     val vote_average: Double,
     val vote_count: Int
-){
+) {
     val fullBackdropPath: String
-        get() = "https://image.tmdb.org/t/p/w500${backdrop_path}"
+        get() = "https://image.tmdb.org/t/p/w500$backdrop_path"
 
     val fullPosterPath: String
-        get() = "https://image.tmdb.org/t/p/w500${poster_path}"
+        get() = "https://image.tmdb.org/t/p/w500$poster_path"
 }
 
 data class Genre(

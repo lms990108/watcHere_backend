@@ -5,7 +5,7 @@ import org.springframework.web.reactive.config.CorsRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
-class WebConfig: WebMvcConfigurer {
+class WebConfig : WebMvcConfigurer {
     fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
             .allowedOrigins("*")
