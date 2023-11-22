@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Mono
 
 @RestController
-@RequestMapping("/api/tv")
+@RequestMapping("/api/v1/tv")
 class TVDetailsController(private val tvDetailsService: TVDetailsService) {
 
     @GetMapping("/{tvId}")

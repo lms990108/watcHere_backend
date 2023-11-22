@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Mono
 
 @RestController
-@RequestMapping("/api/movie")
+@RequestMapping("/api/v1/movie")
 class MovieDetailsController(private val movieDetailsService: MovieDetailsService) {
 
     @GetMapping("/{movieId}")

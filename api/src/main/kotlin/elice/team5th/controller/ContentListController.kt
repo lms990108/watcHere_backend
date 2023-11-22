@@ -41,7 +41,7 @@ import java.util.*
  * - 넷플릭스에서 제공되는 영화 중 출시일 기준 내림차순으로 정렬된 두 번째 페이지의 영화 목록을 가져옵니다.
  */
 @RestController
-@RequestMapping("/api/content-list")
+@RequestMapping("/api/v1/content-list")
 class ContentListController(private val contentListService: ContentListService) {
 
     @GetMapping("")

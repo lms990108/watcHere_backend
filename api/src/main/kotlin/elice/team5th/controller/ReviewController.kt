@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*
 import java.security.Principal
 
 @RestController
-@RequestMapping("/reviews")
+@RequestMapping("api/v1/reviews")
 class ReviewController(private val reviewService: ReviewService) {
 
     // 리뷰 작성
