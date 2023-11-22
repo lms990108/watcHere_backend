@@ -11,7 +11,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 class WebSocketConfig : WebSocketMessageBrokerConfigurer {
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
         // ws -> http, wss -> https
-        registry.addEndpoint("/ws").setAllowedOrigins("*").withSockJS()  // chat: endpoint
+        registry.addEndpoint("/ws").setAllowedOrigins("*") // chat: endpoint
     }
 
     override fun configureMessageBroker(registry: MessageBrokerRegistry) {
