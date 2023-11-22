@@ -17,7 +17,17 @@ enum class ErrorType(
     // 404
     NOT_FOUND(3000, HttpStatus.NOT_FOUND),
     USER_NOT_FOUND(3001, HttpStatus.NOT_FOUND),
+    PATH_NOT_FOUND(3002, HttpStatus.NOT_FOUND),
 
     // 409
-    CONFLICT(4000, HttpStatus.CONFLICT)
+    CONFLICT(4000, HttpStatus.CONFLICT),
+
+    // 429
+    TOO_MANY_REQUEST(5001, HttpStatus.TOO_MANY_REQUESTS),
+
+    // 500
+    INTERNAL_SERVER_ERROR(6000, HttpStatus.INTERNAL_SERVER_ERROR),
+
+    // 503
+    SERVICE_UNAVAILABLE(7000, HttpStatus.SERVICE_UNAVAILABLE),
 }
