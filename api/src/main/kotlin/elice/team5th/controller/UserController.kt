@@ -27,8 +27,12 @@ class UserController(
     fun getUsers(
         @RequestParam(value = "offset", defaultValue = "0") offset: Int,
         @RequestParam(value = "limit", defaultValue = "20") limit: Int,
-        @Parameter(description = "밴 여부", example = "true/false") @RequestParam(value = "ban", defaultValue = "false", required = false) ban: Boolean,
-        @Parameter(description = "닉네임 prefix", example = "김") @RequestParam(value = "nickname_prefix", required = false) nicknamePrefix: String?
+        @Parameter(description = "밴 여부", example = "true/false")
+        @RequestParam(value = "ban", defaultValue = "false", required = false)
+        ban: Boolean,
+        @Parameter(description = "닉네임 prefix", example = "김")
+        @RequestParam(value = "nickname_prefix", required = false)
+        nicknamePrefix: String?
     ): ResponseEntity<Page<UserDto.Response>> {
         val pageRequest = PageRequest.of(offset, limit)
         val users = when {

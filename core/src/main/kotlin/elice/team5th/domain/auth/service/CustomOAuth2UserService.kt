@@ -20,7 +20,7 @@ class CustomOAuth2UserService(
     private val userRepository: UserRepository
 ) : DefaultOAuth2UserService() {
     override fun loadUser(userRequest: OAuth2UserRequest): OAuth2User {
-        val user = super.loadUser(userRequest)  // OAuth2User 객체를 받아온다.
+        val user = super.loadUser(userRequest) // OAuth2User 객체를 받아온다.
         return try {
             process(userRequest, user)
         } catch (e: AuthenticationException) {
@@ -34,7 +34,7 @@ class CustomOAuth2UserService(
     // 받은 유저 정보를 가지고 DB에 저장하고, UserPrincipal 객체를 반환한다.
     private fun process(userRequest: OAuth2UserRequest, user: OAuth2User): OAuth2User {
         val providerType = ProviderType.valueOf(
-            userRequest.clientRegistration.registrationId.uppercase(Locale.getDefault())  // OAuth2 공급자 이름
+            userRequest.clientRegistration.registrationId.uppercase(Locale.getDefault()) // OAuth2 공급자 이름
         )
         val userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.attributes)
         var savedUser = userRepository.findByUserId(userInfo.getId())

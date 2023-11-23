@@ -5,6 +5,7 @@ import elice.team5th.domain.tmdb.dto.ListResponseDto
 import elice.team5th.domain.tmdb.enumtype.ContentType
 import elice.team5th.domain.tmdb.enumtype.ProviderType
 import elice.team5th.domain.tmdb.enumtype.SortType
+import elice.team5th.domain.tmdb.util.ErrorUtil
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
@@ -51,6 +52,7 @@ class ContentListService(private val webClient: WebClient) {
             .header("accept", "application/json")
             .retrieve()
             .bodyToMono(ListResponseDto::class.java)
+            .onErrorMap(ErrorUtil::handleCommonErrors)
             .map { response ->
                 println("Response: $response") // 로그 출력
                 ListResponseDto(

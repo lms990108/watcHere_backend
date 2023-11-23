@@ -1,6 +1,7 @@
 package elice.team5th.domain.tmdb.service
 
 import elice.team5th.domain.tmdb.dto.MovieDetailsDto
+import elice.team5th.domain.tmdb.util.ErrorUtil
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
@@ -23,5 +24,6 @@ class MovieDetailsService(private val webClient: WebClient) {
             .header("accept", "application/json")
             .retrieve()
             .bodyToMono(MovieDetailsDto::class.java)
+            .onErrorMap(ErrorUtil::handleCommonErrors)
     }
 }

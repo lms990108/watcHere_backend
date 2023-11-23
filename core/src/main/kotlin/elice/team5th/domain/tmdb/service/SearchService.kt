@@ -3,6 +3,7 @@ package elice.team5th.domain.tmdb.service
 import elice.team5th.domain.tmdb.dto.ListInfoDto
 import elice.team5th.domain.tmdb.dto.ListResponseDto
 import elice.team5th.domain.tmdb.enumtype.ContentType
+import elice.team5th.domain.tmdb.util.ErrorUtil
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
@@ -14,7 +15,7 @@ class SearchService(private val webClient: WebClient) {
     @Value("\${tmdb.api.access-token}")
     private lateinit var accessToken: String
 
-    fun searchContent(query: String, contentType: ContentType): Mono<ListResponseDto> {
+    fun searchContent(query: String, contentType: ContentType, page: Int): Mono<ListResponseDto> {
         val path = when (contentType) {
             ContentType.MOVIE -> "/search/movie"
             ContentType.TV -> "/search/tv"
@@ -25,12 +26,14 @@ class SearchService(private val webClient: WebClient) {
                 uriBuilder.path(path)
                     .queryParam("query", query)
                     .queryParam("language", "ko-KR")
+                    .queryParam("page", page)
                     .build()
             }
             .header("Authorization", accessToken)
             .header("accept", "application/json")
             .retrieve()
             .bodyToMono(Map::class.java)
+            .onErrorMap(ErrorUtil::handleCommonErrors)
             .map { rawResponse ->
                 @Suppress("UNCHECKED_CAST")
                 val rawResults = rawResponse["results"] as List<Map<String, Any>>
@@ -38,8 +41,8 @@ class SearchService(private val webClient: WebClient) {
                     results = rawResults.map { rawItem ->
                         ListInfoDto(
                             id = rawItem["id"] as Int,
-                            title = if (contentType == ContentType.MOVIE) rawItem["title"] as String? else null,
-                            name = if (contentType == ContentType.TV) rawItem["name"] as String? else null,
+                            title = if (contentType == ContentType.MOVIE) rawItem["title"] as String? else rawItem["name"] as String?,
+                            name = if (contentType == ContentType.TV) rawItem["name"] as String? else rawItem["title"] as String?,
                             poster_path = "https://image.tmdb.org/t/p/w500${rawItem["poster_path"] as String}"
                         )
                     }

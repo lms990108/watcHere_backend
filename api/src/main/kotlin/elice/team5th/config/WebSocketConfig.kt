@@ -15,8 +15,8 @@ class WebSocketConfig : WebSocketMessageBrokerConfigurer {
     }
 
     override fun configureMessageBroker(registry: MessageBrokerRegistry) {
-        registry.enableSimpleBroker("/topic", "/user")  // topic: broadcast, user: private
-        registry.setApplicationDestinationPrefixes("/app")  // app: prefix for message
-        registry.setUserDestinationPrefix("/user")  // user: prefix for private message
+        registry.enableSimpleBroker("/topic", "/user") // topic: broadcast, user: private
+        registry.setApplicationDestinationPrefixes("/app") // app: prefix for message
+        registry.setUserDestinationPrefix("/user") // user: prefix for private message
     }
 }
