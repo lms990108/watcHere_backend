@@ -11,7 +11,6 @@ import elice.team5th.domain.auth.repository.OAuth2AuthorizationRequestBasedOnCoo
 import elice.team5th.domain.auth.repository.UserRefreshTokenRepository
 import elice.team5th.domain.auth.service.CustomOAuth2UserService
 import elice.team5th.domain.auth.token.AuthTokenProvider
-import elice.team5th.domain.user.model.RoleType
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager

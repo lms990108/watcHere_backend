@@ -93,6 +93,7 @@ class ReviewService(private val reviewRepository: ReviewRepository) {
         )
     }
 
+
     // 특정 별점에 해당하는 리뷰 갯수
     fun getRatingCountsForContentId(contentId: Long): RatingCountDTO {
         val ratingCounts = reviewRepository.countReviewsByRatingForContentId(contentId)
