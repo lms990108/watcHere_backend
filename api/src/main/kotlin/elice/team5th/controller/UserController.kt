@@ -52,8 +52,6 @@ class UserController(
     @Operation(summary = "내 정보 조회", description = "현재 로그인한 유저의 정보를 조회합니다.")
     @GetMapping("/me")
     fun getMe(@CurrentUser userPrincipal: UserPrincipal): ResponseEntity<UserDto.Response> {
-//        val authentication = SecurityContextHolder.getContext().authentication
-//        val oAuth2User = authentication.principal as UserPrincipal
         val user = userService.findUserById(userPrincipal.userId)
         return ResponseEntity.ok().body(UserDto.Response(user))
     }
