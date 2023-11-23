@@ -9,6 +9,8 @@ import elice.team5th.domain.review.dto.ReviewPageDataDTO
 import elice.team5th.domain.review.service.ReviewService
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -31,6 +33,7 @@ class ReviewController(private val reviewService: ReviewService) {
     fun createReview(@RequestBody createReviewDTO: CreateReviewDTO, @CurrentUser user: UserPrincipal):
         ResponseEntity<ReviewDTO> {
         val review = reviewService.createReview(createReviewDTO, user)
+        println(createReviewDTO)
         return ResponseEntity.ok(
             ReviewDTO(
                 review.id,
@@ -69,7 +72,7 @@ class ReviewController(private val reviewService: ReviewService) {
 
     // 리뷰 삭제
     @DeleteMapping("/{id}")
-    @Operation(summary = "리뷰 수정",
+    @Operation(summary = "리뷰 삭제",
         description = "작성자와 관리자만 삭제 가능합니다.")
     fun deleteReview(@PathVariable id: Long, @CurrentUser user: UserPrincipal): ResponseEntity<Void> {
         reviewService.deleteReview(id, user)
@@ -144,12 +147,16 @@ class ReviewController(private val reviewService: ReviewService) {
     }
 
     // report >= 5 인 리뷰들 리스트 조회
-    @GetMapping("/high-reports")
-    @Operation(summary = "신고 누적 리뷰들 조회",
-        description = "신고 5회 누적 리뷰들의 리스트를 제공합니다.")
-    fun getReviewsWithHighReports(): ResponseEntity<List<ReviewDTO>> {
-        val reviews = reviewService.findReviewsWithHighReports()
-        val reviewDTOs = reviews.map { review ->
+    @GetMapping("/reviews/high-reports")
+    @Operation(summary = "높은 신고 수를 받은 리뷰 목록 조회",
+        description = "페이지당 10개의 리뷰를 페이징하여 제공합니다. 높은 신고 수를 받은 리뷰들을 조회할 수 있습니다.")
+    fun getReviewsWithHighReports(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int
+    ): ResponseEntity<Page<ReviewDTO>> {
+        val pageable: Pageable = PageRequest.of(page, size)
+        val pageOfReviews = reviewService.findReviewsWithHighReports(pageable)
+        val reviewDTOs = pageOfReviews.map { review ->
             ReviewDTO(
                 id = review.id,
                 userId = review.userId,
