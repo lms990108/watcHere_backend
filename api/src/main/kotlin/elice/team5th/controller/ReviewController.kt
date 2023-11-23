@@ -4,9 +4,9 @@ import elice.team5th.domain.auth.annotation.CurrentUser
 import elice.team5th.domain.review.dto.CreateReviewDTO
 import elice.team5th.domain.review.dto.ReviewDTO
 import elice.team5th.domain.review.service.ReviewService
+import elice.team5th.domain.user.model.User
 import org.springframework.data.domain.Page
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -23,7 +23,7 @@ class ReviewController(private val reviewService: ReviewService) {
 
     // 리뷰 작성
     @PostMapping("")
-    fun createReview(@RequestBody createReviewDTO: CreateReviewDTO, @CurrentUser user: UserDetails):
+    fun createReview(@RequestBody createReviewDTO: CreateReviewDTO, @CurrentUser user: User):
         ResponseEntity<ReviewDTO> {
         val review = reviewService.createReview(createReviewDTO, user)
         return ResponseEntity.ok(
@@ -44,7 +44,7 @@ class ReviewController(private val reviewService: ReviewService) {
     fun updateReview(
         @PathVariable id: Long,
         @RequestBody createReviewDTO: CreateReviewDTO,
-        @CurrentUser user: UserDetails
+        @CurrentUser user: User
     ): ResponseEntity<ReviewDTO> {
         val updatedReview = reviewService.updateReview(id, createReviewDTO, user)
         return ResponseEntity.ok(
@@ -62,10 +62,12 @@ class ReviewController(private val reviewService: ReviewService) {
 
     // 리뷰 삭제
     @DeleteMapping("/{id}")
-    fun deleteReview(@PathVariable id: Long, @CurrentUser user: UserDetails): ResponseEntity<Void> {
+    fun deleteReview(@PathVariable id: Long, @CurrentUser user: User): ResponseEntity<Void> {
         reviewService.deleteReview(id, user)
         return ResponseEntity.ok().build()
     }
+
+    // 리뷰 상세 조회 넣어야함
 
     // user_id로 페이징된 리뷰 리스트 조회
     @GetMapping("/user/{userId}")
@@ -146,9 +148,13 @@ class ReviewController(private val reviewService: ReviewService) {
     }
 
     // 신고 기능
+    // 인증된 유저만 신고할 수 있게끔 수정해야함
     @PutMapping("/{id}/report")
     fun reportReview(@PathVariable id: Long): ResponseEntity<Void> {
         reviewService.reportReview(id)
         return ResponseEntity.ok().build()
     }
+
+    // report >= 5 인 리뷰들 리스트 조회
+    // 최신순 정렬
 }

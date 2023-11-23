@@ -1,8 +1,13 @@
 package elice.team5th.domain.review.service
 
 import elice.team5th.domain.review.dto.CreateReviewDTO
+import elice.team5th.domain.review.exception.PermissionDeniedException
+import elice.team5th.domain.review.exception.ReviewNotFoundException
+import elice.team5th.domain.review.exception.UnauthorizedReviewAccessException
 import elice.team5th.domain.review.model.Review
 import elice.team5th.domain.review.repository.ReviewRepository
+import elice.team5th.domain.user.model.RoleType
+import elice.team5th.domain.user.model.User
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -15,10 +20,10 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class ReviewService(private val reviewRepository: ReviewRepository) {
 
-    fun createReview(createReviewDTO: CreateReviewDTO, user: UserDetails): Review {
+    fun createReview(createReviewDTO: CreateReviewDTO, user: User): Review {
         val review = Review(
             contentId = createReviewDTO.contentId,
-            userId = user.username.toLong(),
+            userId = user.userId.toLong(),
             detail = createReviewDTO.detail,
             rating = createReviewDTO.rating,
             likes = 0,
@@ -55,12 +60,12 @@ class ReviewService(private val reviewRepository: ReviewRepository) {
     }
 
     @Transactional
-    fun updateReview(id: Long, createReviewDTO: CreateReviewDTO, user: UserDetails): Review {
+    fun updateReview(id: Long, createReviewDTO: CreateReviewDTO, user: User): Review {
         val review = reviewRepository.findById(id).orElseThrow {
-            throw RuntimeException("Review not found")
+            ReviewNotFoundException("Review not found with ID: $id")
         }
-        if (review.userId != user.username.toLong()) {
-            throw RuntimeException("Not authorized to update this review")
+        if (review.userId != user.id) { // user.id 또는 user.userId로 변경해야 할 수 있습니다.
+            throw UnauthorizedReviewAccessException("User is not authorized to update review with ID: $id")
         }
         review.apply {
             detail = createReviewDTO.detail
@@ -68,15 +73,14 @@ class ReviewService(private val reviewRepository: ReviewRepository) {
         return reviewRepository.save(review)
     }
 
+
     @Transactional
-    fun deleteReview(id: Long, user: UserDetails) {
+    fun deleteReview(id: Long, user: User) {
         val review = reviewRepository.findById(id).orElseThrow {
-            throw RuntimeException("Review not found")
+            ReviewNotFoundException("Review not found with ID: $id")
         }
-        val currentUserId = user.username.toLong()
-        val hasRoleAdmin = user.authorities.any { it.authority == "ROLE_ADMIN" }
-        if (review.userId != currentUserId && !hasRoleAdmin) {
-            throw RuntimeException("You do not have permission to delete this review")
+        if (review.userId != user.id && user.role != RoleType.ADMIN) { // RoleType.ADMIN은 사용자 정의 enum에 따라 다를 수 있습니다.
+            throw PermissionDeniedException("User does not have permission to delete review with ID: $id")
         }
         reviewRepository.deleteById(id)
     }
@@ -88,10 +92,14 @@ class ReviewService(private val reviewRepository: ReviewRepository) {
     }
 
     // content_id로 페이징된 리뷰 리스트 조회
+    // 컨텐츠 평균 평점 조회 가능하도록 수정
+    // 컨텐츠 총 리뷰 갯수 조회 가능하도록 수정
     fun findReviewsByContentIdPaginated(contentId: Long, page: Int, size: Int): Page<Review> {
         val pageable: Pageable = PageRequest.of(page, size)
         return reviewRepository.findByContentId(contentId, pageable)
     }
+
+    // 해당하는 리뷰 갯수만
 
     // 최신순 정렬 조회
     fun findAllReviewsOrderByCreatedAtDesc(): List<Review> {
@@ -103,11 +111,13 @@ class ReviewService(private val reviewRepository: ReviewRepository) {
         return reviewRepository.findAll(Sort.by(Sort.Direction.DESC, "likes"))
     }
 
+    // 별점높은순 & 낮은순
+
     // 좋아요(추천) 기능
     @Transactional
     fun likeReview(id: Long): Review {
         val review = reviewRepository.findById(id).orElseThrow {
-            throw RuntimeException("Review not found")
+            ReviewNotFoundException("Review not found with ID: $id")
         }
         review.likes += 1
         return reviewRepository.save(review)
@@ -117,7 +127,7 @@ class ReviewService(private val reviewRepository: ReviewRepository) {
     @Transactional
     fun reportReview(id: Long): Review {
         val review = reviewRepository.findById(id).orElseThrow {
-            throw RuntimeException("Review not found")
+            ReviewNotFoundException("Review not found with ID: $id")
         }
         review.reports += 1
         return reviewRepository.save(review)
