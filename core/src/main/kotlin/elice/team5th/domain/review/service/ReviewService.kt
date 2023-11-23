@@ -1,6 +1,8 @@
 package elice.team5th.domain.review.service
 
 import elice.team5th.domain.review.dto.CreateReviewDTO
+import elice.team5th.domain.review.dto.RatingCountDTO
+import elice.team5th.domain.review.dto.ReviewPageDataDTO
 import elice.team5th.domain.review.exception.PermissionDeniedException
 import elice.team5th.domain.review.exception.ReviewNotFoundException
 import elice.team5th.domain.review.exception.UnauthorizedReviewAccessException
@@ -67,24 +69,39 @@ class ReviewService(private val reviewRepository: ReviewRepository) {
     // content_id로 페이징된 리뷰 리스트 조회
     // 컨텐츠 평균 평점 조회 가능하도록 수정
     // 컨텐츠 총 리뷰 갯수 조회 가능하도록 수정
-    fun findReviewsByContentIdPaginated(contentId: Long, page: Int, size: Int): Page<Review> {
-        val pageable: Pageable = PageRequest.of(page, size)
-        return reviewRepository.findByContentId(contentId, pageable)
+    fun findReviewsByContentIdPaginated(
+        contentId: Long,
+        page: Int,
+        size: Int,
+        sortBy: String = "createdAtDesc"
+    ): ReviewPageDataDTO {
+        val sort = when (sortBy) {
+            "ratingDesc" -> Sort.by(Sort.Direction.DESC, "rating")
+            "ratingAsc" -> Sort.by(Sort.Direction.ASC, "rating")
+            "likesDesc" -> Sort.by(Sort.Direction.DESC, "likes")
+            else -> Sort.by(Sort.Direction.DESC, "createdAt") // 기본값은 최신순
+        }
+        val pageable = PageRequest.of(page, size, sort)
+
+        val pageOfReviews = reviewRepository.findByContentId(contentId, pageable)
+        val averageRating = reviewRepository.findAverageRatingByContentId(contentId) ?: 0.0
+
+        return ReviewPageDataDTO(
+            reviews = pageOfReviews,
+            averageRating = averageRating,
+            totalElements = pageOfReviews.totalElements
+        )
     }
 
-    // 해당하는 리뷰 갯수만
 
-    // 최신순 정렬 조회
-    fun findAllReviewsOrderByCreatedAtDesc(): List<Review> {
-        return reviewRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"))
+    // 특정 별점에 해당하는 리뷰 갯수
+    fun getRatingCountsForContentId(contentId: Long): RatingCountDTO {
+        val ratingCounts = reviewRepository.countReviewsByRatingForContentId(contentId)
+        val ratingMap = ratingCounts.associate { (rating, count) ->
+            rating as Int to (count as Long)
+        }
+        return RatingCountDTO(ratingMap)
     }
-
-    // 추천순 정렬 조회
-    fun findAllReviewsOrderByLikesDesc(): List<Review> {
-        return reviewRepository.findAll(Sort.by(Sort.Direction.DESC, "likes"))
-    }
-
-    // 별점높은순 & 낮은순
 
     // 좋아요(추천) 기능
     @Transactional
@@ -104,5 +121,10 @@ class ReviewService(private val reviewRepository: ReviewRepository) {
         }
         review.reports += 1
         return reviewRepository.save(review)
+    }
+
+    // 누적신고 5회 이상 리뷰
+    fun findReviewsWithHighReports(): List<Review> {
+        return reviewRepository.findByReportsGreaterThanEqual(5)
     }
 }

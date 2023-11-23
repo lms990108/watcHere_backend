@@ -2,7 +2,9 @@ package elice.team5th.controller
 
 import elice.team5th.domain.auth.annotation.CurrentUser
 import elice.team5th.domain.review.dto.CreateReviewDTO
+import elice.team5th.domain.review.dto.RatingCountDTO
 import elice.team5th.domain.review.dto.ReviewDTO
+import elice.team5th.domain.review.dto.ReviewPageDataDTO
 import elice.team5th.domain.review.service.ReviewService
 import elice.team5th.domain.user.model.User
 import org.springframework.data.domain.Page
@@ -67,8 +69,6 @@ class ReviewController(private val reviewService: ReviewService) {
         return ResponseEntity.ok().build()
     }
 
-    // 리뷰 상세 조회 넣어야함
-
     // user_id로 페이징된 리뷰 리스트 조회
     @GetMapping("/user/{userId}")
     fun getReviewsByUserIdPaginated(
@@ -96,48 +96,18 @@ class ReviewController(private val reviewService: ReviewService) {
     fun getReviewsByContentIdPaginated(
         @PathVariable contentId: Long,
         @RequestParam(defaultValue = "0") page: Int,
-        @RequestParam(defaultValue = "10") size: Int
-    ): ResponseEntity<Page<ReviewDTO>> {
-        val pageOfReviews = reviewService.findReviewsByContentIdPaginated(contentId, page, size)
-        return ResponseEntity.ok(
-            pageOfReviews.map { ReviewDTO(it.id, it.userId, it.contentId, it.detail, it.rating, it.likes, it.reports) }
-        )
+        @RequestParam(defaultValue = "10") size: Int,
+        @RequestParam(defaultValue = "createdAtDesc") sortBy: String // 정렬 기준 추가
+    ): ResponseEntity<ReviewPageDataDTO> {
+        val reviewPageData = reviewService.findReviewsByContentIdPaginated(contentId, page, size, sortBy)
+        return ResponseEntity.ok(reviewPageData)
     }
 
-    // 최신순 리뷰 조회
-    @GetMapping("/latest")
-    fun getLatestReviews(): ResponseEntity<List<ReviewDTO>> {
-        val reviews = reviewService.findAllReviewsOrderByCreatedAtDesc()
-        val reviewDTOs = reviews.map {
-            ReviewDTO(
-                it.id,
-                it.userId,
-                it.contentId,
-                it.detail,
-                it.rating,
-                it.likes,
-                it.reports
-            )
-        }
-        return ResponseEntity.ok(reviewDTOs)
-    }
-
-    // 추천순 리뷰 조회
-    @GetMapping("/popular")
-    fun getPopularReviews(): ResponseEntity<List<ReviewDTO>> {
-        val reviews = reviewService.findAllReviewsOrderByLikesDesc()
-        val reviewDTOs = reviews.map {
-            ReviewDTO(
-                it.id,
-                it.userId,
-                it.contentId,
-                it.detail,
-                it.rating,
-                it.likes,
-                it.reports
-            )
-        }
-        return ResponseEntity.ok(reviewDTOs)
+    // 리뷰 별점당 갯수 조회
+    @GetMapping("/ratings/{contentId}")
+    fun getReviewRatingsCount(@PathVariable contentId: Long): ResponseEntity<RatingCountDTO> {
+        val ratingCounts = reviewService.getRatingCountsForContentId(contentId)
+        return ResponseEntity.ok(ratingCounts)
     }
 
     // 추천 기능
@@ -156,5 +126,20 @@ class ReviewController(private val reviewService: ReviewService) {
     }
 
     // report >= 5 인 리뷰들 리스트 조회
-    // 최신순 정렬
+    @GetMapping("/high-reports")
+    fun getReviewsWithHighReports(): ResponseEntity<List<ReviewDTO>> {
+        val reviews = reviewService.findReviewsWithHighReports()
+        val reviewDTOs = reviews.map { review ->
+            ReviewDTO(
+                id = review.id,
+                userId = review.userId,
+                contentId = review.contentId,
+                detail = review.detail,
+                rating = review.rating,
+                likes = review.likes,
+                reports = review.reports
+            )
+        }
+        return ResponseEntity.ok(reviewDTOs)
+    }
 }
