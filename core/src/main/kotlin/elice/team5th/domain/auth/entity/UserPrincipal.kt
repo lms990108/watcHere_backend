@@ -3,8 +3,10 @@ package elice.team5th.domain.auth.entity
 import elice.team5th.domain.user.model.ProviderType
 import elice.team5th.domain.user.model.RoleType
 import elice.team5th.domain.user.model.User
+import io.jsonwebtoken.Claims
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.oauth2.core.oidc.OidcIdToken
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
@@ -33,6 +35,8 @@ class UserPrincipal(
     override fun getIdToken(): OidcIdToken? = null
 
     companion object {
+        private const val AUTHORITIES_KEY = "role"
+
         fun create(user: User): UserPrincipal = UserPrincipal(
             user.userId,
             user.nickname,
@@ -40,6 +44,17 @@ class UserPrincipal(
             user.provider,
             RoleType.USER,
             listOf(SimpleGrantedAuthority(RoleType.USER.code))
+        )
+
+        fun create(user: User, claims: Claims): UserPrincipal = UserPrincipal(
+            user.userId,
+            user.nickname,
+            user.profileImage,
+            user.provider,
+            RoleType.of(claims[AUTHORITIES_KEY].toString()),
+            claims[AUTHORITIES_KEY].toString()
+                .split(",")
+                .map { SimpleGrantedAuthority(it.trim()) }
         )
 
         fun create(user: User, attributes: Map<String, Any>): UserPrincipal {
