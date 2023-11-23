@@ -59,8 +59,8 @@ class ContentListService(private val webClient: WebClient) {
                     results = response.results.map { content ->
                         ListInfoDto(
                             id = content.id,
-                            title = if (contentType == ContentType.MOVIE) content.title else null,
-                            name = if (contentType == ContentType.TV) content.name else null,
+                            title = content.title ?: content.name, // 영화든 TV든 'title' 필드에 제목을 저장
+                            name = null,
                             poster_path = "https://image.tmdb.org/t/p/w500${content.poster_path}"
                         ).also { println("Mapped Content: $it") } // 로그 출력
                     }
