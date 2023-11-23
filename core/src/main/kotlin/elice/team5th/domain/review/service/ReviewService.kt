@@ -12,14 +12,13 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
-import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ReviewService(private val reviewRepository: ReviewRepository) {
 
+    // 리뷰 작성
     fun createReview(createReviewDTO: CreateReviewDTO, user: User): Review {
         val review = Review(
             contentId = createReviewDTO.contentId,
@@ -34,32 +33,6 @@ class ReviewService(private val reviewRepository: ReviewRepository) {
 
     // 리뷰 수정
     @Transactional
-    fun updateReview(id: Long, createReviewDTO: CreateReviewDTO): Review {
-        // 현재 인증된 사용자의 정보를 SecurityContext에서 가져옵니다.
-        val authentication = SecurityContextHolder.getContext().authentication
-        val currentUser = authentication.principal as UserDetails // UserDetails 사용은 스프링 시큐리티 설정에 따라 달라질 수 있습니다.
-        val currentUserId = currentUser.username.toLong() // 사용자의 고유 ID를 가져옵니다.
-
-        // 리뷰를 조회합니다.
-        val review = reviewRepository.findById(id).orElseThrow {
-            throw RuntimeException("Review not found")
-        }
-
-        // 현재 인증된 사용자가 리뷰 작성자와 동일한지 확인합니다.
-        if (review.userId != currentUserId) {
-            throw RuntimeException("Not authorized to update this review")
-        }
-
-        // 리뷰의 detail 필드만 수정합니다.
-        review.apply {
-            detail = createReviewDTO.detail
-        }
-
-        // 수정된 리뷰를 저장합니다.
-        return reviewRepository.save(review)
-    }
-
-    @Transactional
     fun updateReview(id: Long, createReviewDTO: CreateReviewDTO, user: User): Review {
         val review = reviewRepository.findById(id).orElseThrow {
             ReviewNotFoundException("Review not found with ID: $id")
@@ -73,7 +46,7 @@ class ReviewService(private val reviewRepository: ReviewRepository) {
         return reviewRepository.save(review)
     }
 
-
+    // 리뷰 삭제
     @Transactional
     fun deleteReview(id: Long, user: User) {
         val review = reviewRepository.findById(id).orElseThrow {

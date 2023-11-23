@@ -5,7 +5,7 @@ data class ReviewDTO(
     val userId: Long,
     val contentId: Long,
     val detail: String,
-    val rating: Double,
+    val rating: Int,
     val likes: Int,
     val reports: Int
 )
