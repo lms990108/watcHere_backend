@@ -22,12 +22,6 @@ spring:
     config:
         import: classpath:application-info.yml
 
-springdoc:
-    swagger-ui:
-        path: /api/v1/api-docs
-    api-docs:
-        path: /api/v1/api-docs
-
 logging:
     level:
       org:

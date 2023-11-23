@@ -1,5 +1,7 @@
 package elice.team5th.controller
 
+import elice.team5th.domain.auth.annotation.CurrentUser
+import elice.team5th.domain.auth.entity.UserPrincipal
 import elice.team5th.domain.auth.token.AuthTokenProvider
 import elice.team5th.domain.user.dto.UserDto
 import elice.team5th.domain.user.service.UserService
@@ -47,12 +49,12 @@ class UserController(
         return ResponseEntity.ok().body(users.map { UserDto.Response(it) })
     }
 
-//    @GetMapping("/me")
-//    fun getMe(
-//        @CurrentUser user: User
-//    ): ResponseEntity<UserDto.Response> {
-//        return ResponseEntity.ok().body(UserDto.Response(user))
-//    }
+    @Operation(summary = "내 정보 조회", description = "현재 로그인한 유저의 정보를 조회합니다.")
+    @GetMapping("/me")
+    fun getMe(@CurrentUser userPrincipal: UserPrincipal): ResponseEntity<UserDto.Response> {
+        val user = userService.findUserById(userPrincipal.userId)
+        return ResponseEntity.ok().body(UserDto.Response(user))
+    }
 
     @Operation(summary = "단일 유저 조회", description = "유저 아이디를 통해 유저를 조회합니다.")
     @GetMapping("/{userId}")
