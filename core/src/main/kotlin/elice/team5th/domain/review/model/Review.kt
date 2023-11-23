@@ -19,7 +19,7 @@ class Review(
     var detail: String = "", // 기본값을 제공하거나 생성자를 통해 값을 받아야 합니다.
 
     @Column(nullable = false)
-    var rating: Double = 0.0, // rating에 대한 기본값 지정
+    var rating: Int = 0, // rating에 대한 기본값 지정
 
     @Column(nullable = false)
     var likes: Int = 0, // 'likes'는 추천 수를 나타냄
