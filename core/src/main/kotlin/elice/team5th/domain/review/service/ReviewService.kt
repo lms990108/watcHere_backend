@@ -1,5 +1,6 @@
 package elice.team5th.domain.review.service
 
+import elice.team5th.domain.auth.entity.UserPrincipal
 import elice.team5th.domain.review.dto.CreateReviewDTO
 import elice.team5th.domain.review.dto.RatingCountDTO
 import elice.team5th.domain.review.dto.ReviewPageDataDTO
@@ -9,7 +10,6 @@ import elice.team5th.domain.review.exception.UnauthorizedReviewAccessException
 import elice.team5th.domain.review.model.Review
 import elice.team5th.domain.review.repository.ReviewRepository
 import elice.team5th.domain.user.model.RoleType
-import elice.team5th.domain.user.model.User
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -21,10 +21,10 @@ import org.springframework.transaction.annotation.Transactional
 class ReviewService(private val reviewRepository: ReviewRepository) {
 
     // 리뷰 작성
-    fun createReview(createReviewDTO: CreateReviewDTO, user: User): Review {
+    fun createReview(createReviewDTO: CreateReviewDTO, user: UserPrincipal): Review {
         val review = Review(
             contentId = createReviewDTO.contentId,
-            userId = user.userId.toLong(),
+            userId = user.userId,
             detail = createReviewDTO.detail,
             rating = createReviewDTO.rating,
             likes = 0,
@@ -35,11 +35,11 @@ class ReviewService(private val reviewRepository: ReviewRepository) {
 
     // 리뷰 수정
     @Transactional
-    fun updateReview(id: Long, createReviewDTO: CreateReviewDTO, user: User): Review {
+    fun updateReview(id: Long, createReviewDTO: CreateReviewDTO, user: UserPrincipal): Review {
         val review = reviewRepository.findById(id).orElseThrow {
             ReviewNotFoundException("Review not found with ID: $id")
         }
-        if (review.userId != user.id) { // user.id 또는 user.userId로 변경해야 할 수 있습니다.
+        if (review.userId != user.userId) { // user.id 또는 user.userId로 변경해야 할 수 있습니다.
             throw UnauthorizedReviewAccessException("User is not authorized to update review with ID: $id")
         }
         review.apply {
@@ -50,11 +50,11 @@ class ReviewService(private val reviewRepository: ReviewRepository) {
 
     // 리뷰 삭제
     @Transactional
-    fun deleteReview(id: Long, user: User) {
+    fun deleteReview(id: Long, user: UserPrincipal) {
         val review = reviewRepository.findById(id).orElseThrow {
             ReviewNotFoundException("Review not found with ID: $id")
         }
-        if (review.userId != user.id && user.role != RoleType.ADMIN) { // RoleType.ADMIN은 사용자 정의 enum에 따라 다를 수 있습니다.
+        if (review.userId != user.userId && user.roleType != RoleType.ADMIN) { // RoleType.ADMIN은 사용자 정의 enum에 따라 다를 수 있습니다.
             throw PermissionDeniedException("User does not have permission to delete review with ID: $id")
         }
         reviewRepository.deleteById(id)

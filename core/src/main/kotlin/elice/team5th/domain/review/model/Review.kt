@@ -13,7 +13,7 @@ class Review(
     var contentId: Long = 0, // contentID에 대한 기본값 지정
 
     @Column(name = "user_id", nullable = false)
-    var userId: Long = 0, // userID에 대한 기본값 지정
+    var userId: String = "", // userID에 대한 기본값 지정
 
     @Column(nullable = false)
     var detail: String = "", // 기본값을 제공하거나 생성자를 통해 값을 받아야 합니다.
