@@ -1,12 +1,12 @@
 package elice.team5th.controller
 
 import elice.team5th.domain.auth.annotation.CurrentUser
+import elice.team5th.domain.auth.entity.UserPrincipal
 import elice.team5th.domain.review.dto.CreateReviewDTO
 import elice.team5th.domain.review.dto.RatingCountDTO
 import elice.team5th.domain.review.dto.ReviewDTO
 import elice.team5th.domain.review.dto.ReviewPageDataDTO
 import elice.team5th.domain.review.service.ReviewService
-import elice.team5th.domain.user.model.User
 import org.springframework.data.domain.Page
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -25,7 +25,7 @@ class ReviewController(private val reviewService: ReviewService) {
 
     // 리뷰 작성
     @PostMapping("")
-    fun createReview(@RequestBody createReviewDTO: CreateReviewDTO, @CurrentUser user: User):
+    fun createReview(@RequestBody createReviewDTO: CreateReviewDTO, @CurrentUser user: UserPrincipal):
         ResponseEntity<ReviewDTO> {
         val review = reviewService.createReview(createReviewDTO, user)
         return ResponseEntity.ok(
@@ -46,7 +46,7 @@ class ReviewController(private val reviewService: ReviewService) {
     fun updateReview(
         @PathVariable id: Long,
         @RequestBody createReviewDTO: CreateReviewDTO,
-        @CurrentUser user: User
+        @CurrentUser user: UserPrincipal
     ): ResponseEntity<ReviewDTO> {
         val updatedReview = reviewService.updateReview(id, createReviewDTO, user)
         return ResponseEntity.ok(
@@ -64,7 +64,7 @@ class ReviewController(private val reviewService: ReviewService) {
 
     // 리뷰 삭제
     @DeleteMapping("/{id}")
-    fun deleteReview(@PathVariable id: Long, @CurrentUser user: User): ResponseEntity<Void> {
+    fun deleteReview(@PathVariable id: Long, @CurrentUser user: UserPrincipal): ResponseEntity<Void> {
         reviewService.deleteReview(id, user)
         return ResponseEntity.ok().build()
     }
