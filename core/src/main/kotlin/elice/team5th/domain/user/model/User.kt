@@ -1,20 +1,17 @@
 package elice.team5th.domain.user.model
 
-import com.fasterxml.jackson.databind.ser.Serializers.Base
 import elice.team5th.common.model.BaseEntity
 import elice.team5th.domain.chat.model.Message
 import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.FetchType
 import jakarta.persistence.OneToMany
-import jakarta.persistence.Table
 import org.jetbrains.annotations.NotNull
 
 @Entity
-class User (
+class User(
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val messages: List<Message> = mutableListOf(),

@@ -13,7 +13,10 @@ class UserDto {
         @Schema(description = "email", example = "example@example.com")
         val email: String,
 
-        @Schema(description = "profile image link", example = "https://lh3.googleusercontent.com/a/ACg8ocIqCt6pUKU2p4K7kU3zLTgzyqkznfaW2EgC-M97DCpE6A=s96-c")
+        @Schema(
+            description = "profile image link",
+            example = "https://lh3.googleusercontent.com/a/ACg8ocIqCt6pUKU2p4K7kU3zLTgzyqkznfaW2EgC-M97DCpE6A=s96-c"
+        )
         val profileImage: String,
 
         @Schema(description = "nickname", example = "김코딩")

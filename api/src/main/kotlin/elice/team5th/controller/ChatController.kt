@@ -10,11 +10,11 @@ import org.springframework.stereotype.Controller
 
 @Controller
 class ChatController(
-    private val userService: UserService,
+    private val userService: UserService
 
 ) {
-    @MessageMapping("/chat.sendMessage")  // 클라이언트가 /chat.sendMessage로 메시지를 보내면
-    @SendTo("/topic/public")  // /topic/public queue로 메시지를 보낸다.
+    @MessageMapping("/chat.sendMessage") // 클라이언트가 /chat.sendMessage로 메시지를 보내면
+    @SendTo("/topic/public") // /topic/public queue로 메시지를 보낸다.
     fun send(@Payload message: Message): Message {
         return message
     }

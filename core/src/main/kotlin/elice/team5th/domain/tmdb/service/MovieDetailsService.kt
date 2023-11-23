@@ -1,15 +1,10 @@
 package elice.team5th.domain.tmdb.service
 
-import com.fasterxml.jackson.core.JsonProcessingException
 import elice.team5th.domain.tmdb.dto.MovieDetailsDto
-import elice.team5th.domain.tmdb.exception.ResponseParsingException
-import elice.team5th.domain.tmdb.exception.UnknownErrorException
 import elice.team5th.domain.tmdb.util.ErrorUtil
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.WebClientResponseException
-import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Mono
 
 @Service
