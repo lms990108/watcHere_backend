@@ -11,7 +11,6 @@ import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import org.jetbrains.annotations.NotNull
 
-@Table(name = "user")
 @Entity
 @Table(name = "users")
 class User(
