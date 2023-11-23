@@ -9,3 +9,4 @@ abstract class NotFoundException(errorType: ErrorType, detail: String = "") : El
 abstract class ConflictException(errorType: ErrorType, detail: String = "") : EliceException(errorType, detail)
 abstract class ResponseParseException(errorType: ErrorType, detail: String = "") : EliceException(errorType, detail)
 abstract class GenericErrorException(errorType: ErrorType, detail: String = "") : EliceException(errorType, detail)
+abstract class ForbiddenException(errorType: ErrorType, detail: String = "") : EliceException(errorType, detail)
