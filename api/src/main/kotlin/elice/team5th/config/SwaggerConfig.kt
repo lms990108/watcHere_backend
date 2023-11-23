@@ -29,6 +29,6 @@ class SwaggerConfig {
             .info(info)
             .servers(listOf(devServer, localServer))
             .components(Components().addSecuritySchemes("jwtAuth", securityScheme))
-            .addSecurityItem(securityRequirement)
+//            .addSecurityItem(securityRequirement)
     }
 }
