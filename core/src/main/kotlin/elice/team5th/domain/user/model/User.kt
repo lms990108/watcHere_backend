@@ -8,9 +8,11 @@ import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.FetchType
 import jakarta.persistence.OneToMany
+import jakarta.persistence.Table
 import org.jetbrains.annotations.NotNull
 
 @Entity
+@Table(name = "users")
 class User(
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
