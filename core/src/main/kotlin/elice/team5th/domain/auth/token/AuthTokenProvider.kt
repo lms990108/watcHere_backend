@@ -1,7 +1,5 @@
 package elice.team5th.domain.auth.token
 
-import elice.team5th.config.logger
-import elice.team5th.config.properties.AppProperties
 import elice.team5th.domain.auth.entity.UserPrincipal
 import elice.team5th.domain.auth.exception.TokenValidationFailedException
 import elice.team5th.domain.user.service.UserService
@@ -12,16 +10,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.core.userdetails.User
 import java.security.Key
 import java.util.Date
 
 class AuthTokenProvider(
     private val userService: UserService,
-    secret: String,
+    secret: String
 ) {
     @Value("\${app.auth.token-expiry}")
-    private val expiry : Long = 0
+    private val expiry: Long = 0
     private val key: Key = Keys.hmacShaKeyFor(secret.toByteArray())
     private val AUTHORITIES_KEY = "role"
 
