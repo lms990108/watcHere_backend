@@ -3,6 +3,7 @@ package elice.team5th.domain.user.service
 import elice.team5th.domain.auth.repository.UserRefreshTokenRepository
 import elice.team5th.domain.user.dto.UserDto
 import elice.team5th.domain.user.exception.UserNotFoundException
+import elice.team5th.domain.user.model.RoleType
 import elice.team5th.domain.user.model.User
 import elice.team5th.domain.user.repository.UserRepository
 import org.springframework.data.domain.Page
@@ -27,11 +28,23 @@ class UserService(private val userRepository: UserRepository,
 
     fun updateUser(userId: String, updateRequest: UserDto.UpdateRequest): User =
         userRepository.findByUserId(userId)?.apply {
-            ban = updateRequest.ban ?: ban
-            role = updateRequest.role ?: role
             nickname = updateRequest.nickname ?: nickname
         }?.let { userRepository.save(it) }
             ?: throw UserNotFoundException("유저를 찾을 수 없습니다.")
+
+    fun updateBan(userId: String, ban: Boolean): User {
+        return userRepository.findByUserId(userId)?.apply {
+            this.ban = ban
+        }?.let { userRepository.save(it) }
+            ?: throw UserNotFoundException("유저를 찾을 수 없습니다.")
+    }
+
+    fun updateRole(userId: String, role: RoleType): User {
+        return userRepository.findByUserId(userId)?.apply {
+            this.role = role
+        }?.let { userRepository.save(it) }
+            ?: throw UserNotFoundException("유저를 찾을 수 없습니다.")
+    }
 
     fun deleteUser(userId: String) {
         userRepository.findByUserId(userId)?.apply {
@@ -53,4 +66,5 @@ class UserService(private val userRepository: UserRepository,
 
     fun findUsersByNicknameStartingWithAndBanIsTrue(pageable: Pageable, nicknamePrefix: String): Page<User> =
         userRepository.findByNicknameStartingWithAndBanIsTrue(pageable, nicknamePrefix)
+
 }

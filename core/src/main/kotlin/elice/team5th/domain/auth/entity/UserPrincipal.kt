@@ -41,8 +41,8 @@ class UserPrincipal(
             user.nickname,
             user.profileImage,
             user.provider,
-            RoleType.USER,
-            listOf(SimpleGrantedAuthority(RoleType.USER.code))
+            user.role,
+            listOf(SimpleGrantedAuthority(user.role.code))
         )
 
         fun create(user: User, claims: Claims): UserPrincipal = UserPrincipal(
