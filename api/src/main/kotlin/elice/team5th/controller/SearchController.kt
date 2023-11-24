@@ -12,14 +12,15 @@ import reactor.core.publisher.Mono
 
 @RestController
 @RequestMapping("api/v1/search")
-
 class SearchController(private val searchService: SearchService) {
 
     @GetMapping
-    @Operation(summary = "검색 기능",
+    @Operation(
+        summary = "검색 기능",
         description = "제목을 한국어로 검색할 수 있습니다. \n" +
             "contentType을 명시해야합니다. MOVIE or TV" +
-            "하나의 키워드로 타입다르게 두번 api 날리면 될듯합니다.")
+            "하나의 키워드로 타입다르게 두번 api 날리면 될듯합니다."
+    )
     fun search(
         @RequestParam query: String,
         @RequestParam contentType: ContentType,

@@ -18,7 +18,8 @@ import java.util.*
 class ContentListController(private val contentListService: ContentListService) {
 
     @GetMapping("")
-    @Operation(summary = "컨텐츠 리스트 조회",
+    @Operation(
+        summary = "컨텐츠 리스트 조회",
         description = "지정된 페이지, 정렬 방식, 제공자 및 콘텐츠 유형에 따라 인기 콘텐츠를 조회. \n" +
             "1. 정렬방식 \n" +
             "POPULARITY_DESC: 인기순 \n" +

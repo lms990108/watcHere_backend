@@ -1,7 +1,9 @@
 package elice.team5th.domain.user.service
 
+import elice.team5th.domain.auth.repository.UserRefreshTokenRepository
 import elice.team5th.domain.user.dto.UserDto
 import elice.team5th.domain.user.exception.UserNotFoundException
+import elice.team5th.domain.user.model.RoleType
 import elice.team5th.domain.user.model.User
 import elice.team5th.domain.user.repository.UserRepository
 import org.springframework.data.domain.Page
@@ -9,7 +11,10 @@ import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
-class UserService(private val userRepository: UserRepository) {
+class UserService(
+    private val userRepository: UserRepository,
+    private val userRefreshTokenRepository: UserRefreshTokenRepository
+) {
     fun findAllUsers(pageable: Pageable): Page<User> =
         userRepository.findAll(pageable)
 
@@ -19,13 +24,40 @@ class UserService(private val userRepository: UserRepository) {
     fun findUserByNickname(nickname: String): User =
         userRepository.findByNickname(nickname) ?: throw UserNotFoundException("유저를 찾을 수 없습니다.")
 
+    fun checkDeletedUser(userId: String): Boolean =
+        userRepository.findByUserId(userId)?.deletedAt != null
+
     fun updateUser(userId: String, updateRequest: UserDto.UpdateRequest): User =
         userRepository.findByUserId(userId)?.apply {
-            ban = updateRequest.ban ?: ban
-            role = updateRequest.role ?: role
             nickname = updateRequest.nickname ?: nickname
         }?.let { userRepository.save(it) }
             ?: throw UserNotFoundException("유저를 찾을 수 없습니다.")
+
+    fun updateBan(userId: String, ban: Boolean): User {
+        return userRepository.findByUserId(userId)?.apply {
+            this.ban = ban
+        }?.let { userRepository.save(it) }
+            ?: throw UserNotFoundException("유저를 찾을 수 없습니다.")
+    }
+
+    fun updateRole(userId: String, role: RoleType): User {
+        return userRepository.findByUserId(userId)?.apply {
+            this.role = role
+        }?.let { userRepository.save(it) }
+            ?: throw UserNotFoundException("유저를 찾을 수 없습니다.")
+    }
+
+    fun deleteUser(userId: String) {
+        userRepository.findByUserId(userId)?.apply {
+            deletedAt = java.time.LocalDateTime.now()
+        }?.let { userRepository.save(it) }
+            ?: throw UserNotFoundException("유저를 찾을 수 없습니다.")
+        userRefreshTokenRepository.findByUserId(userId)?.let { userRefreshTokenRepository.delete(it) }
+    }
+
+    fun logout(userId: String) {
+        userRefreshTokenRepository.findByUserId(userId)?.let { userRefreshTokenRepository.delete(it) }
+    }
 
     fun findUsersByBanIsTrue(pageable: Pageable): Page<User> =
         userRepository.findByBanIsTrue(pageable)
