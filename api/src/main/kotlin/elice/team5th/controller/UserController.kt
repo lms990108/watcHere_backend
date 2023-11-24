@@ -1,19 +1,16 @@
 package elice.team5th.controller
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import elice.team5th.domain.auth.annotation.CurrentUser
 import elice.team5th.domain.auth.entity.UserPrincipal
 import elice.team5th.domain.auth.token.AuthTokenProvider
 import elice.team5th.domain.user.dto.UserDto
 import elice.team5th.domain.user.model.RoleType
-import elice.team5th.domain.user.model.User
 import elice.team5th.domain.user.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.ResponseEntity
-import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -87,7 +84,9 @@ class UserController(
     @PutMapping("/admin/ban")
     fun updateBan(
         @Parameter(description = "현재 로그인한 유저") @CurrentUser userPrincipal: UserPrincipal,
-        @Parameter(description = "대상이 되는 유저 아이디") @RequestParam(value = "user_id", required = true) userId: String,
+        @Parameter(description = "대상이 되는 유저 아이디")
+        @RequestParam(value = "user_id", required = true)
+        userId: String,
         @RequestParam(value = "ban", defaultValue = "false", required = true) ban: Boolean
     ): ResponseEntity<UserDto.Response> {
         val user = userService.updateBan(userId, ban)
@@ -98,16 +97,22 @@ class UserController(
     @PutMapping("/admin/role")
     fun updateRole(
         @Parameter(description = "현재 로그인한 유저") @CurrentUser userPrincipal: UserPrincipal,
-        @Parameter(description = "대상이 되는 유저 아이디") @RequestParam(value = "user_id", required = true) userId: String,
-        @Parameter(description = "role", example = "USER, ADMIN, GUEST") @RequestParam(value = "role", required = true) role: RoleType,
+        @Parameter(description = "대상이 되는 유저 아이디")
+        @RequestParam(value = "user_id", required = true)
+        userId: String,
+        @Parameter(description = "role", example = "USER, ADMIN, GUEST")
+        @RequestParam(value = "role", required = true)
+        role: RoleType
     ): ResponseEntity<UserDto.Response> {
         val user = userService.updateRole(userId, role)
         return ResponseEntity.ok().body(UserDto.Response(user))
     }
 
-    @Operation(summary = "유저 탈퇴",
+    @Operation(
+        summary = "유저 탈퇴",
         description = "접속한 유저가 탈퇴 요청을 보내면 탈퇴합니다. " +
-            "실제로 삭제되는 것이 아닌 deleted_at 컬럼에 현재 시간이 저장됩니다. 토큰은 만료됩니다.")
+            "실제로 삭제되는 것이 아닌 deleted_at 컬럼에 현재 시간이 저장됩니다. 토큰은 만료됩니다."
+    )
     @DeleteMapping("/me")
     fun deleteUser(@CurrentUser userPrincipal: UserPrincipal): ResponseEntity<String> {
         userService.deleteUser(userPrincipal.userId)

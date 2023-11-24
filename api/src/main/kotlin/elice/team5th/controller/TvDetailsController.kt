@@ -15,8 +15,10 @@ import reactor.core.publisher.Mono
 class TVDetailsController(private val tvDetailsService: TVDetailsService) {
 
     @GetMapping("/{tvId}")
-    @Operation(summary = "Tv 상세조회",
-        description = "Tv id를 통해 Tvshow 상세조회")
+    @Operation(
+        summary = "Tv 상세조회",
+        description = "Tv id를 통해 Tvshow 상세조회"
+    )
     fun getTVDetails(@PathVariable tvId: Int): Mono<ResponseEntity<TVDetailsDto>> {
         return tvDetailsService.getTVDetails(tvId)
             .map { ResponseEntity.ok(it) }

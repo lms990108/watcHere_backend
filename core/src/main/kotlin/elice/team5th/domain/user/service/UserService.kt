@@ -11,8 +11,9 @@ import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
-class UserService(private val userRepository: UserRepository,
-                  private val userRefreshTokenRepository: UserRefreshTokenRepository
+class UserService(
+    private val userRepository: UserRepository,
+    private val userRefreshTokenRepository: UserRefreshTokenRepository
 ) {
     fun findAllUsers(pageable: Pageable): Page<User> =
         userRepository.findAll(pageable)
@@ -66,5 +67,4 @@ class UserService(private val userRepository: UserRepository,
 
     fun findUsersByNicknameStartingWithAndBanIsTrue(pageable: Pageable, nicknamePrefix: String): Page<User> =
         userRepository.findByNicknameStartingWithAndBanIsTrue(pageable, nicknamePrefix)
-
 }
