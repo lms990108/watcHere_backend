@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional
 class ReviewService(private val reviewRepository: ReviewRepository) {
 
     // 리뷰 작성
+    // 사용자가 컨텐츠당 하나씩 리뷰
     fun createReview(createReviewDTO: CreateReviewDTO, user: UserPrincipal): Review {
         val review = Review(
             contentId = createReviewDTO.contentId,
