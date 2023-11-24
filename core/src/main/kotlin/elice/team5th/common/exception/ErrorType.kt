@@ -7,7 +7,9 @@ enum class ErrorType(
     val httpStatus: HttpStatus
 ) {
     // 400
-    INVALID_REQUEST(0, HttpStatus.BAD_REQUEST),
+    INVALID_REQUEST(1000, HttpStatus.BAD_REQUEST),
+    DELETED_USER(1001, HttpStatus.BAD_REQUEST),
+    NOT_EXPIRED_TOKEN(1002, HttpStatus.BAD_REQUEST),
 
     // 401
     UNAUTHORIZED(2000, HttpStatus.UNAUTHORIZED),

@@ -10,8 +10,10 @@ import io.swagger.v3.oas.annotations.Parameter
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -73,5 +75,21 @@ class UserController(
     ): ResponseEntity<UserDto.Response> {
         val user = userService.updateUser(userId, updateRequest)
         return ResponseEntity.ok().body(UserDto.Response(user))
+    }
+
+    @Operation(summary = "유저 탈퇴",
+        description = "접속한 유저가 탈퇴 요청을 보내면 탈퇴합니다. " +
+            "실제로 삭제되는 것이 아닌 deleted_at 컬럼에 현재 시간이 저장됩니다. 토큰은 만료됩니다.")
+    @DeleteMapping("/me")
+    fun deleteUser(@CurrentUser userPrincipal: UserPrincipal): ResponseEntity<String> {
+        userService.deleteUser(userPrincipal.userId)
+        return ResponseEntity.ok().body("탈퇴되었습니다.")
+    }
+
+    @Operation(summary = "로그아웃", description = "접속한 유저의 토큰을 만료시킵니다.")
+    @PostMapping("/logout")
+    fun logout(@CurrentUser userPrincipal: UserPrincipal): ResponseEntity<String> {
+        userService.logout(userPrincipal.userId)
+        return ResponseEntity.ok().body("로그아웃되었습니다.")
     }
 }

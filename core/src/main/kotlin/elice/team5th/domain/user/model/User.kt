@@ -11,6 +11,8 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import org.jetbrains.annotations.NotNull
+import java.time.LocalDateTime
+import java.util.Date
 
 @Entity
 @Table(name = "users")
@@ -37,7 +39,9 @@ class User(
     var role: RoleType = RoleType.USER,
 
     @NotNull
-    var ban: Boolean = false
+    var ban: Boolean = false,
+
+    var deletedAt: LocalDateTime? = null
 
     //  val favorites : Array<Favorite>
 ) : BaseEntity()

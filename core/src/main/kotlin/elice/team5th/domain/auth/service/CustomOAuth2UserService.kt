@@ -3,6 +3,7 @@ package elice.team5th.domain.auth.service
 import elice.team5th.domain.auth.entity.UserPrincipal
 import elice.team5th.domain.auth.info.OAuth2UserInfo
 import elice.team5th.domain.auth.info.OAuth2UserInfoFactory
+import elice.team5th.domain.user.exception.DeletedUserException
 import elice.team5th.domain.user.model.ProviderType
 import elice.team5th.domain.user.model.RoleType
 import elice.team5th.domain.user.model.User
@@ -40,6 +41,9 @@ class CustomOAuth2UserService(
         var savedUser = userRepository.findByUserId(userInfo.getId())
 
         if (savedUser != null) {
+            if (savedUser.deletedAt != null) {
+                throw DeletedUserException("탈퇴한 유저입니다.")
+            }
             updateUser(savedUser, userInfo)
         } else {
             savedUser = createUser(userInfo, providerType)
