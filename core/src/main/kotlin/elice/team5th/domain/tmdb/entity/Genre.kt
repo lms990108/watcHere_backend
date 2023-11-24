@@ -15,7 +15,7 @@ class Genre(
 
     val name: String,
 
-    @ManyToMany(mappedBy = "genres")
+    @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
     val movies: List<MovieEntity> = mutableListOf(),
 
     @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)

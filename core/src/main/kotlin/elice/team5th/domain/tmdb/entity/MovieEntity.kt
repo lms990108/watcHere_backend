@@ -33,6 +33,17 @@ class MovieEntity(
     )
     val genres: List<Genre> = mutableListOf(),
 
+    @OneToMany(mappedBy = "movie", cascade = [CascadeType.ALL])
+    val videos: List<VideoEntity> = mutableListOf(),
+
+    @ManyToMany(cascade = [CascadeType.ALL])
+    @JoinTable(
+        name = "movie_actor",
+        joinColumns = [JoinColumn(name = "movie_id")],
+        inverseJoinColumns = [JoinColumn(name = "actor_id")]
+    )
+    val actors: MutableList<ActorEntity> = mutableListOf(),
+
     @Column(name = "imdb_id")
     val imdbId: String,
 
@@ -67,7 +78,4 @@ class MovieEntity(
 
     @Column(name = "vote_count")
     val voteCount: Int,
-
-    @OneToMany(mappedBy = "movie", cascade = [CascadeType.ALL])
-    val videos: List<VideoEntity> = mutableListOf()
 )

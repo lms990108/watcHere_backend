@@ -38,6 +38,22 @@ class TVShowEntity(
     @OneToMany(mappedBy = "tvShow", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val videos: List<VideoEntity> = mutableListOf(),
 
+    @ManyToMany
+    @JoinTable(
+        name = "tvshow_actor",
+        joinColumns = [JoinColumn(name = "tvshow_id")],
+        inverseJoinColumns = [JoinColumn(name = "actor_id")]
+    )
+    val actors: MutableList<ActorEntity> = mutableListOf(),
+
+//    @ManyToMany(cascade = [CascadeType.ALL])
+//    @JoinTable(
+//        name = "tvshow_watch_provider",
+//        joinColumns = [JoinColumn(name = "tvshow_id")],
+//        inverseJoinColumns = [JoinColumn(name = "provider_id")]
+//    )
+//    val watchProviders: MutableList<WatchProviderEntity> = mutableListOf(),
+
     @Temporal(TemporalType.DATE)
     @Column(name = "first_air_date")
     val firstAirDate: Date,
