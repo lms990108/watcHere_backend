@@ -1,6 +1,7 @@
 package elice.team5th.domain.auth.service
 
 import elice.team5th.domain.auth.entity.UserPrincipal
+import elice.team5th.domain.auth.exception.BanUserException
 import elice.team5th.domain.auth.info.OAuth2UserInfo
 import elice.team5th.domain.auth.info.OAuth2UserInfoFactory
 import elice.team5th.domain.user.exception.DeletedUserException
@@ -43,6 +44,9 @@ class CustomOAuth2UserService(
         if (savedUser != null) {
             if (savedUser.deletedAt != null) {
                 throw DeletedUserException("탈퇴한 유저입니다.")
+            }
+            if (savedUser.ban) {
+                throw BanUserException("밴 처리된 유저입니다.")
             }
             updateUser(savedUser, userInfo)
         } else {
