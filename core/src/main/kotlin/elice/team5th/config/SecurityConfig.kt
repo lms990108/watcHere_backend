@@ -72,13 +72,9 @@ class SecurityConfig(
         http.authorizeHttpRequests { auth ->
             auth
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .requestMatchers("/api/v1/ping", "/api/v1/api-docs", "/api/v1/swagger-ui/**", "/api/v1/swagger-ui.html",
-                    "/api/v1/webjars/**", "/api/v1/swagger-resources/**", "/api/v1/api-docs/**",
-                    "/api/v1/configuration/ui", "/api/v1/configuration/security"
-                ).permitAll()
                 .requestMatchers("/api/v1/users/admin/**").hasAnyAuthority(RoleType.ADMIN.code)
-                .requestMatchers("/api/v1/**").hasAnyAuthority(RoleType.USER.code, RoleType.ADMIN.code)
-                .anyRequest().authenticated()
+                .requestMatchers("/api/v1/users/**").hasAnyAuthority(RoleType.USER.code, RoleType.ADMIN.code)
+                .anyRequest().permitAll()
         }
 
         // OAuth2 설정
