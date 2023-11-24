@@ -28,8 +28,10 @@ class ReviewController(private val reviewService: ReviewService) {
 
     // 리뷰 작성
     @PostMapping("")
-    @Operation(summary = "리뷰 작성",
-        description = "userId는 자동으로 가져오니 contentId, 내용, 평점만 적으면 됩니다.")
+    @Operation(
+        summary = "리뷰 작성",
+        description = "userId는 자동으로 가져오니 contentId, 내용, 평점만 적으면 됩니다."
+    )
     fun createReview(@RequestBody createReviewDTO: CreateReviewDTO, @CurrentUser user: UserPrincipal):
         ResponseEntity<ReviewDTO> {
         val review = reviewService.createReview(createReviewDTO, user)
@@ -49,8 +51,10 @@ class ReviewController(private val reviewService: ReviewService) {
 
     // 리뷰 수정
     @PutMapping("/{id}")
-    @Operation(summary = "리뷰 수정",
-        description = "백엔드로 보낼땐 안바뀐 부분도 리뷰작성과 똑같이 보내주세요.")
+    @Operation(
+        summary = "리뷰 수정",
+        description = "백엔드로 보낼땐 안바뀐 부분도 리뷰작성과 똑같이 보내주세요."
+    )
     fun updateReview(
         @PathVariable id: Long,
         @RequestBody createReviewDTO: CreateReviewDTO,
@@ -72,8 +76,10 @@ class ReviewController(private val reviewService: ReviewService) {
 
     // 리뷰 삭제
     @DeleteMapping("/{id}")
-    @Operation(summary = "리뷰 삭제",
-        description = "작성자와 관리자만 삭제 가능합니다.")
+    @Operation(
+        summary = "리뷰 삭제",
+        description = "작성자와 관리자만 삭제 가능합니다."
+    )
     fun deleteReview(@PathVariable id: Long, @CurrentUser user: UserPrincipal): ResponseEntity<Void> {
         reviewService.deleteReview(id, user)
         return ResponseEntity.ok().build()
@@ -81,8 +87,10 @@ class ReviewController(private val reviewService: ReviewService) {
 
     // user_id로 페이징된 리뷰 리스트 조회
     @GetMapping("/user/{userId}")
-    @Operation(summary = "해당 유저의 리뷰 목록 조회",
-        description = "10개씩 페이징되고 추가적인 정렬방식 등은 넣지 않았습니다.")
+    @Operation(
+        summary = "해당 유저의 리뷰 목록 조회",
+        description = "10개씩 페이징되고 추가적인 정렬방식 등은 넣지 않았습니다."
+    )
     fun getReviewsByUserIdPaginated(
         @PathVariable userId: Long,
         @RequestParam(defaultValue = "0") page: Int,
@@ -105,12 +113,14 @@ class ReviewController(private val reviewService: ReviewService) {
 
     // content_id로 페이징된 리뷰 리스트 조회
     @GetMapping("/content/{contentId}")
-    @Operation(summary = "컨텐츠의 리뷰 목록 조회",
+    @Operation(
+        summary = "컨텐츠의 리뷰 목록 조회",
         description = "정렬기능을 지원합니다 sortBy = \n" +
             "ratingDesc: 평점 높은순 \n" +
             "ratingAsc: 평점 낮은순 \n" +
             "likesDesc: 추천순\n" +
-            "createdAt: 기본값, 최신순")
+            "createdAt: 기본값, 최신순"
+    )
     fun getReviewsByContentIdPaginated(
         @PathVariable contentId: Long,
         @RequestParam(defaultValue = "0") page: Int,
@@ -148,8 +158,10 @@ class ReviewController(private val reviewService: ReviewService) {
 
     // report >= 5 인 리뷰들 리스트 조회
     @GetMapping("/reviews/high-reports")
-    @Operation(summary = "높은 신고 수를 받은 리뷰 목록 조회",
-        description = "페이지당 10개의 리뷰를 페이징하여 제공합니다. 높은 신고 수를 받은 리뷰들을 조회할 수 있습니다.")
+    @Operation(
+        summary = "높은 신고 수를 받은 리뷰 목록 조회",
+        description = "페이지당 10개의 리뷰를 페이징하여 제공합니다. 높은 신고 수를 받은 리뷰들을 조회할 수 있습니다."
+    )
     fun getReviewsWithHighReports(
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int

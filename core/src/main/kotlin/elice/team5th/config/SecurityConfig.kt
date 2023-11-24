@@ -72,7 +72,8 @@ class SecurityConfig(
         http.authorizeHttpRequests { auth ->
             auth
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .requestMatchers("/api/v1/users/**").hasAnyAuthority(RoleType.USER.code)
+                .requestMatchers("/api/v1/users/admin/**").hasAnyAuthority(RoleType.ADMIN.code)
+                .requestMatchers("/api/v1/users/**").hasAnyAuthority(RoleType.USER.code, RoleType.ADMIN.code)
                 .anyRequest().permitAll()
         }
 

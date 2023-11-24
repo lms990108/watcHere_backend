@@ -69,7 +69,7 @@ class OAuth2AuthenticationSuccessHandler(
         val userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.attributes)
         val authorities = user.authorities
 
-        val roleType = if (hasAuthority(authorities, RoleType.ADMIN.name)) RoleType.ADMIN else RoleType.USER
+        val roleType = if (hasAuthority(authorities, RoleType.ADMIN.code)) RoleType.ADMIN else RoleType.USER
 
         val now = Date()
         val accessToken = tokenProvider.createAuthToken(

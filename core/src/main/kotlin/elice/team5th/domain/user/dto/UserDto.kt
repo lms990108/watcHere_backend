@@ -4,6 +4,7 @@ import elice.team5th.domain.user.model.ProviderType
 import elice.team5th.domain.user.model.RoleType
 import elice.team5th.domain.user.model.User
 import io.swagger.v3.oas.annotations.media.Schema
+import org.springframework.web.multipart.MultipartFile
 
 class UserDto {
     data class Response(
@@ -49,12 +50,12 @@ class UserDto {
 
     data class UpdateRequest(
         @Schema(description = "nickname", example = "홍박사")
-        var nickname: String?,
+        var nickname: String,
 
-        @Schema(description = "ban 여부", example = "true")
-        var ban: Boolean?,
-
-        @Schema(description = "role", example = "USER/ADMIN/GUEST")
-        var role: RoleType?
+        @Schema(
+            description = "profile image link",
+            example = "https://lh3.googleusercontent.com/a/ACg8ocIqCt6pUKU2p4K7kU3zLTgzyqkznfaW2EgC-M97DCpE6A=s96-c"
+        )
+        var profileImage: MultipartFile
     )
 }

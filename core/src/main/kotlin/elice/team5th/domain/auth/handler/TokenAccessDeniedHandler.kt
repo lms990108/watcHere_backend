@@ -16,6 +16,8 @@ class TokenAccessDeniedHandler(
         response: HttpServletResponse,
         accessDeniedException: AccessDeniedException
     ) {
+        // 인가 관련 에러 핸들러
+        response.sendError(HttpServletResponse.SC_FORBIDDEN, "권한이 없습니다.")
         handlerExceptionResolver.resolveException(request, response, null, accessDeniedException)
     }
 }
