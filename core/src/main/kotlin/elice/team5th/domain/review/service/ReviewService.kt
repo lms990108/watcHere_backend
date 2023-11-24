@@ -30,6 +30,7 @@ class ReviewService(private val reviewRepository: ReviewRepository) {
             likes = 0,
             reports = 0
         )
+        println(createReviewDTO.contentId)
         return reviewRepository.save(review)
     }
 
@@ -123,8 +124,9 @@ class ReviewService(private val reviewRepository: ReviewRepository) {
         return reviewRepository.save(review)
     }
 
-    // 누적신고 5회 이상 리뷰
-    fun findReviewsWithHighReports(): List<Review> {
-        return reviewRepository.findByReportsGreaterThanEqual(5)
+    // 누적신고 5회 이상 리뷰 리스트 조회
+    // 서비스 클래스 내
+    fun findReviewsWithHighReports(pageable: Pageable): Page<Review> {
+        return reviewRepository.findByReportsGreaterThanEqual(5, pageable)
     }
 }

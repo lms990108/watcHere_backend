@@ -19,5 +19,5 @@ interface ReviewRepository : JpaRepository<Review, Long> {
     @Query("SELECT r.rating, COUNT(r) FROM Review r WHERE r.contentId = :contentId GROUP BY r.rating")
     fun countReviewsByRatingForContentId(@Param("contentId") contentId: Long): List<Array<Any>>
 
-    fun findByReportsGreaterThanEqual(reportThreshold: Long): List<Review>
+    fun findByReportsGreaterThanEqual(reportsThreshold: Int, pageable: Pageable): Page<Review>
 }

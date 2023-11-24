@@ -10,7 +10,7 @@ import jakarta.persistence.Table
 class Review(
 
     @Column(name = "content_id", nullable = false)
-    var contentId: Long = 0, // contentID에 대한 기본값 지정
+    var contentId: Int = 0, // contentID에 대한 기본값 지정
 
     @Column(name = "user_id", nullable = false)
     var userId: String = "", // userID에 대한 기본값 지정
