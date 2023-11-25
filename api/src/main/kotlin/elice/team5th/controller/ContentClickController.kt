@@ -1,3 +1,4 @@
+package elice.team5th.controller
 
 import elice.team5th.domain.clicks.dto.MovieWithClicksDto
 import elice.team5th.domain.clicks.dto.TVShowWithClicksDto
