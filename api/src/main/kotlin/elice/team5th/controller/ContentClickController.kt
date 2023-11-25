@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/v1/content")
+@RequestMapping("/api/v1/topclick")
 class ContentClickController(private val contentClickService: ContentClickService) {
 
     // 인기 영화 목록 가져오기 (페이징 처리)
     @Operation(
         summary = "영화 조회순"
     )
-    @GetMapping("/movies/top")
+    @GetMapping("/movies")
     fun getTopMoviesByClicks(
         @RequestParam(value = "page", defaultValue = "0") page: Int,
         @RequestParam(value = "size", defaultValue = "10") size: Int
@@ -29,7 +29,7 @@ class ContentClickController(private val contentClickService: ContentClickServic
     @Operation(
         summary = "tv 조회순"
     )
-    @GetMapping("/tvshows/top")
+    @GetMapping("/tvshows")
     fun getTopTVShowsByClicks(
         @RequestParam(value = "page", defaultValue = "0") page: Int,
         @RequestParam(value = "size", defaultValue = "10") size: Int
