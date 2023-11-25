@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -71,12 +73,14 @@ class UserController(
     }
 
     @Operation(summary = "유저 정보 수정", description = "유저 아이디를 통해 유저 정보(닉네임, 프로필 사진)를 수정합니다.")
-    @PutMapping("/")
+    @PutMapping("/me", consumes = ["multipart/form-data"])
     fun updateUser(
         @CurrentUser userPrincipal: UserPrincipal,
-        @RequestBody updateRequest: UserDto.UpdateRequest
+        @Parameter(name = "nickname", description = "닉네임") @RequestParam(value = "nickname", required = false) nickname: String?,
+        @Parameter(name = "profile_image", description = "multipart/form-data 형식의 사진 파일을 input으로 받습니다.", example = "image.png")
+        @RequestPart(value = "profile_image", required = false) profileImage: MultipartFile?
     ): ResponseEntity<UserDto.Response> {
-        val user = userService.updateUser(userPrincipal.userId, updateRequest)
+        val user = userService.updateUser(userPrincipal.userId, nickname, profileImage)
         return ResponseEntity.ok().body(UserDto.Response(user))
     }
 

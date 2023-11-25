@@ -1,5 +1,7 @@
 package elice.team5th.domain.user.service
 
+import elice.team5th.common.exception.FileSizeExceededException
+import elice.team5th.common.service.S3Service
 import elice.team5th.domain.auth.repository.UserRefreshTokenRepository
 import elice.team5th.domain.user.dto.UserDto
 import elice.team5th.domain.user.exception.UserNotFoundException
@@ -9,9 +11,11 @@ import elice.team5th.domain.user.repository.UserRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
 
 @Service
 class UserService(
+    private val s3Service: S3Service,
     private val userRepository: UserRepository,
     private val userRefreshTokenRepository: UserRefreshTokenRepository
 ) {
@@ -27,9 +31,13 @@ class UserService(
     fun checkDeletedUser(userId: String): Boolean =
         userRepository.findByUserId(userId)?.deletedAt != null
 
-    fun updateUser(userId: String, updateRequest: UserDto.UpdateRequest): User =
+    fun updateUser(userId: String, nickname: String?, profileImage: MultipartFile?): User =
         userRepository.findByUserId(userId)?.apply {
-            nickname = updateRequest.nickname ?: nickname
+            this.nickname = nickname ?: this.nickname
+            if (profileImage != null) {
+                if (profileImage.size > 2000000) throw FileSizeExceededException("프로필 이미지는 2MB를 넘을 수 없습니다.")
+                this.profileImage = s3Service.uploadFile(profileImage)
+            }
         }?.let { userRepository.save(it) }
             ?: throw UserNotFoundException("유저를 찾을 수 없습니다.")
 

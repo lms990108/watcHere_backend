@@ -47,15 +47,4 @@ class UserDto {
 //            reviews = user.reviews
         )
     }
-
-    data class UpdateRequest(
-        @Schema(description = "nickname", example = "홍박사")
-        var nickname: String,
-
-        @Schema(
-            description = "profile image link",
-            example = "https://lh3.googleusercontent.com/a/ACg8ocIqCt6pUKU2p4K7kU3zLTgzyqkznfaW2EgC-M97DCpE6A=s96-c"
-        )
-        var profileImage: MultipartFile
-    )
 }
