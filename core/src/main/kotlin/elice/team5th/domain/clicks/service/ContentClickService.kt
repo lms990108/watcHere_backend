@@ -6,6 +6,9 @@ import elice.team5th.domain.clicks.entity.MovieClicksEntity
 import elice.team5th.domain.clicks.entity.TVShowClicksEntity
 import elice.team5th.domain.clicks.repository.MovieClicksRepository
 import elice.team5th.domain.clicks.repository.TVShowClicksRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -34,14 +37,15 @@ class ContentClickService(
         tvShowClicksRepository.save(tvShowClicks)
     }
 
-    // 조회수가 높은 영화 목록 가져오기
-    fun getTopMoviesByClicks(): List<MovieWithClicksDto> {
-        // 수정: MovieClicksEntity 대신 MovieWithClicksDto 객체의 리스트를 반환
-        return movieClicksRepository.findAllMoviesWithClicks()
+    // 조회수가 높은 영화 목록 가져오기 (페이징 처리)
+    fun getTopMoviesByClicks(page: Int, size: Int): Page<MovieWithClicksDto> {
+        val pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "clicks"))
+        return movieClicksRepository.findAllMoviesWithClicks(pageable)
     }
 
-    // 조회수가 높은 TV 쇼 목록 가져오기
-    fun getTopTVShowsByClicks(): List<TVShowWithClicksDto> {
-        return tvShowClicksRepository.findAllTVShowsWithClicks()
+    // 조회수가 높은 TV 쇼 목록 가져오기 (페이징 처리)
+    fun getTopTVShowsByClicks(page: Int, size: Int = 10): Page<TVShowWithClicksDto> {
+        val pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "clicks"))
+        return tvShowClicksRepository.findAllTVShowsWithClicks(pageable)
     }
 }
