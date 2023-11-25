@@ -1,10 +1,13 @@
 package elice.team5th.domain.clicks.repository
 
+import elice.team5th.domain.clicks.dto.TVShowWithClicksDto
 import elice.team5th.domain.clicks.entity.TVShowClicksEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
 interface TVShowClicksRepository : JpaRepository<TVShowClicksEntity, Long> {
-    @Query("SELECT t FROM TVShowClicksEntity t ORDER BY t.views DESC")
-    fun findAllOrderByViewsDesc(): List<TVShowClicksEntity>
+    @Query("SELECT new elice.team5th.domain.clicks.dto.TVShowWithClicksDto(t.id, t.name, t.posterPath, c.clicks) " +
+        "FROM TVShowClicksEntity c JOIN c.tvShow t " +
+        "ORDER BY c.clicks DESC")
+    fun findAllTVShowsWithClicks(): List<TVShowWithClicksDto>
 }

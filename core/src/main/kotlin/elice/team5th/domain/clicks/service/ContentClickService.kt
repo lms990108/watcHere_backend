@@ -1,5 +1,7 @@
 package elice.team5th.domain.clicks.service
 
+import elice.team5th.domain.clicks.dto.MovieWithClicksDto
+import elice.team5th.domain.clicks.dto.TVShowWithClicksDto
 import elice.team5th.domain.clicks.entity.MovieClicksEntity
 import elice.team5th.domain.clicks.entity.TVShowClicksEntity
 import elice.team5th.domain.clicks.repository.MovieClicksRepository
@@ -18,7 +20,7 @@ class ContentClickService(
         val movieClicks = movieClicksRepository.findById(movieId).orElseGet {
             movieClicksRepository.save(MovieClicksEntity(movieId, 0))
         }
-        movieClicks.views++
+        movieClicks.clicks++
         movieClicksRepository.save(movieClicks)
     }
 
@@ -28,17 +30,18 @@ class ContentClickService(
         val tvShowClicks = tvShowClicksRepository.findById(tvShowId).orElseGet {
             tvShowClicksRepository.save(TVShowClicksEntity(tvShowId, 0))
         }
-        tvShowClicks.views++
+        tvShowClicks.clicks++
         tvShowClicksRepository.save(tvShowClicks)
     }
 
     // 조회수가 높은 영화 목록 가져오기
-    fun getTopMoviesByClicks(): List<MovieClicksEntity> {
-        return movieClicksRepository.findAllOrderByViewsDesc()
+    fun getTopMoviesByClicks(): List<MovieWithClicksDto> {
+        // 수정: MovieClicksEntity 대신 MovieWithClicksDto 객체의 리스트를 반환
+        return movieClicksRepository.findAllMoviesWithClicks()
     }
 
     // 조회수가 높은 TV 쇼 목록 가져오기
-    fun getTopTVShowsByClicks(): List<TVShowClicksEntity> {
-        return tvShowClicksRepository.findAllOrderByViewsDesc()
+    fun getTopTVShowsByClicks(): List<TVShowWithClicksDto> {
+        return tvShowClicksRepository.findAllTVShowsWithClicks()
     }
 }
