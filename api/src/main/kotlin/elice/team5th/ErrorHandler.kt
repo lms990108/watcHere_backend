@@ -19,7 +19,8 @@ class ErrorHandler {
     }
 
     @ExceptionHandler(MissingServletRequestParameterException::class)
-    fun handleMissingServletRequestParameterException(e: MissingServletRequestParameterException): ResponseEntity<ErrorResponse> {
+    fun handleMissingServletRequestParameterException(e: MissingServletRequestParameterException):
+        ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(
             errorCode = HttpStatus.BAD_REQUEST.value(), // 'errorCode' 파라미터를 제공해야 함
             errorMessage = "The required parameter '${e.parameterName}' is missing."

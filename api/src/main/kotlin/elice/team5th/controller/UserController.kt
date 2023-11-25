@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RequestPart
@@ -77,7 +76,8 @@ class UserController(
     fun updateUser(
         @CurrentUser userPrincipal: UserPrincipal,
         @Parameter(name = "nickname", description = "닉네임") @RequestParam(value = "nickname", required = false) nickname: String?,
-        @Parameter(name = "profile_image", description = "multipart/form-data 형식의 사진 파일을 input으로 받습니다.", example = "image.png")
+        @Parameter(name = "profile_image", description = "multipart/form-data 형식의 사진 파일을 input으로 받습니다.",
+            example = "image.png")
         @RequestPart(value = "profile_image", required = false) profileImage: MultipartFile?
     ): ResponseEntity<UserDto.Response> {
         val user = userService.updateUser(userPrincipal.userId, nickname, profileImage)
