@@ -34,6 +34,7 @@ class MovieDetailsService(
         return webClient.get()
             .uri { uriBuilder ->
                 uriBuilder.path("/movie/$movieId")
+                    .queryParam("append_to_response", "videos,credits")
                     .queryParam("language", "ko-KR")
                     .build()
             }
