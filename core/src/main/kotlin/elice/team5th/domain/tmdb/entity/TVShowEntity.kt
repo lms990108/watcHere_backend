@@ -46,14 +46,6 @@ class TVShowEntity(
     )
     val actors: MutableList<ActorEntity> = mutableListOf(),
 
-//    @ManyToMany(cascade = [CascadeType.ALL])
-//    @JoinTable(
-//        name = "tvshow_watch_provider",
-//        joinColumns = [JoinColumn(name = "tvshow_id")],
-//        inverseJoinColumns = [JoinColumn(name = "provider_id")]
-//    )
-//    val watchProviders: MutableList<WatchProviderEntity> = mutableListOf(),
-
     @Temporal(TemporalType.DATE)
     @Column(name = "first_air_date")
     val firstAirDate: Date,
