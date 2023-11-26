@@ -1,5 +1,7 @@
 package elice.team5th.domain.tmdb.dto
 
+import elice.team5th.domain.tmdb.entity.Genre
+
 data class TVDetailsDto(
     val adult: Boolean,
     val backdrop_path: String?,

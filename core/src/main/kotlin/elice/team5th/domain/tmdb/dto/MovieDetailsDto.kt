@@ -1,5 +1,7 @@
 package elice.team5th.domain.tmdb.dto
 
+import elice.team5th.domain.tmdb.entity.Genre
+
 data class MovieDetailsDto(
     val adult: Boolean,
     val backdrop_path: String?,
@@ -23,11 +25,6 @@ data class MovieDetailsDto(
     val fullPosterPath: String
         get() = "https://image.tmdb.org/t/p/w500$poster_path"
 }
-
-data class Genre(
-    val id: Int,
-    val name: String
-)
 
 data class SpokenLanguage(
     val english_name: String,
