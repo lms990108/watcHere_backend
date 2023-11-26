@@ -75,4 +75,11 @@ class TVShowEntity(
 
     @Column(name = "vote_count")
     val voteCount: Int,
+
+    // 추가된 필드
+    @Column(name = "director_name")
+    val directorName: String? = null,
+
+    @Column(name = "director_profile_path")
+    val directorProfilePath: String? = null
 )

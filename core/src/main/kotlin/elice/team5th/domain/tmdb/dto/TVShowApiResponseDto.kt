@@ -5,6 +5,7 @@ import elice.team5th.domain.tmdb.entity.GenreEntity
 data class TVShowApiResponseDto(
     val adult: Boolean,
     val backdrop_path: String?,
+    val created_by: List<DirectorDto>,
     val genres: List<GenreEntity>,
     val id: Int,
     val name: String,
@@ -20,4 +21,10 @@ data class TVShowApiResponseDto(
     val vote_count: Int,
     val videos: VideoResponse,
     val credits: CreditsResponse
+)
+
+data class DirectorDto(
+    val id: Int,
+    val name: String,
+    val profile_path: String?
 )
