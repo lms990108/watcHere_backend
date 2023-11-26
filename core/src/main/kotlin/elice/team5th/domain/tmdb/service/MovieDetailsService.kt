@@ -1,7 +1,9 @@
 package elice.team5th.domain.tmdb.service
 
+import elice.team5th.domain.tmdb.dto.ActorDto
 import elice.team5th.domain.tmdb.dto.MovieDetailsDto
-import elice.team5th.domain.tmdb.entity.Genre
+import elice.team5th.domain.tmdb.dto.VideoDto
+import elice.team5th.domain.tmdb.entity.GenreEntity
 import elice.team5th.domain.tmdb.entity.MovieEntity
 import elice.team5th.domain.tmdb.repository.MovieRepository
 import elice.team5th.domain.tmdb.util.ErrorUtil
@@ -61,7 +63,7 @@ class MovieDetailsService(
             adult = movieEntity.adult,
             backdrop_path = movieEntity.backdropPath,
             genres = movieEntity.genres.map { genreEntity ->
-                Genre(id = genreEntity.id, name = genreEntity.name)
+                GenreEntity(id = genreEntity.id, name = genreEntity.name)
             },
             id = movieEntity.id.toInt(),
             original_language = movieEntity.originalLanguage,
@@ -74,7 +76,24 @@ class MovieDetailsService(
             title = movieEntity.title,
             video = movieEntity.video,
             vote_average = movieEntity.voteAverage,
-            vote_count = movieEntity.voteCount
+            vote_count = movieEntity.voteCount,
+            actors = movieEntity.actors.map { actorEntity ->
+                ActorDto(
+                    id = actorEntity.id ?: throw IllegalStateException("Actor ID cannot be null"),
+                    name = actorEntity.name ?: "Unknown",
+                    profilePath = actorEntity.profilePath ?: ""
+                )
+            },
+            videos = movieEntity.videos.map { videoEntity ->
+                VideoDto(
+                    id = videoEntity.id ?: throw IllegalStateException("Video ID cannot be null"),
+                    key = videoEntity.key,
+                    name = videoEntity.name,
+                    site = videoEntity.site,
+                    type = videoEntity.type
+                )
+            }
+
         )
     }
 }

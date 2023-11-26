@@ -1,6 +1,6 @@
 package elice.team5th.domain.tmdb.dto
 
-import elice.team5th.domain.tmdb.entity.Genre
+import elice.team5th.domain.tmdb.entity.GenreEntity
 
 data class TVDetailsDto(
     val adult: Boolean,
@@ -8,7 +8,7 @@ data class TVDetailsDto(
     val created_by: List<Any>,
     val episode_run_time: List<Int>,
     val first_air_date: String,
-    val genres: List<Genre>,
+    val genres: List<GenreEntity>,
     val id: Int,
     val last_air_date: String,
     val last_episode_to_air: Episode,

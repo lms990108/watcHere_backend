@@ -1,11 +1,11 @@
 package elice.team5th.domain.tmdb.dto
 
-import elice.team5th.domain.tmdb.entity.Genre
+import elice.team5th.domain.tmdb.entity.GenreEntity
 
 data class MovieDetailsDto(
     val adult: Boolean,
     val backdrop_path: String?,
-    val genres: List<Genre>,
+    val genres: List<GenreEntity>,
     val id: Int,
     val original_language: String,
     val original_title: String,

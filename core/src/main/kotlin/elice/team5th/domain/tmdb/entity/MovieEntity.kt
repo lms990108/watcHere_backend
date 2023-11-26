@@ -31,7 +31,7 @@ class MovieEntity(
         joinColumns = [JoinColumn(name = "movie_id")],
         inverseJoinColumns = [JoinColumn(name = "genre_id")]
     )
-    val genres: List<Genre> = mutableListOf(),
+    val genres: List<GenreEntity> = mutableListOf(),
 
     @OneToMany(mappedBy = "movie", cascade = [CascadeType.ALL])
     val videos: List<VideoEntity> = mutableListOf(),
