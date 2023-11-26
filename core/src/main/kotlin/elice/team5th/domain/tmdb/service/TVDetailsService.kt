@@ -21,11 +21,14 @@ class TVDetailsService(
     private lateinit var accessToken: String
 
     fun getTVDetails(tvId: Int): Mono<TVDetailsDto> {
+        println("Fetching TV show details for ID: $tvId") // 로그
         val tvShowEntity = tvShowRepository.findById(tvId)
         if (tvShowEntity.isPresent) {
+            println("Found TV show details in the database for ID: $tvId") // 로그
             return Mono.just(convertEntityToDto(tvShowEntity.get()))
         }
 
+        println("TV show details not found in the database for ID: $tvId. Fetching from TMDB API.") // 로그
         return webClient.get()
             .uri { uriBuilder ->
                 uriBuilder.path("/tv/$tvId")
@@ -37,6 +40,8 @@ class TVDetailsService(
             .header("accept", "application/json")
             .retrieve()
             .bodyToMono(TVShowApiResponseDto::class.java)
+            .doOnSuccess { println("Received API response for TV show ID: $tvId") }
+            .doOnError { error -> println("Error during API call for TV show ID: $tvId: $error") }
             .map(this::convertApiResponseToDto)
             .onErrorMap(ErrorUtil::handleCommonErrors)
     }

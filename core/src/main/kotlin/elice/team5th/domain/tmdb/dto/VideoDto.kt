@@ -1,7 +1,7 @@
 package elice.team5th.domain.tmdb.dto
 
 data class VideoDto(
-    val id: Long,
+    val id: String,
     val key: String,
     val name: String,
     val site: String,

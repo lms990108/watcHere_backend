@@ -48,11 +48,11 @@ class TVShowEntity(
 
     @Temporal(TemporalType.DATE)
     @Column(name = "first_air_date")
-    val firstAirDate: Date,
+    var firstAirDate: Date? = null,
 
     @Temporal(TemporalType.DATE)
     @Column(name = "last_air_date")
-    val lastAirDate: Date,
+    var lastAirDate: Date? = null,
 
     val name: String,
 
