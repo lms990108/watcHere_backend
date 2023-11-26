@@ -1,6 +1,6 @@
 package elice.team5th.controller
 
-import elice.team5th.domain.tmdb.dto.ListResponseDto
+import elice.team5th.domain.tmdb.dto.SearchListResponseDto
 import elice.team5th.domain.tmdb.enumtype.ContentType
 import elice.team5th.domain.tmdb.service.SearchService
 import io.swagger.v3.oas.annotations.Operation
@@ -25,7 +25,7 @@ class SearchController(private val searchService: SearchService) {
         @RequestParam query: String,
         @RequestParam contentType: ContentType,
         @RequestParam(required = false, defaultValue = "1") page: Int // 페이징을 위한 매개변수 추가
-    ): Mono<ListResponseDto> {
+    ): Mono<SearchListResponseDto> {
         return searchService.searchContent(query, contentType, page)
     }
 }
