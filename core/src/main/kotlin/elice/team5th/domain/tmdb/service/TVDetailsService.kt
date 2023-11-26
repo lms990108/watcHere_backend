@@ -67,7 +67,6 @@ class TVDetailsService(
             vote_count = entity.voteCount,
             videos = entity.videos.map {
                 VideoDto(
-                    id = it.id ?: throw IllegalStateException("Video ID cannot be null"),
                     key = it.key,
                     name = it.name,
                     site = it.site,

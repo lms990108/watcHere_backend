@@ -82,7 +82,6 @@ class MovieDetailsService(
             },
             videos = movieEntity.videos.map { videoEntity ->
                 VideoDto(
-                    id = videoEntity.id ?: throw IllegalStateException("Video ID cannot be null"),
                     key = videoEntity.key,
                     name = videoEntity.name,
                     site = videoEntity.site,
