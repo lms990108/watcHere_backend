@@ -17,7 +17,7 @@ class ContentListService(private val webClient: WebClient) {
     @Value("\${tmdb.api.access-token}")
     private lateinit var accessToken: String
 
-    fun getPopularContent(page: Int, sortType: SortType, providerName: String, contentType: ContentType): Mono<ListResponseDto> {
+    fun getPopularContent(page: Int, sortType: SortType, providerName: String, contentType: ContentType, anime: Boolean): Mono<ListResponseDto> {
         val path = when (contentType) {
             ContentType.MOVIE -> "/discover/movie"
             ContentType.TV -> "/discover/tv"
@@ -31,6 +31,8 @@ class ContentListService(private val webClient: WebClient) {
             id
         }
 
+        val genresParam = if (anime) "with_genres=16" else "without_genres=16"
+
         return webClient.get()
             .uri { uriBuilder ->
                 uriBuilder.path(path)
@@ -40,6 +42,7 @@ class ContentListService(private val webClient: WebClient) {
                     .queryParam("page", page.toString())
                     .queryParam("sort_by", sortType.queryParam)
                     .queryParam("watch_region", "KR")
+                    .queryParam(genresParam, "") // 애니메이션 관련 쿼리 파라미터 추가
                     .apply {
                         providerId?.let {
                             queryParam("with_watch_providers", it)
