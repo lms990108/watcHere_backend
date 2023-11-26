@@ -1,6 +1,7 @@
 package elice.team5th.domain.tmdb.service
 
 import elice.team5th.domain.tmdb.dto.ActorDto
+import elice.team5th.domain.tmdb.dto.MovieApiResponseDto
 import elice.team5th.domain.tmdb.dto.MovieDetailsDto
 import elice.team5th.domain.tmdb.dto.VideoDto
 import elice.team5th.domain.tmdb.entity.GenreEntity
@@ -21,16 +22,16 @@ class MovieDetailsService(
     private lateinit var accessToken: String
 
     fun getMovieDetails(movieId: Int): Mono<MovieDetailsDto> {
-        // 먼저 데이터베이스에서 영화 상세 정보를 조회
+        println("Attempting to retrieve movie details for movie ID: $movieId")
+
         val movieEntity = movieRepository.findById(movieId)
         if (movieEntity.isPresent) {
-            // MovieEntity를 MovieDetailsDto로 변환하고 반환
-            println("Found movie details in the database for movie ID: $movieId")
+            println("Movie details found in the database for movie ID: $movieId")
             return Mono.just(convertToDto(movieEntity.get()))
+        } else {
+            println("Movie details not found in the database for movie ID: $movieId. Making API call.")
         }
 
-        // DB에 없다면 API 호출
-        println("Movie details not found in the database for movie ID: $movieId. Making API call.")
         return webClient.get()
             .uri { uriBuilder ->
                 uriBuilder.path("/movie/$movieId")
@@ -41,21 +42,14 @@ class MovieDetailsService(
             .header("Authorization", accessToken)
             .header("accept", "application/json")
             .retrieve()
-            .bodyToMono(MovieDetailsDto::class.java)
-            .onErrorMap(ErrorUtil::handleCommonErrors)
-    }
-
-    private fun fetchMovieDetailsFromApi(movieId: Int): Mono<MovieDetailsDto> {
-        return webClient.get()
-            .uri { uriBuilder ->
-                uriBuilder.path("/movie/$movieId")
-                    .queryParam("language", "ko-KR")
-                    .build()
+            .bodyToMono(MovieApiResponseDto::class.java)
+            .doOnNext { response ->
+                println("Received response from TMDB API for movie ID: $movieId")
             }
-            .header("Authorization", accessToken)
-            .header("accept", "application/json")
-            .retrieve()
-            .bodyToMono(MovieDetailsDto::class.java)
+            .map(this::convertApiResponseToDto)
+            .doOnError { error ->
+                println("Error occurred while retrieving movie details for movie ID: $movieId - Error: $error")
+            }
             .onErrorMap(ErrorUtil::handleCommonErrors)
     }
 
@@ -82,7 +76,8 @@ class MovieDetailsService(
                 ActorDto(
                     id = actorEntity.id ?: throw IllegalStateException("Actor ID cannot be null"),
                     name = actorEntity.name ?: "Unknown",
-                    profilePath = actorEntity.profilePath ?: ""
+                    profilePath = actorEntity.profilePath
+                        ?.let { "https://image.tmdb.org/t/p/w500$it" } ?: ""
                 )
             },
             videos = movieEntity.videos.map { videoEntity ->
@@ -93,8 +88,35 @@ class MovieDetailsService(
                     site = videoEntity.site,
                     type = videoEntity.type
                 )
-            }
+            },
+            directorName = movieEntity.directorName, // 감독 이름 매핑
+            directorProfilePath = movieEntity.directorProfilePath // 감독 프로필 경로 매핑
+        )
+    }
 
+    private fun convertApiResponseToDto(apiResponse: MovieApiResponseDto): MovieDetailsDto {
+        return MovieDetailsDto(
+            adult = apiResponse.adult,
+            backdrop_path = apiResponse.backdrop_path,
+            genres = apiResponse.genres,
+            id = apiResponse.id,
+            original_language = apiResponse.original_language,
+            original_title = apiResponse.original_title,
+            overview = apiResponse.overview,
+            popularity = apiResponse.popularity,
+            poster_path = apiResponse.poster_path,
+            release_date = apiResponse.release_date,
+            runtime = apiResponse.runtime,
+            title = apiResponse.title,
+            video = apiResponse.video,
+            vote_average = apiResponse.vote_average,
+            vote_count = apiResponse.vote_count,
+            actors = apiResponse.credits.cast,
+            videos = apiResponse.videos.results,
+            directorName = apiResponse.credits.crew.firstOrNull { it.job == "Director" }?.name ?: "Unknown",
+            directorProfilePath = apiResponse.credits.crew
+                .firstOrNull { it.job == "Director" }?.profile_path
+                ?.let { "https://image.tmdb.org/t/p/w500$it" } ?: ""
         )
     }
 }
