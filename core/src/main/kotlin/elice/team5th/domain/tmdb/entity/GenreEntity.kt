@@ -8,7 +8,7 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "genres")
-class Genre(
+class GenreEntity(
 
     @Id
     val id: Long,

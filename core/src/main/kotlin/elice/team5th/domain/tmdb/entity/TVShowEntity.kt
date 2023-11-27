@@ -33,7 +33,7 @@ class TVShowEntity(
         joinColumns = [JoinColumn(name = "tvshow_id")],
         inverseJoinColumns = [JoinColumn(name = "genre_id")]
     )
-    val genres: List<Genre> = mutableListOf(),
+    val genres: List<GenreEntity> = mutableListOf(),
 
     @OneToMany(mappedBy = "tvShow", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val videos: List<VideoEntity> = mutableListOf(),
@@ -46,21 +46,13 @@ class TVShowEntity(
     )
     val actors: MutableList<ActorEntity> = mutableListOf(),
 
-//    @ManyToMany(cascade = [CascadeType.ALL])
-//    @JoinTable(
-//        name = "tvshow_watch_provider",
-//        joinColumns = [JoinColumn(name = "tvshow_id")],
-//        inverseJoinColumns = [JoinColumn(name = "provider_id")]
-//    )
-//    val watchProviders: MutableList<WatchProviderEntity> = mutableListOf(),
-
     @Temporal(TemporalType.DATE)
     @Column(name = "first_air_date")
-    val firstAirDate: Date,
+    var firstAirDate: Date? = null,
 
     @Temporal(TemporalType.DATE)
     @Column(name = "last_air_date")
-    val lastAirDate: Date,
+    var lastAirDate: Date? = null,
 
     val name: String,
 
@@ -83,4 +75,11 @@ class TVShowEntity(
 
     @Column(name = "vote_count")
     val voteCount: Int,
+
+    // 추가된 필드
+    @Column(name = "director_name")
+    val directorName: String? = null,
+
+    @Column(name = "director_profile_path")
+    val directorProfilePath: String? = null
 )
