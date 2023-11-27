@@ -1,19 +1,25 @@
 package elice.team5th.domain.review.model
 
 import elice.team5th.common.model.BaseEntity
+import elice.team5th.domain.user.model.User
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import org.jetbrains.annotations.NotNull
 
 @Entity
 @Table(name = "review")
 class Review(
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    val user: User,
+
     @Column(name = "content_id", nullable = false)
     var contentId: Int = 0, // contentID에 대한 기본값 지정
-
-    @Column(name = "user_id", nullable = false)
-    var userId: String = "", // userID에 대한 기본값 지정
 
     @Column(nullable = false)
     var detail: String = "", // 기본값을 제공하거나 생성자를 통해 값을 받아야 합니다.

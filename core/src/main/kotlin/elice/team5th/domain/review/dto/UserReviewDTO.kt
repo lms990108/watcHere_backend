@@ -1,12 +1,9 @@
 package elice.team5th.domain.review.dto
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import elice.team5th.domain.user.model.User
+import elice.team5th.domain.user.dto.UserDto
 
-data class ReviewDTO(
+class UserReviewDTO (
     val id: Long? = null,
-    val user: User,
-    @JsonProperty("content_id")
     val contentId: Int,
     val detail: String,
     val rating: Int,

@@ -3,12 +3,14 @@ package elice.team5th.controller
 import elice.team5th.domain.auth.annotation.CurrentUser
 import elice.team5th.domain.auth.entity.UserPrincipal
 import elice.team5th.domain.auth.token.AuthTokenProvider
+import elice.team5th.domain.review.dto.UserReviewDTO
 import elice.team5th.domain.user.dto.UserDto
 import elice.team5th.domain.user.model.RoleType
 import elice.team5th.domain.user.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping

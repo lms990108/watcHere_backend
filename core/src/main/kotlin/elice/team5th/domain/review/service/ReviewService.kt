@@ -9,7 +9,7 @@ import elice.team5th.domain.review.exception.ReviewNotFoundException
 import elice.team5th.domain.review.exception.UnauthorizedReviewAccessException
 import elice.team5th.domain.review.model.Review
 import elice.team5th.domain.review.repository.ReviewRepository
-import elice.team5th.domain.user.model.RoleType
+import elice.team5th.domain.user.service.UserService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -18,13 +18,17 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class ReviewService(private val reviewRepository: ReviewRepository) {
+class ReviewService(
+    private val reviewRepository: ReviewRepository,
+    private val userService: UserService
+) {
 
     // 리뷰 작성
     fun createReview(createReviewDTO: CreateReviewDTO, user: UserPrincipal): Review {
+        val currentUser = userService.findUserById(user.userId)
         val review = Review(
+            user = currentUser,
             contentId = createReviewDTO.contentId,
-            userId = user.userId,
             detail = createReviewDTO.detail,
             rating = createReviewDTO.rating,
             likes = 0,
@@ -40,7 +44,7 @@ class ReviewService(private val reviewRepository: ReviewRepository) {
         val review = reviewRepository.findById(id).orElseThrow {
             ReviewNotFoundException("Review not found with ID: $id")
         }
-        if (review.userId != user.userId) { // user.id 또는 user.userId로 변경해야 할 수 있습니다.
+        if (review.user.userId != user.userId) { // user.id 또는 user.userId로 변경해야 할 수 있습니다.
             throw UnauthorizedReviewAccessException("User is not authorized to update review with ID: $id")
         }
         review.apply {
@@ -55,9 +59,13 @@ class ReviewService(private val reviewRepository: ReviewRepository) {
         val review = reviewRepository.findById(id).orElseThrow {
             ReviewNotFoundException("Review not found with ID: $id")
         }
-        if (review.userId != user.userId && user.roleType != RoleType.ADMIN) { // RoleType.ADMIN은 사용자 정의 enum에 따라 다를 수 있습니다.
+        if (review.user.userId != user.userId) {  // INFO: 시큐리티 쪽에서 관리자 권한 api가 되도록 변경
             throw PermissionDeniedException("User does not have permission to delete review with ID: $id")
         }
+
+//        if (review.userId != user.userId && user.roleType != RoleType.ADMIN) { // RoleType.ADMIN은 사용자 정의 enum에 따라 다를 수 있습니다.
+//            throw PermissionDeniedException("User does not have permission to delete review with ID: $id")
+//        }
         reviewRepository.deleteById(id)
     }
 

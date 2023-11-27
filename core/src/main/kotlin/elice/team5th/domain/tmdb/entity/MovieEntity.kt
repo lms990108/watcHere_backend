@@ -17,14 +17,6 @@ import java.util.*
 @Table(name = "movies")
 class MovieEntity(
 
-    @Id
-    val id: Long,
-
-    val adult: Boolean,
-
-    @Column(name = "backdrop_path")
-    val backdropPath: String,
-
     @ManyToMany(cascade = [CascadeType.ALL])
     @JoinTable(
         name = "movie_genre",
@@ -53,14 +45,6 @@ class MovieEntity(
     @Column(name = "original_title")
     val originalTitle: String,
 
-    @Column(columnDefinition = "TEXT")
-    val overview: String,
-
-    val popularity: Double,
-
-    @Column(name = "poster_path")
-    val posterPath: String,
-
     @Temporal(TemporalType.DATE)
     @Column(name = "release_date")
     val releaseDate: Date,
@@ -72,16 +56,4 @@ class MovieEntity(
     val title: String,
 
     val video: Boolean,
-
-    @Column(name = "vote_average")
-    val voteAverage: Double,
-
-    @Column(name = "vote_count")
-    val voteCount: Int,
-
-    @Column(name = "director_name")
-    val directorName: String? = null,
-
-    @Column(name = "director_profile_path")
-    val directorProfilePath: String? = null
-)
+) : Content()
