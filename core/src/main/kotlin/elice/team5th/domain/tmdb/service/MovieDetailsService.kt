@@ -1,5 +1,6 @@
 package elice.team5th.domain.tmdb.service
 
+import elice.team5th.domain.clicks.service.ContentClickService
 import elice.team5th.domain.tmdb.dto.ActorDto
 import elice.team5th.domain.tmdb.dto.MovieApiResponseDto
 import elice.team5th.domain.tmdb.dto.MovieDetailsDto
@@ -16,7 +17,8 @@ import reactor.core.publisher.Mono
 @Service
 class MovieDetailsService(
     private val webClient: WebClient,
-    private val movieRepository: MovieRepository // 레포지토리 인터페이스 주입
+    private val movieRepository: MovieRepository, // 레포지토리 인터페이스 주입
+    private val contentClickService: ContentClickService
 ) {
     @Value("\${tmdb.api.access-token}")
     private lateinit var accessToken: String
@@ -26,6 +28,7 @@ class MovieDetailsService(
 
         val movieEntity = movieRepository.findById(movieId)
         if (movieEntity.isPresent) {
+            contentClickService.incrementMovieClicks(movieId.toLong()) // 조회수 증가 로직 추가
             println("Movie details found in the database for movie ID: $movieId")
             return Mono.just(convertToDto(movieEntity.get()))
         } else {
@@ -82,7 +85,6 @@ class MovieDetailsService(
             },
             videos = movieEntity.videos.map { videoEntity ->
                 VideoDto(
-                    id = videoEntity.id ?: throw IllegalStateException("Video ID cannot be null"),
                     key = videoEntity.key,
                     name = videoEntity.name,
                     site = videoEntity.site,

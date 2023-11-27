@@ -24,7 +24,7 @@ class TVDetailsController(
         description = "Tv id를 통해 Tvshow 상세조회"
     )
     fun getTVDetails(@PathVariable tvId: Int): Mono<ResponseEntity<TVDetailsDto>> {
-        contentClickService.incrementTVShowClicks(tvId.toLong()) // 조회수 증가 로직 추가
+
         return tvDetailsService.getTVDetails(tvId)
             .map { ResponseEntity.ok(it) }
             .defaultIfEmpty(ResponseEntity.notFound().build())

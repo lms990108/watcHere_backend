@@ -25,7 +25,7 @@ class MovieDetailsController(
     )
     fun getMovieDetails(@PathVariable movieId: Int): Mono<ResponseEntity<MovieDetailsDto>> {
         println(movieId)
-        contentClickService.incrementMovieClicks(movieId.toLong()) // 조회수 증가 로직 추가
+
         return movieDetailsService.getMovieDetails(movieId)
             .map { ResponseEntity.ok(it) }
             .defaultIfEmpty(ResponseEntity.notFound().build())
