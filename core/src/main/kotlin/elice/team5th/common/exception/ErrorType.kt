@@ -27,6 +27,9 @@ enum class ErrorType(
     USER_NOT_FOUND(4001, HttpStatus.NOT_FOUND),
     PATH_NOT_FOUND(4002, HttpStatus.NOT_FOUND),
     REVIEW_NOT_FOUND(4003, HttpStatus.NOT_FOUND),
+    MOVIE_NOT_FOUND(4004, HttpStatus.NOT_FOUND),
+    TV_SHOW_NOT_FOUND(4005, HttpStatus.NOT_FOUND),
+    LIKE_NOT_FOUND(4006, HttpStatus.NOT_FOUND),
 
     // 409
     CONFLICT(5000, HttpStatus.CONFLICT),
