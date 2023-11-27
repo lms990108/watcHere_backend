@@ -19,16 +19,16 @@ class SwaggerConfig {
             .bearerFormat("JWT")
             .name("JWT Authentication")
 
-//        val securityRequirement = SecurityRequirement().addList("jwtAuth")
+        val securityRequirement = SecurityRequirement().addList("jwtAuth")
 
         val info = Info().title("Elice 5th API").description("Elice 5th API Docs").version("v1.0.0")
-        val devServer = Server().url("http://kdt-sw-6-team05.elicecoding.com").description("Dev Server")
+        val devServer = Server().url("https://kdt-sw-6-team05.elicecoding.com").description("Dev Server")
         val localServer = Server().url("http://localhost:8080").description("Local Server")
 
         return OpenAPI()
             .info(info)
             .servers(listOf(devServer, localServer))
             .components(Components().addSecuritySchemes("jwtAuth", securityScheme))
-//            .addSecurityItem(securityRequirement)
+            .addSecurityItem(securityRequirement)
     }
 }
