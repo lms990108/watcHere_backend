@@ -4,6 +4,7 @@ import elice.team5th.domain.tmdb.dto.SearchTVListResponseDto
 import elice.team5th.domain.tmdb.util.ErrorUtil
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -16,6 +17,7 @@ class SearchTVService(
     @Value("\${tmdb.api.access-token}")
     private lateinit var accessToken: String
 
+    @Transactional
     fun searchContent(query: String, page: Int): Mono<SearchTVListResponseDto> {
         return webClient.get()
             .uri { uriBuilder ->

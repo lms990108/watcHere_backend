@@ -8,6 +8,7 @@ import elice.team5th.domain.tmdb.repository.TVShowRepository
 import elice.team5th.domain.tmdb.util.ErrorUtil
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 import java.util.*
@@ -22,6 +23,7 @@ class TVDetailsService(
     @Value("\${tmdb.api.access-token}")
     private lateinit var accessToken: String
 
+    @Transactional
     fun getTVDetails(tvId: Int): Mono<TVDetailsDto> {
         println("Fetching TV show details for ID: $tvId") // 로그
         val tvShowEntity = tvShowRepository.findById(tvId)

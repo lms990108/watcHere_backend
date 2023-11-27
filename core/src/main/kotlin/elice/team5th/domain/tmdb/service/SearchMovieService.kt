@@ -4,6 +4,7 @@ import elice.team5th.domain.tmdb.dto.SearchMovieListResponseDto
 import elice.team5th.domain.tmdb.util.ErrorUtil
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -17,6 +18,7 @@ class SearchMovieService(
     @Value("\${tmdb.api.access-token}")
     private lateinit var accessToken: String
 
+    @Transactional
     fun searchContent(query: String, page: Int): Mono<SearchMovieListResponseDto> {
         return webClient.get()
             .uri { uriBuilder ->
