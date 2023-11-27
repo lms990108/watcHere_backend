@@ -2,6 +2,7 @@ package elice.team5th.domain.user.model
 
 import elice.team5th.common.model.BaseEntity
 import elice.team5th.domain.chat.model.Message
+import elice.team5th.domain.review.model.Review
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -19,8 +20,8 @@ class User(
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val messages: List<Message> = mutableListOf(),
 
-//    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-//    val reviews : MutableList<Review> = mutableListOf(),
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    val reviews : MutableList<Review> = mutableListOf(),
 
     @NotNull
     val userId: String,

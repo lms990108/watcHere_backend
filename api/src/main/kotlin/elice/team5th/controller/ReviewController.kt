@@ -39,7 +39,7 @@ class ReviewController(private val reviewService: ReviewService) {
         return ResponseEntity.ok(
             ReviewDTO(
                 review.id,
-                review.userId,
+                review.user,
                 review.contentId,
                 review.detail,
                 review.rating,
@@ -64,7 +64,7 @@ class ReviewController(private val reviewService: ReviewService) {
         return ResponseEntity.ok(
             ReviewDTO(
                 updatedReview.id,
-                updatedReview.userId,
+                updatedReview.user,
                 updatedReview.contentId,
                 updatedReview.detail,
                 updatedReview.rating,
@@ -100,7 +100,7 @@ class ReviewController(private val reviewService: ReviewService) {
         val reviewDTOs = pageOfReviews.map {
             ReviewDTO(
                 it.id,
-                it.userId,
+                it.user,
                 it.contentId,
                 it.detail,
                 it.rating,
@@ -171,7 +171,7 @@ class ReviewController(private val reviewService: ReviewService) {
         val reviewDTOs = pageOfReviews.map { review ->
             ReviewDTO(
                 id = review.id,
-                userId = review.userId,
+                user = review.user,
                 contentId = review.contentId,
                 detail = review.detail,
                 rating = review.rating,
