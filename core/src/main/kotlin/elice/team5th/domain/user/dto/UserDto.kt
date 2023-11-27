@@ -33,12 +33,6 @@ class UserDto {
 
         @Schema(description = "role", example = "USER/ADMIN/GUEST")
         val role: RoleType,
-
-        @Schema(description = "favorites")
-        val favorites: MutableList<Content>,
-
-        @Schema(description = "reviews")
-        val reviews: MutableList<Review>
     ) {
         constructor(user: User) : this(
             userId = user.userId,
@@ -48,8 +42,6 @@ class UserDto {
             ban = user.ban,
             provider = user.provider,
             role = user.role,
-            favorites = user.favorites,
-            reviews = user.reviews
         )
     }
 }

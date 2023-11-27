@@ -38,17 +38,7 @@ class ReviewController(private val reviewService: ReviewService) {
         ResponseEntity<ReviewDTO> {
         val review = reviewService.createReview(createReviewDTO, user)
         println(createReviewDTO)
-        return ResponseEntity.ok(
-            ReviewDTO(
-                review.id,
-                review.user.userId,
-                review.contentId,
-                review.detail,
-                review.rating,
-                review.likes,
-                review.reports
-            )
-        )
+        return ResponseEntity.ok().body(ReviewDTO(review))
     }
 
     // 리뷰 수정
@@ -63,17 +53,7 @@ class ReviewController(private val reviewService: ReviewService) {
         @CurrentUser user: UserPrincipal
     ): ResponseEntity<ReviewDTO> {
         val updatedReview = reviewService.updateReview(id, createReviewDTO, user)
-        return ResponseEntity.ok(
-            ReviewDTO(
-                updatedReview.id,
-                updatedReview.user.userId,
-                updatedReview.contentId,
-                updatedReview.detail,
-                updatedReview.rating,
-                updatedReview.likes,
-                updatedReview.reports
-            )
-        )
+        return ResponseEntity.ok().body(ReviewDTO(updatedReview))
     }
 
     // 리뷰 삭제
@@ -99,17 +79,7 @@ class ReviewController(private val reviewService: ReviewService) {
         @RequestParam(defaultValue = "10") size: Int
     ): ResponseEntity<Page<ReviewDTO>> {
         val pageOfReviews = reviewService.findReviewsByUserIdPaginated(userId, page, size)
-        val reviewDTOs = pageOfReviews.map {
-            ReviewDTO(
-                it.id,
-                it.user.userId,
-                it.contentId,
-                it.detail,
-                it.rating,
-                it.likes,
-                it.reports
-            )
-        }
+        val reviewDTOs = pageOfReviews.map { ReviewDTO(it) }
         return ResponseEntity.ok(reviewDTOs)
     }
 
@@ -170,17 +140,7 @@ class ReviewController(private val reviewService: ReviewService) {
     ): ResponseEntity<Page<ReviewDTO>> {
         val pageable: Pageable = PageRequest.of(page, size)
         val pageOfReviews = reviewService.findReviewsWithHighReports(pageable)
-        val reviewDTOs = pageOfReviews.map { review ->
-            ReviewDTO(
-                id = review.id,
-                userId = review.user.userId,
-                contentId = review.contentId,
-                detail = review.detail,
-                rating = review.rating,
-                likes = review.likes,
-                reports = review.reports
-            )
-        }
+        val reviewDTOs = pageOfReviews.map { ReviewDTO(it) }
         return ResponseEntity.ok(reviewDTOs)
     }
 }
