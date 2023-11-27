@@ -1,6 +1,7 @@
 package elice.team5th.domain.user.dto
 
 import elice.team5th.domain.review.model.Review
+import elice.team5th.domain.tmdb.entity.Content
 import elice.team5th.domain.user.model.ProviderType
 import elice.team5th.domain.user.model.RoleType
 import elice.team5th.domain.user.model.User
@@ -33,7 +34,9 @@ class UserDto {
         @Schema(description = "role", example = "USER/ADMIN/GUEST")
         val role: RoleType,
 
-//        val favorites:
+        @Schema(description = "favorites")
+        val favorites: MutableList<Content>,
+
         @Schema(description = "reviews")
         val reviews: MutableList<Review>
     ) {
@@ -45,7 +48,7 @@ class UserDto {
             ban = user.ban,
             provider = user.provider,
             role = user.role,
-//            favorites = user.favorites
+            favorites = user.favorites,
             reviews = user.reviews
         )
     }

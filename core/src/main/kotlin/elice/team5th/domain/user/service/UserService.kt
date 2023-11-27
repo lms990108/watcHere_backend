@@ -3,7 +3,6 @@ package elice.team5th.domain.user.service
 import elice.team5th.common.exception.FileSizeExceededException
 import elice.team5th.common.service.S3Service
 import elice.team5th.domain.auth.repository.UserRefreshTokenRepository
-import elice.team5th.domain.user.dto.UserDto
 import elice.team5th.domain.user.exception.UserNotFoundException
 import elice.team5th.domain.user.model.RoleType
 import elice.team5th.domain.user.model.User

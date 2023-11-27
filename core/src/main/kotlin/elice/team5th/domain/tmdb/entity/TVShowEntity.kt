@@ -19,14 +19,6 @@ import java.util.*
 @Table(name = "tvshows")
 class TVShowEntity(
 
-    @Id
-    val id: Long,
-
-    val adult: Boolean,
-
-    @Column(name = "backdrop_path")
-    val backdropPath: String,
-
     @ManyToMany(cascade = [CascadeType.ALL])
     @JoinTable(
         name = "tvshow_genre",
@@ -60,26 +52,5 @@ class TVShowEntity(
 
     val numberOfSeasons: Int,
 
-    @Column(columnDefinition = "TEXT")
-    val overview: String,
-
-    val popularity: Double,
-
-    @Column(name = "poster_path")
-    val posterPath: String,
-
     val type: String,
-
-    @Column(name = "vote_average")
-    val voteAverage: Double,
-
-    @Column(name = "vote_count")
-    val voteCount: Int,
-
-    // 추가된 필드
-    @Column(name = "director_name")
-    val directorName: String? = null,
-
-    @Column(name = "director_profile_path")
-    val directorProfilePath: String? = null
-)
+) : Content()

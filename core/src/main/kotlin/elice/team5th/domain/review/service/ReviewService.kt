@@ -69,6 +69,12 @@ class ReviewService(
         reviewRepository.deleteById(id)
     }
 
+    // user_id로 페이징된 리뷰 리스트 조회
+    fun findReviewsByUserIdPaginated(userId: Long, page: Int, size: Int): Page<Review> {
+        val pageable: Pageable = PageRequest.of(page, size)
+        return reviewRepository.findByUserId(userId, pageable)
+    }
+
     // content_id로 페이징된 리뷰 리스트 조회
     // 컨텐츠 평균 평점 조회 가능하도록 수정
     // 컨텐츠 총 리뷰 갯수 조회 가능하도록 수정
