@@ -8,12 +8,11 @@ import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
-import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 
 @Entity
 @Table(name = "likes")
-class Like (
+class Like(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     val user: User,
@@ -24,5 +23,5 @@ class Like (
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tv_show_id", referencedColumnName = "id", nullable = false)
-    val tvShow: TVShowEntity?,
-    ) : BaseEntity()
+    val tvShow: TVShowEntity?
+) : BaseEntity()

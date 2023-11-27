@@ -1,7 +1,6 @@
 package elice.team5th.domain.tmdb.entity
 
 import elice.team5th.domain.like.model.Like
-import elice.team5th.domain.review.model.Review
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -18,7 +17,6 @@ import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import java.time.LocalDateTime
 import java.util.*
-
 
 @Entity
 @Table(name = "tvshows")

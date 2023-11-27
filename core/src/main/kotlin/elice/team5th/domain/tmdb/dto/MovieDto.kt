@@ -2,7 +2,6 @@ package elice.team5th.domain.tmdb.dto
 
 import elice.team5th.domain.tmdb.entity.GenreEntity
 import elice.team5th.domain.tmdb.entity.MovieEntity
-import elice.team5th.domain.user.dto.UserDto
 import java.time.LocalDateTime
 
 class MovieDto {

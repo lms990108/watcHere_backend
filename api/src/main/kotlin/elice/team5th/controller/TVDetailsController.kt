@@ -24,7 +24,6 @@ class TVDetailsController(
         description = "Tv id를 통해 Tvshow 상세조회"
     )
     fun getTVDetails(@PathVariable tvId: Int): Mono<ResponseEntity<TVDetailsDto>> {
-
         return tvDetailsService.getTVDetails(tvId)
             .map { ResponseEntity.ok(it) }
             .defaultIfEmpty(ResponseEntity.notFound().build())

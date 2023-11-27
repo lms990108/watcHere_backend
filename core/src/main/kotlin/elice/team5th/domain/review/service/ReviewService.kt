@@ -59,7 +59,7 @@ class ReviewService(
         val review = reviewRepository.findById(id).orElseThrow {
             ReviewNotFoundException("Review not found with ID: $id")
         }
-        if (review.user.userId != user.userId) {  // INFO: 시큐리티 쪽에서 관리자 권한 api가 되도록 변경
+        if (review.user.userId != user.userId) { // INFO: 시큐리티 쪽에서 관리자 권한 api가 되도록 변경
             throw PermissionDeniedException("User does not have permission to delete review with ID: $id")
         }
 

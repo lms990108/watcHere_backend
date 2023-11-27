@@ -36,7 +36,7 @@ class UserDto {
         val createdAt: LocalDateTime?,
 
         @Schema(description = "updated_at", example = "2021-08-23T14:00:00")
-        val updatedAt: LocalDateTime?,
+        val updatedAt: LocalDateTime?
     ) {
         constructor(user: User) : this(
             userId = user.userId,

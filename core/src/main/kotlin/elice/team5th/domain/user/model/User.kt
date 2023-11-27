@@ -27,11 +27,11 @@ class User(
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @Column(name = "reviews")
-    val reviews : MutableList<Review> = mutableListOf(),
+    val reviews: MutableList<Review> = mutableListOf(),
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @Column(name = "likes")
-    val likes : MutableList<Like> = mutableListOf(),
+    val likes: MutableList<Like> = mutableListOf(),
 
     @NotNull
     @Id

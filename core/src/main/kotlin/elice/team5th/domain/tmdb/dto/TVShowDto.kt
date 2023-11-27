@@ -2,8 +2,6 @@ package elice.team5th.domain.tmdb.dto
 
 import elice.team5th.domain.tmdb.entity.GenreEntity
 import elice.team5th.domain.tmdb.entity.TVShowEntity
-import elice.team5th.domain.user.dto.UserDto
-import org.springframework.cglib.core.Local
 import java.time.LocalDateTime
 
 class TVShowDto {

@@ -8,8 +8,10 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
 interface MovieClicksRepository : JpaRepository<MovieClicksEntity, Long> {
-    @Query("SELECT new elice.team5th.domain.clicks.dto.MovieWithClicksDto(m.id, m.title, m.posterPath, c.clicks) " +
-        "FROM MovieClicksEntity c JOIN c.movie m " +
-        "ORDER BY c.clicks DESC")
+    @Query(
+        "SELECT new elice.team5th.domain.clicks.dto.MovieWithClicksDto(m.id, m.title, m.posterPath, c.clicks) " +
+            "FROM MovieClicksEntity c JOIN c.movie m " +
+            "ORDER BY c.clicks DESC"
+    )
     fun findAllMoviesWithClicks(pageable: Pageable): Page<MovieWithClicksDto>
 }

@@ -71,12 +71,16 @@ class LikeService(
 
     fun cancelLike(userId: String, likeRequest: LikeDto.LikeRequest) {
         likeRequest.movieId?.let {
-            val like = likeRepository.findByUserUserIdAndMovieId(userId, it) ?: throw LikeNotFoundException("해당 영화에 대한 좋아요를 찾을 수 없습니다.")
+            val like = likeRepository.findByUserUserIdAndMovieId(userId, it) ?: throw LikeNotFoundException(
+                "해당 영화에 대한 좋아요를 찾을 수 없습니다."
+            )
             likeRepository.delete(like)
         }
 
         likeRequest.tvShowId?.let {
-            val like = likeRepository.findByUserUserIdAndTvShowId(userId, it) ?: throw LikeNotFoundException("해당 TV 프로그램에 대한 좋아요를 찾을 수 없습니다.")
+            val like = likeRepository.findByUserUserIdAndTvShowId(userId, it) ?: throw LikeNotFoundException(
+                "해당 TV 프로그램에 대한 좋아요를 찾을 수 없습니다."
+            )
             likeRepository.delete(like)
         }
     }

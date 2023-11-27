@@ -13,4 +13,3 @@ data class ActorDto(
         profilePath = actor.profilePath
     )
 }
-

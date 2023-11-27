@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.client.HttpServerErrorException.InternalServerError
 
 @RestController
 @RequestMapping("/api/v1/likes")
@@ -32,9 +31,11 @@ class LikeController(
         @RequestParam("size", defaultValue = "20") size: Int
     ): ResponseEntity<Page<MovieDto.Response>> {
         val movies = likeService.getLikedMoviesByUserId(userId, page, size)
-        return ResponseEntity.ok().body(movies.map {
-            MovieDto.Response(it)
-        })
+        return ResponseEntity.ok().body(
+            movies.map {
+                MovieDto.Response(it)
+            }
+        )
     }
 
     @Operation(summary = "해당 유저의 선호 TV 프로그램 목록 조회", description = "유저의 선호 TV 프로그램 목록을 페이징 조회합니다.")
@@ -45,9 +46,11 @@ class LikeController(
         @RequestParam("size", defaultValue = "20") size: Int
     ): ResponseEntity<Page<TVShowDto.Response>> {
         val tvShows = likeService.getLikedTVShowsByUserId(userId, page, size)
-        return ResponseEntity.ok().body(tvShows.map {
-            TVShowDto.Response(it)
-        })
+        return ResponseEntity.ok().body(
+            tvShows.map {
+                TVShowDto.Response(it)
+            }
+        )
     }
 
     @Operation(summary = "좋아요 기능", description = "로그인한 유저가 특정 컨텐츠를 좋아요 표시합니다.")

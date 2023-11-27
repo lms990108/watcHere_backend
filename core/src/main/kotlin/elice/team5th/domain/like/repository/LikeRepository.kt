@@ -1,7 +1,6 @@
 package elice.team5th.domain.like.repository
 
 import elice.team5th.domain.like.model.Like
-import elice.team5th.domain.user.model.User
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository

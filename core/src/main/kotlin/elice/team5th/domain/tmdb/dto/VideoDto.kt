@@ -15,4 +15,3 @@ data class VideoDto(
         type = video.type
     )
 }
-

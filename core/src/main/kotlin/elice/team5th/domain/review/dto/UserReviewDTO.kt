@@ -1,8 +1,6 @@
 package elice.team5th.domain.review.dto
 
-import elice.team5th.domain.user.dto.UserDto
-
-class UserReviewDTO (
+class UserReviewDTO(
     val id: Long,
     val contentId: Int,
     val detail: String,

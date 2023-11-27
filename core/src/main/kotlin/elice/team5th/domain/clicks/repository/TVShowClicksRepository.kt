@@ -8,8 +8,10 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
 interface TVShowClicksRepository : JpaRepository<TVShowClicksEntity, Long> {
-    @Query("SELECT new elice.team5th.domain.clicks.dto.TVShowWithClicksDto(t.id, t.name, t.posterPath, c.clicks) " +
-        "FROM TVShowClicksEntity c JOIN c.tvShow t " +
-        "ORDER BY c.clicks DESC")
+    @Query(
+        "SELECT new elice.team5th.domain.clicks.dto.TVShowWithClicksDto(t.id, t.name, t.posterPath, c.clicks) " +
+            "FROM TVShowClicksEntity c JOIN c.tvShow t " +
+            "ORDER BY c.clicks DESC"
+    )
     fun findAllTVShowsWithClicks(pageable: Pageable): Page<TVShowWithClicksDto>
 }
