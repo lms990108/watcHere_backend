@@ -3,7 +3,7 @@ package elice.team5th.domain.review.dto
 import elice.team5th.domain.user.dto.UserDto
 
 class UserReviewDTO (
-    val id: Long? = null,
+    val id: Long,
     val contentId: Int,
     val detail: String,
     val rating: Int,

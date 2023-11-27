@@ -70,9 +70,9 @@ class ReviewService(
     }
 
     // user_id로 페이징된 리뷰 리스트 조회
-    fun findReviewsByUserIdPaginated(userId: Long, page: Int, size: Int): Page<Review> {
+    fun findReviewsByUserIdPaginated(userId: String, page: Int, size: Int): Page<Review> {
         val pageable: Pageable = PageRequest.of(page, size)
-        return reviewRepository.findByUserId(userId, pageable)
+        return reviewRepository.findByUserUserId(userId, pageable)
     }
 
     // content_id로 페이징된 리뷰 리스트 조회

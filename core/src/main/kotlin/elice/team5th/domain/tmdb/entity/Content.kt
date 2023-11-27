@@ -20,10 +20,10 @@ abstract class Content (
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = true)
-    var userByFavorite: User? = null,
+    var user: User? = null,
 
     @Id
-    open var id: Long? = null,
+    open var id: Long = 0,
 
     @CreatedDate
     open var createdAt: LocalDateTime = LocalDateTime.now(),

@@ -6,6 +6,8 @@ import elice.team5th.domain.review.dto.CreateReviewDTO
 import elice.team5th.domain.review.dto.RatingCountDTO
 import elice.team5th.domain.review.dto.ReviewDTO
 import elice.team5th.domain.review.dto.ReviewPageDataDTO
+import elice.team5th.domain.review.dto.UserReviewDTO
+import elice.team5th.domain.review.model.Review
 import elice.team5th.domain.review.service.ReviewService
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.data.domain.Page
@@ -39,7 +41,7 @@ class ReviewController(private val reviewService: ReviewService) {
         return ResponseEntity.ok(
             ReviewDTO(
                 review.id,
-                review.user,
+                review.user.userId,
                 review.contentId,
                 review.detail,
                 review.rating,
@@ -64,7 +66,7 @@ class ReviewController(private val reviewService: ReviewService) {
         return ResponseEntity.ok(
             ReviewDTO(
                 updatedReview.id,
-                updatedReview.user,
+                updatedReview.user.userId,
                 updatedReview.contentId,
                 updatedReview.detail,
                 updatedReview.rating,
@@ -92,7 +94,7 @@ class ReviewController(private val reviewService: ReviewService) {
         description = "10개씩 페이징되고 추가적인 정렬방식 등은 넣지 않았습니다."
     )
     fun getReviewsByUserIdPaginated(
-        @PathVariable userId: Long,
+        @PathVariable userId: String,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int
     ): ResponseEntity<Page<ReviewDTO>> {
@@ -100,7 +102,7 @@ class ReviewController(private val reviewService: ReviewService) {
         val reviewDTOs = pageOfReviews.map {
             ReviewDTO(
                 it.id,
-                it.user,
+                it.user.userId,
                 it.contentId,
                 it.detail,
                 it.rating,
@@ -171,7 +173,7 @@ class ReviewController(private val reviewService: ReviewService) {
         val reviewDTOs = pageOfReviews.map { review ->
             ReviewDTO(
                 id = review.id,
-                user = review.user,
+                userId = review.user.userId,
                 contentId = review.contentId,
                 detail = review.detail,
                 rating = review.rating,

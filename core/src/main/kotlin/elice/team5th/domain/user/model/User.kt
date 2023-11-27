@@ -9,9 +9,12 @@ import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.FetchType
+import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import org.jetbrains.annotations.NotNull
+import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.annotation.LastModifiedDate
 import java.time.LocalDateTime
 
 @Entity
@@ -28,7 +31,9 @@ class User(
     val favorites : MutableList<Content> = mutableListOf(),
 
     @NotNull
+    @Id
     val userId: String,
+
     var email: String?,
     var nickname: String,
     var profileImage: String,
@@ -44,6 +49,11 @@ class User(
     @NotNull
     var ban: Boolean = false,
 
-    var deletedAt: LocalDateTime? = null
+    var deletedAt: LocalDateTime? = null,
 
-) : BaseEntity()
+    @CreatedDate
+    var createdAt: LocalDateTime = LocalDateTime.now(),
+
+    @LastModifiedDate
+    var updatedAt: LocalDateTime = LocalDateTime.now()
+)
