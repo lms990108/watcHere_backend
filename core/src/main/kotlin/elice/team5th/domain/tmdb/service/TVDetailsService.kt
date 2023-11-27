@@ -1,5 +1,6 @@
 package elice.team5th.domain.tmdb.service
 
+import elice.team5th.domain.clicks.service.ContentClickService
 import elice.team5th.domain.tmdb.dto.*
 import elice.team5th.domain.tmdb.entity.GenreEntity
 import elice.team5th.domain.tmdb.entity.TVShowEntity
@@ -14,7 +15,8 @@ import java.util.*
 @Service
 class TVDetailsService(
     private val webClient: WebClient,
-    private val tvShowRepository: TVShowRepository
+    private val tvShowRepository: TVShowRepository,
+    private val contentClickService: ContentClickService
 ) {
 
     @Value("\${tmdb.api.access-token}")
@@ -24,6 +26,7 @@ class TVDetailsService(
         println("Fetching TV show details for ID: $tvId") // 로그
         val tvShowEntity = tvShowRepository.findById(tvId)
         if (tvShowEntity.isPresent) {
+            contentClickService.incrementTVShowClicks(tvId.toLong()) // 조회수 증가 로직 추가
             println("Found TV show details in the database for ID: $tvId") // 로그
             return Mono.just(convertEntityToDto(tvShowEntity.get()))
         }
@@ -67,7 +70,6 @@ class TVDetailsService(
             vote_count = entity.voteCount,
             videos = entity.videos.map {
                 VideoDto(
-                    id = it.id ?: throw IllegalStateException("Video ID cannot be null"),
                     key = it.key,
                     name = it.name,
                     site = it.site,
