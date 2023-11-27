@@ -65,7 +65,7 @@ class MovieDetailsService(
             genres = movieEntity.genres.map { genreEntity ->
                 GenreEntity(id = genreEntity.id, name = genreEntity.name)
             },
-            id = movieEntity.id.toInt(),
+            id = movieEntity.id,
             original_language = movieEntity.originalLanguage,
             original_title = movieEntity.originalTitle,
             overview = movieEntity.overview,
@@ -103,7 +103,7 @@ class MovieDetailsService(
             adult = apiResponse.adult,
             backdrop_path = apiResponse.backdrop_path,
             genres = apiResponse.genres,
-            id = apiResponse.id,
+            id = apiResponse.id.toLong(),
             original_language = apiResponse.original_language,
             original_title = apiResponse.original_title,
             overview = apiResponse.overview,

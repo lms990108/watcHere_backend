@@ -5,7 +5,7 @@ import elice.team5th.domain.user.model.User
 
 data class ReviewDTO(
     val id: Long? = null,
-    val user: User,
+    val userId: String,
     @JsonProperty("content_id")
     val contentId: Int,
     val detail: String,

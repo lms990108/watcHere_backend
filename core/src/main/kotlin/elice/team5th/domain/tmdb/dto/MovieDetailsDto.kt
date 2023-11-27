@@ -6,7 +6,7 @@ data class MovieDetailsDto(
     val adult: Boolean,
     val backdrop_path: String?,
     val genres: List<GenreEntity>,
-    val id: Int,
+    val id: Long,
     val original_language: String,
     val original_title: String,
     val overview: String,

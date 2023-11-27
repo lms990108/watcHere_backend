@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ReviewRepository : JpaRepository<Review, Long> {
-    fun findByUserId(userId: Long, pageable: Pageable): Page<Review>
+    fun findByUserUserId(userId: String, pageable: Pageable): Page<Review>
     fun findByContentId(contentId: Long, pageable: Pageable): Page<Review>
 
     @Query("SELECT AVG(r.rating) FROM Review r WHERE r.contentId = :contentId")
