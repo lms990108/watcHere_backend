@@ -107,6 +107,8 @@ class ReviewController(private val reviewService: ReviewService) {
             "likesDesc: 추천순\n" +
             "createdAt: 기본값, 최신순"
     )
+
+    // 특정 컨텐츠의 리뷰들 조회
     fun getReviewsByContentIdPaginated(
         @PathVariable contentId: Long,
         @RequestParam(defaultValue = "0") page: Int,
@@ -117,6 +119,7 @@ class ReviewController(private val reviewService: ReviewService) {
         return ResponseEntity.ok(reviewPageData)
     }
 
+    // 특정 컨텐츠에서 내가 작성한 리뷰 조회
     @Operation(summary = "컨텐츠별 마이 리뷰 조회", description = "컨텐츠 아이디를 통해 마이 리뷰를 조회합니다.")
     @GetMapping("/my-review/{contentId}")
     fun getMyReviewByContentId(@PathVariable contentId: Long, @CurrentUser user: UserPrincipal):

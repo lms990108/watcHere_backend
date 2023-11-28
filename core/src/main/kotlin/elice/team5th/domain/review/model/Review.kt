@@ -30,6 +30,10 @@ class Review(
     var likes: Int = 0, // 'likes'는 추천 수를 나타냄
 
     @Column(nullable = false)
-    var reports: Int = 0 // 'reports'는 신고 수를 나타냄
+    var reports: Int = 0, // 'reports'는 신고 수를 나타냄
+
+    @Column(name = "content_type", nullable = false)
+    var contentType: String // 'Movie' 또는 'TV' 값
+
 
 ) : BaseEntity() // BaseEntity의 생성자 호출

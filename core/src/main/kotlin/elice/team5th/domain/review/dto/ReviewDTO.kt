@@ -9,6 +9,7 @@ data class ReviewDTO(
     val author: UserDto.Response,
     @JsonProperty("content_id")
     val contentId: Int,
+    val contentType: String, // 필드 추가
     val detail: String,
     val rating: Int,
     val likes: Int,
@@ -18,6 +19,7 @@ data class ReviewDTO(
         id = review.id,
         author = UserDto.Response(review.user),
         contentId = review.contentId,
+        contentType = review.contentType, // 여기서 설정
         detail = review.detail,
         rating = review.rating,
         likes = review.likes,
