@@ -13,6 +13,16 @@ import org.springframework.stereotype.Repository
 interface ReviewRepository : JpaRepository<Review, Long> {
     fun findByUser(user: User, pageable: Pageable): Page<Review>
     fun findByContentId(contentId: Long, pageable: Pageable): Page<Review>
+
+    fun findByContentIdAndContentType(contentId: Long, contentType: String, pageable: Pageable): Page<Review> // 타입까지 고려
+
+    @Query("SELECT AVG(r.rating) FROM Review r WHERE r.contentId = :contentId AND r.contentType = :contentType")
+    fun findAverageRatingByContentIdAndContentType(
+        @Param("contentId") contentId: Long?,
+        @Param("contentType") contentType: String?
+    ): Double?
+
+
     fun findByUserUserIdAndContentId(userId: String, contentId: Long): Review?
     @Query("SELECT AVG(r.rating) FROM Review r WHERE r.contentId = :contentId")
     fun findAverageRatingByContentId(@Param("contentId") contentId: Long): Double?
@@ -21,5 +31,6 @@ interface ReviewRepository : JpaRepository<Review, Long> {
     fun countReviewsByRatingForContentId(@Param("contentId") contentId: Long): List<Array<Any>>
 
     fun findByReportsGreaterThanEqual(reportsThreshold: Int, pageable: Pageable): Page<Review>
-    fun findByUserUserIdAndContentId(userId: String, contentId: Int): Review?
+    fun findByUserUserIdAndContentIdAndContentType(userId: String, contentId: Int, contentType: String): Review?
+
 }

@@ -29,14 +29,14 @@ class ReviewService(
     fun createReview(createReviewDTO: CreateReviewDTO, user: UserPrincipal): Review {
         val currentUser = userService.findUserById(user.userId)
 
-        reviewRepository.findByUserUserIdAndContentId(currentUser.userId, createReviewDTO.contentId)?.let {
-            throw Exception("이미 해당 컨텐츠(ID: ${createReviewDTO.contentId})에 대한 리뷰가 존재합니다.")
+        reviewRepository.findByUserUserIdAndContentIdAndContentType(currentUser.userId, createReviewDTO.contentId, createReviewDTO.contentType)?.let {
+            throw Exception("이미 해당 컨텐츠(ID: ${createReviewDTO.contentId}, Type: ${createReviewDTO.contentType})에 대한 리뷰가 존재합니다.")
         }
 
         val review = Review(
             user = currentUser,
             contentId = createReviewDTO.contentId,
-            contentType = createReviewDTO.contentType.name, // Enum의 name() 메서드 사용
+            contentType = createReviewDTO.contentType,
             detail = createReviewDTO.detail,
             rating = createReviewDTO.rating,
             likes = 0,
@@ -87,6 +87,7 @@ class ReviewService(
     // 컨텐츠 총 리뷰 갯수 조회 가능하도록 수정
     fun findReviewsByContentIdPaginated(
         contentId: Long,
+        contentType: String,
         page: Int,
         size: Int,
         sortBy: String = "createdAtDesc"
@@ -99,8 +100,8 @@ class ReviewService(
         }
         val pageable = PageRequest.of(page, size, sort)
 
-        val pageOfReviews = reviewRepository.findByContentId(contentId, pageable)
-        val averageRating = reviewRepository.findAverageRatingByContentId(contentId) ?: 0.0
+        val pageOfReviews = reviewRepository.findByContentIdAndContentType(contentId, contentType, pageable)
+        val averageRating = reviewRepository.findAverageRatingByContentIdAndContentType(contentId, contentType) ?: 0.0
 
         return ReviewPageDataDTO(
             reviews = pageOfReviews.map { ReviewDTO(it) },
@@ -144,7 +145,8 @@ class ReviewService(
         return reviewRepository.findByReportsGreaterThanEqual(5, pageable)
     }
 
-    fun findMyReviewByContentId(contentId: Long, user: UserPrincipal): Review =
-        reviewRepository.findByUserUserIdAndContentId(user.userId, contentId)
-            ?: throw ReviewNotFoundException("Review not found with contentId: $contentId")
+    fun findMyReviewByContentId(contentId: Long, contentType: String, user: UserPrincipal): Review {
+        return reviewRepository.findByUserUserIdAndContentIdAndContentType(user.userId, contentId.toInt(), contentType)
+            ?: throw ReviewNotFoundException("Review not found with contentId: $contentId and contentType: $contentType")
+    }
 }
