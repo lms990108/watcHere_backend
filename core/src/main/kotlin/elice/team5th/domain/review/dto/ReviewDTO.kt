@@ -2,6 +2,7 @@ package elice.team5th.domain.review.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import elice.team5th.domain.review.model.Review
+import elice.team5th.domain.tmdb.enumtype.ContentType
 import elice.team5th.domain.user.dto.UserDto
 
 data class ReviewDTO(
@@ -9,7 +10,7 @@ data class ReviewDTO(
     val author: UserDto.Response,
     @JsonProperty("content_id")
     val contentId: Int,
-    val contentType: String, // 필드 추가
+    val contentType: ContentType, // 필드 추가
     val detail: String,
     val rating: Int,
     val likes: Int,

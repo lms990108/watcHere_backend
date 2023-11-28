@@ -7,6 +7,7 @@ import elice.team5th.domain.review.dto.RatingCountDTO
 import elice.team5th.domain.review.dto.ReviewDTO
 import elice.team5th.domain.review.dto.ReviewPageDataDTO
 import elice.team5th.domain.review.service.ReviewService
+import elice.team5th.domain.tmdb.enumtype.ContentType
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -110,7 +111,7 @@ class ReviewController(private val reviewService: ReviewService) {
     )
     fun getReviewsByContentIdPaginated(
         @PathVariable contentId: Long,
-        @RequestParam contentType: String, // 컨텐츠 타입 매개변수 추가
+        @RequestParam contentType: ContentType, // 컨텐츠 타입 매개변수 추가
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
         @RequestParam(defaultValue = "createdAtDesc") sortBy: String
@@ -124,7 +125,7 @@ class ReviewController(private val reviewService: ReviewService) {
     @Operation(summary = "컨텐츠별 마이 리뷰 조회", description = "컨텐츠 아이디를 통해 마이 리뷰를 조회합니다.")
     fun getMyReviewByContentId(
         @PathVariable contentId: Long,
-        @RequestParam contentType: String, // 컨텐츠 타입 매개변수 추가
+        @RequestParam contentType: ContentType, // 컨텐츠 타입 매개변수 추가
         @CurrentUser user: UserPrincipal
     ): ResponseEntity<ReviewDTO> {
         val review = reviewService.findMyReviewByContentId(contentId, contentType, user)

@@ -10,6 +10,7 @@ import elice.team5th.domain.review.exception.ReviewNotFoundException
 import elice.team5th.domain.review.exception.UnauthorizedReviewAccessException
 import elice.team5th.domain.review.model.Review
 import elice.team5th.domain.review.repository.ReviewRepository
+import elice.team5th.domain.tmdb.enumtype.ContentType
 import elice.team5th.domain.user.model.RoleType
 import elice.team5th.domain.user.service.UserService
 import org.springframework.data.domain.Page
@@ -87,7 +88,7 @@ class ReviewService(
     // 컨텐츠 총 리뷰 갯수 조회 가능하도록 수정
     fun findReviewsByContentIdPaginated(
         contentId: Long,
-        contentType: String,
+        contentType: ContentType,
         page: Int,
         size: Int,
         sortBy: String = "createdAtDesc"
@@ -145,7 +146,8 @@ class ReviewService(
         return reviewRepository.findByReportsGreaterThanEqual(5, pageable)
     }
 
-    fun findMyReviewByContentId(contentId: Long, contentType: String, user: UserPrincipal): Review {
+    // 특정 컨텐츠에서 내 리뷰 찾기
+    fun findMyReviewByContentId(contentId: Long, contentType: ContentType, user: UserPrincipal): Review {
         return reviewRepository.findByUserUserIdAndContentIdAndContentType(user.userId, contentId.toInt(), contentType)
             ?: throw ReviewNotFoundException("Review not found with contentId: $contentId and contentType: $contentType")
     }
