@@ -50,6 +50,7 @@ class ReviewService(
         }
         review.apply {
             detail = createReviewDTO.detail
+            rating = createReviewDTO.rating
         }
         return reviewRepository.save(review)
     }
