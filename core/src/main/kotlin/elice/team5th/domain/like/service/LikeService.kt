@@ -6,6 +6,7 @@ import elice.team5th.domain.like.model.Like
 import elice.team5th.domain.like.repository.LikeRepository
 import elice.team5th.domain.tmdb.entity.MovieEntity
 import elice.team5th.domain.tmdb.entity.TVShowEntity
+import elice.team5th.domain.tmdb.enumtype.ContentType
 import elice.team5th.domain.tmdb.exception.MovieNotFoundException
 import elice.team5th.domain.tmdb.exception.TVShowNotFoundException
 import elice.team5th.domain.tmdb.repository.MovieRepository
@@ -43,45 +44,35 @@ class LikeService(
     }
 
     @Transactional
-    fun likeContent(userId: String, addLikeRequest: LikeDto.LikeRequest): Like? {
+    fun likeContent(userId: String, contentType: ContentType, contentId: Int): Like? {
         val user = userRepository.findByUserId(userId) ?: throw UserNotFoundException("해당 유저를 찾을 수 없습니다.")
+        return when (contentType) {
+            ContentType.MOVIE -> {
+                val movie = movieRepository.findById(contentId)
+                    .orElseThrow { MovieNotFoundException("해당 영화를 찾을 수 없습니다.") }
+                likeRepository.save(Like(user = user, movie = movie, null))
+            }
 
-        addLikeRequest.movieId?.let {
-            return likeMovie(user, it)
+            ContentType.TV -> {
+                val tvShow = tvShowRepository.findById(contentId)
+                    .orElseThrow { TVShowNotFoundException("해당 TV 프로그램을 찾을 수 없습니다.") }
+                likeRepository.save(Like(user = user, null, tvShow = tvShow))
+            }
         }
-
-        addLikeRequest.tvShowId?.let {
-            return likeTVShow(user, it)
-        }
-
-        return null
     }
 
-    private fun likeMovie(user: User, movieId: Long): Like {
-        val movie = movieRepository.findById(movieId.toInt())
-            .orElseThrow { MovieNotFoundException("해당 영화를 찾을 수 없습니다.") }
-        return likeRepository.save(Like(user = user, movie = movie, null))
-    }
-
-    private fun likeTVShow(user: User, tvShowId: Long): Like {
-        val tvShow = tvShowRepository.findById(tvShowId.toInt())
-            .orElseThrow { TVShowNotFoundException("해당 TV 프로그램을 찾을 수 없습니다.") }
-        return likeRepository.save(Like(user = user, null, tvShow = tvShow))
-    }
-
-    fun cancelLike(userId: String, likeRequest: LikeDto.LikeRequest) {
-        likeRequest.movieId?.let {
-            val like = likeRepository.findByUserUserIdAndMovieId(userId, it) ?: throw LikeNotFoundException(
-                "해당 영화에 대한 좋아요를 찾을 수 없습니다."
-            )
-            likeRepository.delete(like)
-        }
-
-        likeRequest.tvShowId?.let {
-            val like = likeRepository.findByUserUserIdAndTvShowId(userId, it) ?: throw LikeNotFoundException(
-                "해당 TV 프로그램에 대한 좋아요를 찾을 수 없습니다."
-            )
-            likeRepository.delete(like)
+    fun cancelLike(userId: String, contentType: ContentType, contentId: Int) {
+        when (contentType) {
+            ContentType.MOVIE -> {
+                val movie = movieRepository.findById(contentId)
+                    .orElseThrow { MovieNotFoundException("해당 영화를 찾을 수 없습니다.") }
+                likeRepository.deleteByUserUserIdAndMovie(userId, movie)
+            }
+            ContentType.TV -> {
+                val tvShow = tvShowRepository.findById(contentId)
+                    .orElseThrow { TVShowNotFoundException("해당 TV 프로그램을 찾을 수 없습니다.") }
+                likeRepository.deleteByUserUserIdAndTvShow(userId, tvShow)
+            }
         }
     }
 }
