@@ -35,7 +35,6 @@ class ReviewController(private val reviewService: ReviewService) {
     fun createReview(@RequestBody createReviewDTO: CreateReviewDTO, @CurrentUser user: UserPrincipal):
         ResponseEntity<ReviewDTO> {
         val review = reviewService.createReview(createReviewDTO, user)
-        println(createReviewDTO)
         return ResponseEntity.ok().body(ReviewDTO(review))
     }
 

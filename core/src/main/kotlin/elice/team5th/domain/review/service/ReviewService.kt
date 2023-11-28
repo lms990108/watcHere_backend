@@ -36,7 +36,7 @@ class ReviewService(
         val review = Review(
             user = currentUser,
             contentId = createReviewDTO.contentId,
-            contentType = createReviewDTO.contentType, // 필드 추가
+            contentType = createReviewDTO.contentType.name, // Enum의 name() 메서드 사용
             detail = createReviewDTO.detail,
             rating = createReviewDTO.rating,
             likes = 0,
