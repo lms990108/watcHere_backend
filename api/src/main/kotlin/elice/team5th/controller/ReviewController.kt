@@ -81,6 +81,22 @@ class ReviewController(private val reviewService: ReviewService) {
         return ResponseEntity.ok(reviewDTOs)
     }
 
+    // 로그인한 유저의 리뷰 목록 조회
+    @GetMapping("/my-reviews")
+    @Operation(
+        summary = "로그인한 유저의 리뷰 목록 조회",
+        description = "10개씩 페이징되고 추가적인 정렬방식 등은 넣지 않았습니다."
+    )
+    fun getReviewsByUserIdPaginated(
+        @CurrentUser user: UserPrincipal,
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int
+    ): ResponseEntity<Page<ReviewDTO>> {
+        val pageOfReviews = reviewService.findReviewsByUserIdPaginated(user.userId, page, size)
+        val reviewDTOs = pageOfReviews.map { ReviewDTO(it) }
+        return ResponseEntity.ok(reviewDTOs)
+    }
+
     // content_id로 페이징된 리뷰 리스트 조회
     @GetMapping("/content/{contentId}")
     @Operation(
