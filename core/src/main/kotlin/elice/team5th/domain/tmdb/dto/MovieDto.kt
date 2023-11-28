@@ -8,7 +8,7 @@ class MovieDto {
     data class Response(
         val adult: Boolean,
         val backdrop_path: String?,
-        val genres: List<GenreEntity>,
+        val genres: List<GenreDto>,
         val id: Long,
         val original_language: String,
         val original_title: String,
@@ -32,7 +32,7 @@ class MovieDto {
             id = movie.id,
             adult = movie.adult,
             backdrop_path = movie.backdropPath,
-            genres = movie.genres,
+            genres = movie.genres.map { GenreDto(it) },
             original_language = movie.originalLanguage,
             original_title = movie.originalTitle,
             overview = movie.overview,
