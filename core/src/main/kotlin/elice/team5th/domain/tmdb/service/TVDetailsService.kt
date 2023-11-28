@@ -95,10 +95,10 @@ class TVDetailsService(
         return TVDetailsDto(
             adult = apiResponse.adult,
             backdrop_path = apiResponse.backdrop_path?.let { "https://image.tmdb.org/t/p/w500$it" } ?: "",
-            first_air_date = apiResponse.first_air_date,
+            first_air_date = apiResponse.first_air_date ?: "",
             genres = apiResponse.genres.map { GenreEntity(it.id, it.name) },
             id = apiResponse.id,
-            last_air_date = apiResponse.last_air_date,
+            last_air_date = apiResponse.last_air_date ?: "",
             name = apiResponse.name,
             number_of_episodes = apiResponse.number_of_episodes,
             number_of_seasons = apiResponse.number_of_seasons,
