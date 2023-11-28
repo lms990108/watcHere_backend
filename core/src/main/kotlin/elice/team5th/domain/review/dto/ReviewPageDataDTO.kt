@@ -4,7 +4,7 @@ import elice.team5th.domain.review.model.Review
 import org.springframework.data.domain.Page
 
 data class ReviewPageDataDTO(
-    val reviews: Page<Review>,
+    val reviews: Page<ReviewDTO>,
     val averageRating: Double,
     val totalElements: Long
 )

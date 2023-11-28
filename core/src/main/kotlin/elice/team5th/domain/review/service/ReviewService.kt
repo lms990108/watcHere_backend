@@ -3,6 +3,7 @@ package elice.team5th.domain.review.service
 import elice.team5th.domain.auth.entity.UserPrincipal
 import elice.team5th.domain.review.dto.CreateReviewDTO
 import elice.team5th.domain.review.dto.RatingCountDTO
+import elice.team5th.domain.review.dto.ReviewDTO
 import elice.team5th.domain.review.dto.ReviewPageDataDTO
 import elice.team5th.domain.review.exception.PermissionDeniedException
 import elice.team5th.domain.review.exception.ReviewNotFoundException
@@ -97,7 +98,7 @@ class ReviewService(
         val averageRating = reviewRepository.findAverageRatingByContentId(contentId) ?: 0.0
 
         return ReviewPageDataDTO(
-            reviews = pageOfReviews,
+            reviews = pageOfReviews.map { ReviewDTO(it) },
             averageRating = averageRating,
             totalElements = pageOfReviews.totalElements
         )
