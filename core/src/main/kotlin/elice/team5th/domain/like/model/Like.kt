@@ -18,10 +18,10 @@ class Like(
     val user: User,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "movie_id", referencedColumnName = "id", nullable = false)
-    var movie: MovieEntity? = null,
+    @JoinColumn(name = "movie_id", referencedColumnName = "id")
+    val movie: MovieEntity?,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tv_show_id", referencedColumnName = "id", nullable = false)
-    val tvShow: TVShowEntity? = null
+    @JoinColumn(name = "tv_show_id", referencedColumnName = "id")
+    val tvShow: TVShowEntity?
 ) : BaseEntity()
