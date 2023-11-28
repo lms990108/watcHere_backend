@@ -76,6 +76,7 @@ class SecurityConfig(
                 .requestMatchers("/api/v1/users/admin/**").hasAnyAuthority(RoleType.ADMIN.code)
                 .requestMatchers("/api/v1/users/**").hasAnyAuthority(RoleType.USER.code, RoleType.ADMIN.code)
                 .requestMatchers(HttpMethod.DELETE,"api/v1/reviews/**").hasAnyAuthority(RoleType.USER.code, RoleType.ADMIN.code)
+                .requestMatchers(HttpMethod.PUT,"api/v1/reviews/**").hasAnyAuthority(RoleType.USER.code, RoleType.ADMIN.code)
                 .anyRequest().permitAll()
         }
 
