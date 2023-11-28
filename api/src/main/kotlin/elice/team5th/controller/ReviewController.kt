@@ -67,6 +67,21 @@ class ReviewController(private val reviewService: ReviewService) {
         return ResponseEntity.ok().build()
     }
 
+    // 전체 리뷰 조회
+    @GetMapping("")
+    @Operation(
+        summary = "전체 리뷰 목록 조회",
+        description = "20개씩 페이징되고 최신순으로 정렬합니다."
+    )
+    fun getAllReviewsPaginated(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "20") size: Int
+    ): ResponseEntity<Page<ReviewDTO>> {
+        val pageOfReviews = reviewService.findAllReviewsPaginated(page, size)
+        val reviewDTOs = pageOfReviews.map { ReviewDTO(it) }
+        return ResponseEntity.ok(reviewDTOs)
+    }
+
     // user_id로 페이징된 리뷰 리스트 조회
     @GetMapping("/user/{userId}")
     @Operation(

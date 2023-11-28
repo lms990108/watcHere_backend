@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -41,15 +42,17 @@ class UserController(
         @RequestParam(value = "nickname_prefix", required = false)
         nicknamePrefix: String?
     ): ResponseEntity<Page<UserDto.Response>> {
+        val pageRequestSortByUpdatedAt = PageRequest.of(offset, limit, Sort.by("updatedAt").descending())
         val pageRequest = PageRequest.of(offset, limit)
+
         val users = when {
             ban && nicknamePrefix != null -> userService.findUsersByNicknameStartingWithAndBanIsTrue(
                 pageRequest,
                 nicknamePrefix
             )
-            ban -> userService.findUsersByBanIsTrue(pageRequest)
+            ban -> userService.findUsersByBanIsTrue(pageRequestSortByUpdatedAt)
             nicknamePrefix != null -> userService.findUsersByNicknameStartingWith(pageRequest, nicknamePrefix)
-            else -> userService.findAllUsers(pageRequest)
+            else -> userService.findAllUsers(pageRequestSortByUpdatedAt)
         }
         return ResponseEntity.ok().body(users.map { UserDto.Response(it) })
     }

@@ -43,6 +43,7 @@ class ReviewService(
             likes = 0,
             reports = 0
         )
+        println(createReviewDTO.contentId)
         return reviewRepository.save(review)
     }
 
@@ -150,5 +151,10 @@ class ReviewService(
     fun findMyReviewByContentId(contentId: Long, contentType: ContentType, user: UserPrincipal): Review {
         return reviewRepository.findByUserUserIdAndContentIdAndContentType(user.userId, contentId.toInt(), contentType)
             ?: throw ReviewNotFoundException("Review not found with contentId: $contentId and contentType: $contentType")
+    }
+
+    fun findAllReviewsPaginated(page: Int, size: Int): Page<Review> {
+        val pageable: Pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending())
+        return reviewRepository.findAll(pageable)
     }
 }
