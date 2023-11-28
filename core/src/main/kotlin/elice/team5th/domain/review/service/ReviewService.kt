@@ -137,4 +137,8 @@ class ReviewService(
     fun findReviewsWithHighReports(pageable: Pageable): Page<Review> {
         return reviewRepository.findByReportsGreaterThanEqual(5, pageable)
     }
+
+    fun findMyReviewByContentId(contentId: Long, user: UserPrincipal): Review =
+        reviewRepository.findByUserUserIdAndContentId(user.userId, contentId)
+            ?: throw ReviewNotFoundException("Review not found with contentId: $contentId")
 }

@@ -101,6 +101,14 @@ class ReviewController(private val reviewService: ReviewService) {
         return ResponseEntity.ok(reviewPageData)
     }
 
+    @Operation(summary = "컨텐츠별 마이 리뷰 조회", description = "컨텐츠 아이디를 통해 마이 리뷰를 조회합니다.")
+    @GetMapping("/my-review/{contentId}")
+    fun getMyReviewByContentId(@PathVariable contentId: Long, @CurrentUser user: UserPrincipal):
+        ResponseEntity<ReviewDTO> {
+        val review = reviewService.findMyReviewByContentId(contentId, user)
+        return ResponseEntity.ok(ReviewDTO(review))
+    }
+
     // 리뷰 별점당 갯수 조회
     @GetMapping("/ratings/{contentId}")
     @Operation(summary = "특정 별점의 리뷰 갯수를 반환합니다")
