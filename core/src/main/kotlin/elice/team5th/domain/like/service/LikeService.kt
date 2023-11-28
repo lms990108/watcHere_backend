@@ -50,13 +50,13 @@ class LikeService(
             ContentType.MOVIE -> {
                 val movie = movieRepository.findById(contentId)
                     .orElseThrow { MovieNotFoundException("해당 영화를 찾을 수 없습니다.") }
-                likeRepository.save(Like(user = user, movie = movie, null))
+                likeRepository.save(Like(user = user, movie = movie))
             }
 
             ContentType.TV -> {
                 val tvShow = tvShowRepository.findById(contentId)
                     .orElseThrow { TVShowNotFoundException("해당 TV 프로그램을 찾을 수 없습니다.") }
-                likeRepository.save(Like(user = user, null, tvShow = tvShow))
+                likeRepository.save(Like(user = user, tvShow = tvShow))
             }
         }
     }
