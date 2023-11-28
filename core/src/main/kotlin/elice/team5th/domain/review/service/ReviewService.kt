@@ -29,7 +29,7 @@ class ReviewService(
     fun createReview(createReviewDTO: CreateReviewDTO, user: UserPrincipal): Review {
         val currentUser = userService.findUserById(user.userId)
 
-        reviewRepository.findByUserIdAndContentId(currentUser.userId, createReviewDTO.contentId.toLong())?.let {
+        reviewRepository.findByUserUserIdAndContentId(currentUser.userId, createReviewDTO.contentId)?.let {
             throw Exception("이미 해당 컨텐츠(ID: ${createReviewDTO.contentId})에 대한 리뷰가 존재합니다.")
         }
 

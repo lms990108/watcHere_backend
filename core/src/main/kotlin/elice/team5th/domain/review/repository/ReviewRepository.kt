@@ -21,5 +21,5 @@ interface ReviewRepository : JpaRepository<Review, Long> {
     fun countReviewsByRatingForContentId(@Param("contentId") contentId: Long): List<Array<Any>>
 
     fun findByReportsGreaterThanEqual(reportsThreshold: Int, pageable: Pageable): Page<Review>
-    fun findByUserIdAndContentId(userId: String, contentId: Long): Review?
+    fun findByUserUserIdAndContentId(userId: String, contentId: Int): Review?
 }
