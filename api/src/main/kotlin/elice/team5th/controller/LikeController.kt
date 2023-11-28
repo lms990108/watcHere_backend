@@ -6,7 +6,9 @@ import elice.team5th.domain.like.dto.LikeDto
 import elice.team5th.domain.like.service.LikeService
 import elice.team5th.domain.tmdb.dto.MovieDto
 import elice.team5th.domain.tmdb.dto.TVShowDto
+import elice.team5th.domain.tmdb.enumtype.ContentType
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import org.springframework.data.domain.Page
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -57,10 +59,11 @@ class LikeController(
     @PostMapping("")
     fun likeContent(
         @CurrentUser userPrincipal: UserPrincipal,
-        @RequestBody likeRequest: LikeDto.LikeRequest
+        @RequestParam("content_type") contentType: ContentType,
+        @RequestParam("content_id") contentId: Int
     ): ResponseEntity<LikeDto.Response> {
         val userId = userPrincipal.userId
-        val like = likeService.likeContent(userId, likeRequest)
+        val like = likeService.likeContent(userId, contentType, contentId)
         return ResponseEntity.ok().body(LikeDto.Response(like!!))
     }
 
@@ -68,10 +71,11 @@ class LikeController(
     @DeleteMapping("")
     fun cancelLike(
         @CurrentUser userPrincipal: UserPrincipal,
-        @RequestBody likeRequest: LikeDto.LikeRequest
+        @Parameter(description = "컨텐츠 타입 ENUM", example = "TV/MOVIE") @RequestParam("content_type") contentType: ContentType,
+        @Parameter(description = "컨텐츠 ID", example = "502356") @RequestParam("content_id") contentId: Int
     ): ResponseEntity<String> {
         val userId = userPrincipal.userId
-        likeService.cancelLike(userId, likeRequest)
+        likeService.cancelLike(userId, contentType, contentId)
         return ResponseEntity.ok().body("좋아요 취소 완료")
     }
 }
