@@ -3,7 +3,6 @@ package elice.team5th.domain.review.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 import elice.team5th.domain.review.model.Review
 import elice.team5th.domain.user.dto.UserDto
-import elice.team5th.domain.user.model.User
 
 data class ReviewDTO(
     val id: Long? = null,

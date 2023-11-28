@@ -1,12 +1,10 @@
 package elice.team5th.domain.user.dto
 
-import elice.team5th.domain.review.model.Review
-import elice.team5th.domain.tmdb.entity.Content
 import elice.team5th.domain.user.model.ProviderType
 import elice.team5th.domain.user.model.RoleType
 import elice.team5th.domain.user.model.User
 import io.swagger.v3.oas.annotations.media.Schema
-import org.springframework.web.multipart.MultipartFile
+import java.time.LocalDateTime
 
 class UserDto {
     data class Response(
@@ -33,6 +31,12 @@ class UserDto {
 
         @Schema(description = "role", example = "USER/ADMIN/GUEST")
         val role: RoleType,
+
+        @Schema(description = "created_at", example = "2021-08-23T14:00:00")
+        val createdAt: LocalDateTime?,
+
+        @Schema(description = "updated_at", example = "2021-08-23T14:00:00")
+        val updatedAt: LocalDateTime?
     ) {
         constructor(user: User) : this(
             userId = user.userId,
@@ -42,6 +46,8 @@ class UserDto {
             ban = user.ban,
             provider = user.provider,
             role = user.role,
+            createdAt = user.createdAt,
+            updatedAt = user.updatedAt
         )
     }
 }

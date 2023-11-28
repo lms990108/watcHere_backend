@@ -20,4 +20,3 @@ class ActorEntity {
     @ManyToMany(mappedBy = "actors", fetch = FetchType.LAZY)
     val movies: List<MovieEntity> = ArrayList()
 }
-

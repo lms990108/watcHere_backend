@@ -90,7 +90,6 @@ class TVDetailsService(
         )
     }
 
-
     private fun convertApiResponseToDto(apiResponse: TVShowApiResponseDto): TVDetailsDto {
         val director = apiResponse.created_by.firstOrNull()
         return TVDetailsDto(
@@ -115,6 +114,4 @@ class TVDetailsService(
             directorProfilePath = director?.profile_path?.let { "https://image.tmdb.org/t/p/w500$it" } // 감독 프로필 경로 매핑
         )
     }
-
-
 }

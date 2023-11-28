@@ -3,14 +3,12 @@ package elice.team5th.controller
 import elice.team5th.domain.auth.annotation.CurrentUser
 import elice.team5th.domain.auth.entity.UserPrincipal
 import elice.team5th.domain.auth.token.AuthTokenProvider
-import elice.team5th.domain.review.dto.UserReviewDTO
 import elice.team5th.domain.user.dto.UserDto
 import elice.team5th.domain.user.model.RoleType
 import elice.team5th.domain.user.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -77,10 +75,16 @@ class UserController(
     @PutMapping("/me", consumes = ["multipart/form-data"])
     fun updateUser(
         @CurrentUser userPrincipal: UserPrincipal,
-        @Parameter(name = "nickname", description = "닉네임") @RequestParam(value = "nickname", required = false) nickname: String?,
-        @Parameter(name = "profile_image", description = "multipart/form-data 형식의 사진 파일을 input으로 받습니다.",
-            example = "image.png")
-        @RequestPart(value = "profile_image", required = false) profileImage: MultipartFile?
+        @Parameter(name = "nickname", description = "닉네임")
+        @RequestParam(value = "nickname", required = false)
+        nickname: String?,
+        @Parameter(
+            name = "profile_image",
+            description = "multipart/form-data 형식의 사진 파일을 input으로 받습니다.",
+            example = "image.png"
+        )
+        @RequestPart(value = "profile_image", required = false)
+        profileImage: MultipartFile?
     ): ResponseEntity<UserDto.Response> {
         val user = userService.updateUser(userPrincipal.userId, nickname, profileImage)
         return ResponseEntity.ok().body(UserDto.Response(user))

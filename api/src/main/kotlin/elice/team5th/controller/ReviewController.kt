@@ -6,8 +6,6 @@ import elice.team5th.domain.review.dto.CreateReviewDTO
 import elice.team5th.domain.review.dto.RatingCountDTO
 import elice.team5th.domain.review.dto.ReviewDTO
 import elice.team5th.domain.review.dto.ReviewPageDataDTO
-import elice.team5th.domain.review.dto.UserReviewDTO
-import elice.team5th.domain.review.model.Review
 import elice.team5th.domain.review.service.ReviewService
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.data.domain.Page

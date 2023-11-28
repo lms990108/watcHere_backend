@@ -31,5 +31,5 @@ class VideoEntity(
 
     val name: String,
     val site: String,
-    val type: String,
+    val type: String
 )
