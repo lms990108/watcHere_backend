@@ -145,7 +145,7 @@ class ReviewService(
             ?: throw ReviewNotFoundException("Review not found with contentId: $contentId")
 
     fun findAllReviewsPaginated(page: Int, size: Int): Page<Review> {
-        val pageable: Pageable = PageRequest.of(page, size)
+        val pageable: Pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending())
         return reviewRepository.findAll(pageable)
     }
 }

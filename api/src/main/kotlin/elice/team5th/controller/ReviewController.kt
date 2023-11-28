@@ -69,7 +69,7 @@ class ReviewController(private val reviewService: ReviewService) {
     @GetMapping("")
     @Operation(
         summary = "전체 리뷰 목록 조회",
-        description = "20개씩 페이징되고 추가적인 정렬방식 등은 넣지 않았습니다."
+        description = "20개씩 페이징되고 최신순으로 정렬합니다."
     )
     fun getAllReviewsPaginated(
         @RequestParam(defaultValue = "0") page: Int,
