@@ -10,6 +10,8 @@ import elice.team5th.domain.review.exception.ReviewNotFoundException
 import elice.team5th.domain.review.exception.UnauthorizedReviewAccessException
 import elice.team5th.domain.review.model.Review
 import elice.team5th.domain.review.repository.ReviewRepository
+import elice.team5th.domain.tmdb.enumtype.ContentType
+import elice.team5th.domain.user.model.RoleType
 import elice.team5th.domain.user.service.UserService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -27,9 +29,15 @@ class ReviewService(
     // 리뷰 작성
     fun createReview(createReviewDTO: CreateReviewDTO, user: UserPrincipal): Review {
         val currentUser = userService.findUserById(user.userId)
+
+        reviewRepository.findByUserUserIdAndContentIdAndContentType(currentUser.userId, createReviewDTO.contentId, createReviewDTO.contentType)?.let {
+            throw Exception("이미 해당 컨텐츠(ID: ${createReviewDTO.contentId}, Type: ${createReviewDTO.contentType})에 대한 리뷰가 존재합니다.")
+        }
+
         val review = Review(
             user = currentUser,
             contentId = createReviewDTO.contentId,
+            contentType = createReviewDTO.contentType,
             detail = createReviewDTO.detail,
             rating = createReviewDTO.rating,
             likes = 0,
@@ -39,15 +47,17 @@ class ReviewService(
         return reviewRepository.save(review)
     }
 
+
     // 리뷰 수정
     @Transactional
     fun updateReview(id: Long, createReviewDTO: CreateReviewDTO, user: UserPrincipal): Review {
         val review = reviewRepository.findById(id).orElseThrow {
             ReviewNotFoundException("Review not found with ID: $id")
         }
-        if (review.user.userId != user.userId) { // user.id 또는 user.userId로 변경해야 할 수 있습니다.
+        if (review.user.userId != user.userId) {
             throw UnauthorizedReviewAccessException("User is not authorized to update review with ID: $id")
         }
+
         review.apply {
             detail = createReviewDTO.detail
             rating = createReviewDTO.rating
@@ -61,13 +71,9 @@ class ReviewService(
         val review = reviewRepository.findById(id).orElseThrow {
             ReviewNotFoundException("Review not found with ID: $id")
         }
-        if (review.user.userId != user.userId) { // INFO: 시큐리티 쪽에서 관리자 권한 api가 되도록 변경
+        if (review.user.userId != user.userId && user.roleType != RoleType.ADMIN) { // RoleType.ADMIN은 사용자 정의 enum에 따라 다를 수 있습니다.
             throw PermissionDeniedException("User does not have permission to delete review with ID: $id")
         }
-
-//        if (review.userId != user.userId && user.roleType != RoleType.ADMIN) { // RoleType.ADMIN은 사용자 정의 enum에 따라 다를 수 있습니다.
-//            throw PermissionDeniedException("User does not have permission to delete review with ID: $id")
-//        }
         reviewRepository.deleteById(id)
     }
 
@@ -83,6 +89,7 @@ class ReviewService(
     // 컨텐츠 총 리뷰 갯수 조회 가능하도록 수정
     fun findReviewsByContentIdPaginated(
         contentId: Long,
+        contentType: ContentType,
         page: Int,
         size: Int,
         sortBy: String = "createdAtDesc"
@@ -95,8 +102,8 @@ class ReviewService(
         }
         val pageable = PageRequest.of(page, size, sort)
 
-        val pageOfReviews = reviewRepository.findByContentId(contentId, pageable)
-        val averageRating = reviewRepository.findAverageRatingByContentId(contentId) ?: 0.0
+        val pageOfReviews = reviewRepository.findByContentIdAndContentType(contentId, contentType, pageable)
+        val averageRating = reviewRepository.findAverageRatingByContentIdAndContentType(contentId, contentType) ?: 0.0
 
         return ReviewPageDataDTO(
             reviews = pageOfReviews.map { ReviewDTO(it) },
@@ -140,9 +147,11 @@ class ReviewService(
         return reviewRepository.findByReportsGreaterThanEqual(5, pageable)
     }
 
-    fun findMyReviewByContentId(contentId: Long, user: UserPrincipal): Review =
-        reviewRepository.findByUserUserIdAndContentId(user.userId, contentId)
-            ?: throw ReviewNotFoundException("Review not found with contentId: $contentId")
+    // 특정 컨텐츠에서 내 리뷰 찾기
+    fun findMyReviewByContentId(contentId: Long, contentType: ContentType, user: UserPrincipal): Review {
+        return reviewRepository.findByUserUserIdAndContentIdAndContentType(user.userId, contentId.toInt(), contentType)
+            ?: throw ReviewNotFoundException("Review not found with contentId: $contentId and contentType: $contentType")
+    }
 
     fun findAllReviewsPaginated(page: Int, size: Int): Page<Review> {
         val pageable: Pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending())

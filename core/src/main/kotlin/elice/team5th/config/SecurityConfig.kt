@@ -14,6 +14,7 @@ import elice.team5th.domain.auth.token.AuthTokenProvider
 import elice.team5th.domain.user.model.RoleType
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.BeanIds
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
@@ -74,6 +75,8 @@ class SecurityConfig(
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .requestMatchers("/api/v1/users/admin/**").hasAnyAuthority(RoleType.ADMIN.code)
                 .requestMatchers("/api/v1/users/**").hasAnyAuthority(RoleType.USER.code, RoleType.ADMIN.code)
+                .requestMatchers(HttpMethod.DELETE,"api/v1/reviews/**").hasAnyAuthority(RoleType.USER.code, RoleType.ADMIN.code)
+                .requestMatchers(HttpMethod.PUT,"api/v1/reviews/**").hasAnyAuthority(RoleType.USER.code, RoleType.ADMIN.code)
                 .anyRequest().permitAll()
         }
 

@@ -1,6 +1,7 @@
 package elice.team5th.domain.review.model
 
 import elice.team5th.common.model.BaseEntity
+import elice.team5th.domain.tmdb.enumtype.ContentType
 import elice.team5th.domain.user.model.User
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -30,6 +31,10 @@ class Review(
     var likes: Int = 0, // 'likes'는 추천 수를 나타냄
 
     @Column(nullable = false)
-    var reports: Int = 0 // 'reports'는 신고 수를 나타냄
+    var reports: Int = 0, // 'reports'는 신고 수를 나타냄
+
+    @Column(name = "content_type", nullable = false)
+    var contentType: ContentType // 'Movie' 또는 'TV' 값
+
 
 ) : BaseEntity() // BaseEntity의 생성자 호출

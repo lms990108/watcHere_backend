@@ -7,6 +7,7 @@ import elice.team5th.domain.review.dto.RatingCountDTO
 import elice.team5th.domain.review.dto.ReviewDTO
 import elice.team5th.domain.review.dto.ReviewPageDataDTO
 import elice.team5th.domain.review.service.ReviewService
+import elice.team5th.domain.tmdb.enumtype.ContentType
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -30,12 +31,13 @@ class ReviewController(private val reviewService: ReviewService) {
     @PostMapping("")
     @Operation(
         summary = "리뷰 작성",
-        description = "userId는 자동으로 가져오니 contentId, 내용, 평점만 적으면 됩니다."
+        description =
+        "userId는 자동으로 가져오니 contentId, contentType, 내용, 평점만 적으면 됩니다." +
+        "contentType은 MOVIE와 TV중에 하나만 적어야 합니다."
     )
     fun createReview(@RequestBody createReviewDTO: CreateReviewDTO, @CurrentUser user: UserPrincipal):
         ResponseEntity<ReviewDTO> {
         val review = reviewService.createReview(createReviewDTO, user)
-        println(createReviewDTO)
         return ResponseEntity.ok().body(ReviewDTO(review))
     }
 
@@ -124,22 +126,26 @@ class ReviewController(private val reviewService: ReviewService) {
     )
     fun getReviewsByContentIdPaginated(
         @PathVariable contentId: Long,
+        @RequestParam contentType: ContentType, // 컨텐츠 타입 매개변수 추가
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
-        @RequestParam(defaultValue = "createdAtDesc") sortBy: String // 정렬 기준 추가
+        @RequestParam(defaultValue = "createdAtDesc") sortBy: String
     ): ResponseEntity<ReviewPageDataDTO> {
-        val reviewPageData = reviewService.findReviewsByContentIdPaginated(contentId, page, size, sortBy)
+        val reviewPageData = reviewService.findReviewsByContentIdPaginated(contentId, contentType, page, size, sortBy)
         return ResponseEntity.ok(reviewPageData)
     }
 
-    @Operation(summary = "컨텐츠별 마이 리뷰 조회", description = "컨텐츠 아이디를 통해 마이 리뷰를 조회합니다.")
+    // ReviewController
     @GetMapping("/my-review/{contentId}")
-    fun getMyReviewByContentId(@PathVariable contentId: Long, @CurrentUser user: UserPrincipal):
-        ResponseEntity<ReviewDTO> {
-        val review = reviewService.findMyReviewByContentId(contentId, user)
+    @Operation(summary = "컨텐츠별 마이 리뷰 조회", description = "컨텐츠 아이디를 통해 마이 리뷰를 조회합니다.")
+    fun getMyReviewByContentId(
+        @PathVariable contentId: Long,
+        @RequestParam contentType: ContentType, // 컨텐츠 타입 매개변수 추가
+        @CurrentUser user: UserPrincipal
+    ): ResponseEntity<ReviewDTO> {
+        val review = reviewService.findMyReviewByContentId(contentId, contentType, user)
         return ResponseEntity.ok(ReviewDTO(review))
     }
-
     // 리뷰 별점당 갯수 조회
     @GetMapping("/ratings/{contentId}")
     @Operation(summary = "특정 별점의 리뷰 갯수를 반환합니다")
