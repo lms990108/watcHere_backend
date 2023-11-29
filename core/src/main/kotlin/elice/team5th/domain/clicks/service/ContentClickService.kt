@@ -7,6 +7,7 @@ import elice.team5th.domain.clicks.entity.MovieClicksEntity
 import elice.team5th.domain.clicks.entity.TVShowClicksEntity
 import elice.team5th.domain.clicks.repository.MovieClicksRepository
 import elice.team5th.domain.clicks.repository.TVShowClicksRepository
+import elice.team5th.domain.tmdb.exception.MovieNotFoundException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -27,7 +28,9 @@ class ContentClickService(
     @Transactional
     fun incrementMovieClicks(movieId: Long) {
         val redisKey = "$movieClicksKeyPrefix$movieId"
-        val currentClicks = redisService.getValue(redisKey)?.toLong() ?: 0L
+        val currentClicks = redisService.getValue(redisKey)?.toInt()
+            ?: movieClicksRepository.findById(movieId).map { it.clicks }.orElse(0)
+
         redisService.setValue(redisKey, (currentClicks + 1).toString())
     }
 
@@ -35,7 +38,9 @@ class ContentClickService(
     @Transactional
     fun incrementTVShowClicks(tvShowId: Long) {
         val redisKey = "$tvShowClicksKeyPrefix$tvShowId"
-        val currentClicks = redisService.getValue(redisKey)?.toLong() ?: 0L
+        val currentClicks = redisService.getValue(redisKey)?.toInt()
+            ?: tvShowClicksRepository.findById(tvShowId).map { it.clicks }.orElse(0)
+
         redisService.setValue(redisKey, (currentClicks + 1).toString())
     }
 
@@ -75,16 +80,16 @@ class ContentClickService(
 
         movieClicksKeys?.forEach { key ->
             val movieId = key.substringAfter(movieClicksKeyPrefix).toLong()
-            val clicks = redisService.getValue(key)?.toLong() ?: 0L
-            val movieClicksEntity = MovieClicksEntity(movieId, clicks.toInt())
+            val clicks = redisService.getValue(key)?.toInt() ?: 0
+            val movieClicksEntity = MovieClicksEntity(movieId, clicks)
             movieClicksRepository.save(movieClicksEntity)
             redisService.deleteValue(key)
         }
 
         tvShowClicksKeys?.forEach { key ->
             val tvShowId = key.substringAfter(tvShowClicksKeyPrefix).toLong()
-            val clicks = redisService.getValue(key)?.toLong() ?: 0L
-            val tvShowClicksEntity = TVShowClicksEntity(tvShowId, clicks.toInt())
+            val clicks = redisService.getValue(key)?.toInt() ?: 0
+            val tvShowClicksEntity = TVShowClicksEntity(tvShowId, clicks)
             tvShowClicksRepository.save(tvShowClicksEntity)
             redisService.deleteValue(key)
         }
