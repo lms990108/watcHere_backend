@@ -4,6 +4,7 @@ import elice.team5th.domain.clicks.service.ContentClickService
 import elice.team5th.domain.tmdb.dto.*
 import elice.team5th.domain.tmdb.entity.GenreEntity
 import elice.team5th.domain.tmdb.entity.TVShowEntity
+import elice.team5th.domain.tmdb.exception.FetchFailException
 import elice.team5th.domain.tmdb.repository.TVShowRepository
 import elice.team5th.domain.tmdb.util.ErrorUtil
 import org.springframework.beans.factory.annotation.Value
@@ -25,11 +26,9 @@ class TVDetailsService(
 
     @Transactional
     fun getTVDetails(tvId: Int): Mono<TVDetailsDto> {
-        println("Fetching TV show details for ID: $tvId") // 로그
         val tvShowEntity = tvShowRepository.findById(tvId)
         if (tvShowEntity.isPresent) {
             contentClickService.incrementTVShowClicks(tvId.toLong()) // 조회수 증가 로직 추가
-            println("Found TV show details in the database for ID: $tvId") // 로그
             return Mono.just(convertEntityToDto(tvShowEntity.get()))
         }
 
@@ -45,8 +44,8 @@ class TVDetailsService(
             .header("accept", "application/json")
             .retrieve()
             .bodyToMono(TVShowApiResponseDto::class.java)
-            .doOnSuccess { println("Received API response for TV show ID: $tvId") }
-            .doOnError { error -> println("Error during API call for TV show ID: $tvId: $error") }
+            .doOnSuccess {}
+            .doOnError { error -> throw FetchFailException("Error during API call for TV show ID: $tvId: $error") }
             .map(this::convertApiResponseToDto)
             .onErrorMap(ErrorUtil::handleCommonErrors)
     }

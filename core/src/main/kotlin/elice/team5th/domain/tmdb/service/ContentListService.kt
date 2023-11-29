@@ -27,7 +27,6 @@ class ContentListService(private val webClient: WebClient) {
 
         val providerId = providerName.let {
             val id = ProviderType.getIdByName(it)
-            println("Provider ID: $id") // 로그 출력
             id
         }
 
@@ -49,7 +48,6 @@ class ContentListService(private val webClient: WebClient) {
                         }
                     }
                     .build()
-                    .also { println("URI: $it") } // 로그 출력
             }
             .header("Authorization", accessToken)
             .header("accept", "application/json")
@@ -57,7 +55,6 @@ class ContentListService(private val webClient: WebClient) {
             .bodyToMono(ListResponseDto::class.java)
             .onErrorMap(ErrorUtil::handleCommonErrors)
             .map { response ->
-                println("Response: $response") // 로그 출력
                 ListResponseDto(
                     results = response.results.map { content ->
                         ListInfoDto(
@@ -65,7 +62,7 @@ class ContentListService(private val webClient: WebClient) {
                             title = content.title ?: content.name, // 영화든 TV든 'title' 필드에 제목을 저장
                             name = null,
                             poster_path = "https://image.tmdb.org/t/p/w500${content.poster_path}"
-                        ).also { println("Mapped Content: $it") } // 로그 출력
+                        )
                     }
                 )
             }

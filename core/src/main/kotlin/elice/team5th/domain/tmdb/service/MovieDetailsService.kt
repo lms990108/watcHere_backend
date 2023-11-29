@@ -7,6 +7,7 @@ import elice.team5th.domain.tmdb.dto.MovieDetailsDto
 import elice.team5th.domain.tmdb.dto.VideoDto
 import elice.team5th.domain.tmdb.entity.GenreEntity
 import elice.team5th.domain.tmdb.entity.MovieEntity
+import elice.team5th.domain.tmdb.exception.FetchFailException
 import elice.team5th.domain.tmdb.repository.MovieRepository
 import elice.team5th.domain.tmdb.util.ErrorUtil
 import org.springframework.beans.factory.annotation.Value
@@ -26,15 +27,12 @@ class MovieDetailsService(
 
     @Transactional
     fun getMovieDetails(movieId: Int): Mono<MovieDetailsDto> {
-        println("Attempting to retrieve movie details for movie ID: $movieId")
 
         val movieEntity = movieRepository.findById(movieId)
         if (movieEntity.isPresent) {
             contentClickService.incrementMovieClicks(movieId.toLong()) // 조회수 증가 로직 추가
-            println("Movie details found in the database for movie ID: $movieId")
             return Mono.just(convertToDto(movieEntity.get()))
         } else {
-            println("Movie details not found in the database for movie ID: $movieId. Making API call.")
         }
 
         return webClient.get()
@@ -48,12 +46,10 @@ class MovieDetailsService(
             .header("accept", "application/json")
             .retrieve()
             .bodyToMono(MovieApiResponseDto::class.java)
-            .doOnNext { response ->
-                println("Received response from TMDB API for movie ID: $movieId")
-            }
+            .doOnNext { response -> }
             .map(this::convertApiResponseToDto)
             .doOnError { error ->
-                println("Error occurred while retrieving movie details for movie ID: $movieId - Error: $error")
+                throw FetchFailException("Error occurred while retrieving movie details for movie ID: $movieId - Error: $error")
             }
             .onErrorMap(ErrorUtil::handleCommonErrors)
     }
