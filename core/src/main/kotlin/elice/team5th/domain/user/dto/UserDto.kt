@@ -48,7 +48,7 @@ class UserDto {
             userId = user.userId,
             email = user.email ?: "",
             profileImage = user.profileImage,
-            poster = user.poster,
+            poster = user.poster ?: "",
             nickname = user.nickname,
             ban = user.ban,
             provider = user.provider,
