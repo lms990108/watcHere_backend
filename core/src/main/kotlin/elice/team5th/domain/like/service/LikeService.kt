@@ -72,6 +72,7 @@ class LikeService(
         }
     }
 
+    @Transactional
     fun cancelLike(userId: String, contentType: ContentType, contentId: Int) {
         when (contentType) {
             ContentType.MOVIE -> {
