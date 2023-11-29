@@ -81,6 +81,8 @@ class UserController(
         @Parameter(name = "nickname", description = "닉네임")
         @RequestParam(value = "nickname", required = false)
         nickname: String?,
+        @Parameter(name = "poster", description = "포스터 이미지 링크")
+        @RequestParam(value = "poster", required = false) poster: String?,
         @Parameter(
             name = "profile_image",
             description = "multipart/form-data 형식의 사진 파일을 input으로 받습니다.",
@@ -89,7 +91,7 @@ class UserController(
         @RequestPart(value = "profile_image", required = false)
         profileImage: MultipartFile?
     ): ResponseEntity<UserDto.Response> {
-        val user = userService.updateUser(userPrincipal.userId, nickname, profileImage)
+        val user = userService.updateUser(userPrincipal.userId, nickname, poster, profileImage)
         return ResponseEntity.ok().body(UserDto.Response(user))
     }
 

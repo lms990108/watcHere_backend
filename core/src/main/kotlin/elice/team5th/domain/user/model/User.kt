@@ -40,6 +40,7 @@ class User(
     var email: String?,
     var nickname: String,
     var profileImage: String,
+    var poster: String = "",
 
     @Enumerated(EnumType.STRING)
     @NotNull

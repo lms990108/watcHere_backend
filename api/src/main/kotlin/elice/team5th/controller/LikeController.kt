@@ -55,6 +55,36 @@ class LikeController(
         )
     }
 
+    @Operation(summary = "로그인한 유저의 선호 영화 목록 조회", description = "로그인한 유저의 선호 영화 목록을 페이징 조회합니다.")
+    @GetMapping("/my-movie")
+    fun getLikedMoviesByLoginUser(
+        @CurrentUser userPrincipal: UserPrincipal,
+        @RequestParam("page", defaultValue = "0") page: Int,
+        @RequestParam("size", defaultValue = "20") size: Int
+    ): ResponseEntity<Page<MovieDto.Response>> {
+        val movies = likeService.getLikedMoviesByUserId(userPrincipal.userId, page, size)
+        return ResponseEntity.ok().body(
+            movies.map {
+                MovieDto.Response(it)
+            }
+        )
+    }
+
+    @Operation(summary = "로그인한 유저의 선호 TV 프로그램 목록 조회", description = "로그인한 유저의 선호 TV 프로그램 목록을 페이징 조회합니다.")
+    @GetMapping("/my-tv-show")
+    fun getLikedTVShowsByLoginUser(
+        @CurrentUser userPrincipal: UserPrincipal,
+        @RequestParam("page", defaultValue = "0") page: Int,
+        @RequestParam("size", defaultValue = "20") size: Int
+    ): ResponseEntity<Page<TVShowDto.Response>> {
+        val tvShows = likeService.getLikedTVShowsByUserId(userPrincipal.userId, page, size)
+        return ResponseEntity.ok().body(
+            tvShows.map {
+                TVShowDto.Response(it)
+            }
+        )
+    }
+
     @Operation(summary = "좋아요 기능", description = "로그인한 유저가 특정 컨텐츠를 좋아요 표시합니다.")
     @PostMapping("")
     fun likeContent(

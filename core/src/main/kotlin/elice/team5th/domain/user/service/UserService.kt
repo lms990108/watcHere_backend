@@ -30,9 +30,10 @@ class UserService(
     fun checkDeletedUser(userId: String): Boolean =
         userRepository.findByUserId(userId)?.deletedAt != null
 
-    fun updateUser(userId: String, nickname: String?, profileImage: MultipartFile?): User =
+    fun updateUser(userId: String, nickname: String?, poster: String?, profileImage: MultipartFile?): User =
         userRepository.findByUserId(userId)?.apply {
             this.nickname = nickname ?: this.nickname
+            this.poster = poster ?: this.poster
             if (profileImage != null) {
                 if (profileImage.size > 2000000) throw FileSizeExceededException("프로필 이미지는 2MB를 넘을 수 없습니다.")
                 this.profileImage = s3Service.uploadFile(profileImage)

@@ -20,6 +20,12 @@ class UserDto {
         )
         val profileImage: String,
 
+        @Schema(
+            description = "poster image link",
+            example = "https://lh3.googleusercontent.com/a/ACg8ocIqCt6pUKU2p4K7kU3zLTgzyqkznfaW2EgC-M97DCpE6A=s96-c"
+        )
+        val poster: String,
+
         @Schema(description = "nickname", example = "김코딩")
         val nickname: String,
 
@@ -42,6 +48,7 @@ class UserDto {
             userId = user.userId,
             email = user.email ?: "",
             profileImage = user.profileImage,
+            poster = user.poster ?: "",
             nickname = user.nickname,
             ban = user.ban,
             provider = user.provider,
