@@ -17,6 +17,7 @@ spring:
       redis:
           host: localhost
           timeout: 3s
+          default-ttl: 5m
     profiles:
         default: local
     config:
@@ -33,3 +34,6 @@ spring:
     config:
         activate:
             on-profile: dev
+    data:
+      redis:
+        default-ttl: 5m
