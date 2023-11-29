@@ -1,5 +1,6 @@
 package elice.team5th.domain.clicks.service
 
+import elice.team5th.common.service.RedisService
 import elice.team5th.domain.clicks.dto.MovieWithClicksDto
 import elice.team5th.domain.clicks.dto.TVShowWithClicksDto
 import elice.team5th.domain.clicks.entity.MovieClicksEntity
@@ -9,32 +10,33 @@ import elice.team5th.domain.clicks.repository.TVShowClicksRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ContentClickService(
     private val movieClicksRepository: MovieClicksRepository,
-    private val tvShowClicksRepository: TVShowClicksRepository
+    private val tvShowClicksRepository: TVShowClicksRepository,
+    private val redisService: RedisService
 ) {
+    private val movieClicksKeyPrefix = "movieClicks:"
+    private val tvShowClicksKeyPrefix = "tvShowClicks:"
+
     // 영화 조회수 증가
     @Transactional
     fun incrementMovieClicks(movieId: Long) {
-        val movieClicks = movieClicksRepository.findById(movieId).orElseGet {
-            movieClicksRepository.save(MovieClicksEntity(movieId, 0))
-        }
-        movieClicks.clicks++
-        movieClicksRepository.save(movieClicks)
+        val redisKey = "$movieClicksKeyPrefix$movieId"
+        val currentClicks = redisService.getValue(redisKey)?.toLong() ?: 0L
+        redisService.setValue(redisKey, (currentClicks + 1).toString())
     }
 
     // TV 쇼 조회수 증가
     @Transactional
     fun incrementTVShowClicks(tvShowId: Long) {
-        val tvShowClicks = tvShowClicksRepository.findById(tvShowId).orElseGet {
-            tvShowClicksRepository.save(TVShowClicksEntity(tvShowId, 0))
-        }
-        tvShowClicks.clicks++
-        tvShowClicksRepository.save(tvShowClicks)
+        val redisKey = "$tvShowClicksKeyPrefix$tvShowId"
+        val currentClicks = redisService.getValue(redisKey)?.toLong() ?: 0L
+        redisService.setValue(redisKey, (currentClicks + 1).toString())
     }
 
     // 조회수가 높은 영화 목록 가져오기 (페이징 처리)
@@ -47,5 +49,28 @@ class ContentClickService(
     fun getTopTVShowsByClicks(page: Int, size: Int = 10): Page<TVShowWithClicksDto> {
         val pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "clicks"))
         return tvShowClicksRepository.findAllTVShowsWithClicks(pageable)
+    }
+
+    // 배치로 빼는 게 더 좋을 듯
+    @Scheduled(fixedRate = 60000) // 1분마다 실행
+    fun syncClicksToDb() {
+        val movieClicksKeys = redisService.getKeys("$movieClicksKeyPrefix*")
+        val tvShowClicksKeys = redisService.getKeys("$tvShowClicksKeyPrefix*")
+
+        movieClicksKeys?.forEach { key ->
+            val movieId = key.substringAfter(movieClicksKeyPrefix).toLong()
+            val clicks = redisService.getValue(key)?.toLong() ?: 0L
+            val movieClicksEntity = MovieClicksEntity(movieId, clicks.toInt())
+            movieClicksRepository.save(movieClicksEntity)
+            redisService.deleteValue(key)
+        }
+
+        tvShowClicksKeys?.forEach { key ->
+            val tvShowId = key.substringAfter(tvShowClicksKeyPrefix).toLong()
+            val clicks = redisService.getValue(key)?.toLong() ?: 0L
+            val tvShowClicksEntity = TVShowClicksEntity(tvShowId, clicks.toInt())
+            tvShowClicksRepository.save(tvShowClicksEntity)
+            redisService.deleteValue(key)
+        }
     }
 }
