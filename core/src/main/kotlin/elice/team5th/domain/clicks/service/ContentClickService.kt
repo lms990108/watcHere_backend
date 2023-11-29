@@ -73,7 +73,7 @@ class ContentClickService(
     }
 
     // 배치로 빼는 게 더 좋을 듯
-    @Scheduled(fixedRate = 60000) // 1분마다 실행
+    @Scheduled(fixedRate = 7200000) // 2시간마다 실행
     fun syncClicksToDb() {
         val movieClicksKeys = redisService.getKeys("$movieClicksKeyPrefix*")
         val tvShowClicksKeys = redisService.getKeys("$tvShowClicksKeyPrefix*")
