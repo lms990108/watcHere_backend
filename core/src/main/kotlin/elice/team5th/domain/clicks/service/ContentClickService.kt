@@ -48,11 +48,11 @@ class ContentClickService(
     fun getTopMoviesByClicks(page: Int, size: Int): Page<MovieWithClicksDto> {
         val pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "clicks"))
         val moviesWithClicks =  movieClicksRepository.findAllMoviesWithClicks(pageable)
+
         moviesWithClicks.content.forEach { movieWithClicks ->
             val movieId = movieWithClicks.movieId
             val redisKey = "$movieClicksKeyPrefix$movieId"
-            val currentClicks = redisService.getValue(redisKey)?.toLong() ?: 0L
-            movieWithClicks.clicks += currentClicks.toInt()
+            movieWithClicks.clicks = redisService.getValue(redisKey)?.toInt() ?: movieWithClicks.clicks
         }
 
         return moviesWithClicks
@@ -62,11 +62,11 @@ class ContentClickService(
     fun getTopTVShowsByClicks(page: Int, size: Int = 10): Page<TVShowWithClicksDto> {
         val pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "clicks"))
         val tvShowWithClicks = tvShowClicksRepository.findAllTVShowsWithClicks(pageable)
+
         tvShowWithClicks.content.forEach { tvShowWithClicks ->
             val tvShowId = tvShowWithClicks.tvShowId
             val redisKey = "$tvShowClicksKeyPrefix$tvShowId"
-            val currentClicks = redisService.getValue(redisKey)?.toLong() ?: 0L
-            tvShowWithClicks.clicks += currentClicks.toInt()
+            tvShowWithClicks.clicks = redisService.getValue(redisKey)?.toInt() ?: tvShowWithClicks.clicks
         }
 
         return tvShowWithClicks
