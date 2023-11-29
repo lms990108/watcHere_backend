@@ -4,5 +4,5 @@ data class MovieWithClicksDto(
     val movieId: Long,
     val title: String,
     val posterPath: String,
-    val clicks: Int
+    var clicks: Int
 )
