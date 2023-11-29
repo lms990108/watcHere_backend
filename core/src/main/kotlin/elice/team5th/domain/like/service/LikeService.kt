@@ -1,6 +1,7 @@
 package elice.team5th.domain.like.service
 
 import elice.team5th.domain.like.dto.LikeDto
+import elice.team5th.domain.like.exception.AlreadyLikedContentException
 import elice.team5th.domain.like.exception.LikeNotFoundException
 import elice.team5th.domain.like.model.Like
 import elice.team5th.domain.like.repository.LikeRepository
@@ -50,12 +51,22 @@ class LikeService(
             ContentType.MOVIE -> {
                 val movie = movieRepository.findById(contentId)
                     .orElseThrow { MovieNotFoundException("해당 영화를 찾을 수 없습니다.") }
+
+                likeRepository.findByUserAndMovie(user, movie)?.let {
+                    throw AlreadyLikedContentException("이미 좋아요를 누른 영화입니다.")
+                }
+
                 likeRepository.save(Like(user = user, movie = movie))
             }
 
             ContentType.TV -> {
                 val tvShow = tvShowRepository.findById(contentId)
                     .orElseThrow { TVShowNotFoundException("해당 TV 프로그램을 찾을 수 없습니다.") }
+
+                likeRepository.findByUserAndTvShow(user, tvShow)?.let {
+                    throw AlreadyLikedContentException("이미 좋아요를 누른 TV 프로그램입니다.")
+                }
+
                 likeRepository.save(Like(user = user, tvShow = tvShow))
             }
         }

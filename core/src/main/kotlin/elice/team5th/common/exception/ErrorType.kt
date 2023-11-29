@@ -33,6 +33,7 @@ enum class ErrorType(
 
     // 409
     CONFLICT(5000, HttpStatus.CONFLICT),
+    ALREADY_LIKED_CONTENT(5001, HttpStatus.CONFLICT),
 
     // 429
     TOO_MANY_REQUEST(6001, HttpStatus.TOO_MANY_REQUESTS),
