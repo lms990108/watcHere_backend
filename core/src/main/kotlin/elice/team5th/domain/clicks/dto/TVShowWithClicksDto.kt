@@ -4,5 +4,5 @@ data class TVShowWithClicksDto(
     val tvShowId: Long,
     val name: String,
     val posterPath: String,
-    val clicks: Int
+    var clicks: Int
 )

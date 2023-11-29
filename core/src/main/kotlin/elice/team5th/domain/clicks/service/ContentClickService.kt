@@ -42,13 +42,29 @@ class ContentClickService(
     // 조회수가 높은 영화 목록 가져오기 (페이징 처리)
     fun getTopMoviesByClicks(page: Int, size: Int): Page<MovieWithClicksDto> {
         val pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "clicks"))
-        return movieClicksRepository.findAllMoviesWithClicks(pageable)
+        val moviesWithClicks =  movieClicksRepository.findAllMoviesWithClicks(pageable)
+        moviesWithClicks.content.forEach { movieWithClicks ->
+            val movieId = movieWithClicks.movieId
+            val redisKey = "$movieClicksKeyPrefix$movieId"
+            val currentClicks = redisService.getValue(redisKey)?.toLong() ?: 0L
+            movieWithClicks.clicks += currentClicks.toInt()
+        }
+
+        return moviesWithClicks
     }
 
     // 조회수가 높은 TV 쇼 목록 가져오기 (페이징 처리)
     fun getTopTVShowsByClicks(page: Int, size: Int = 10): Page<TVShowWithClicksDto> {
         val pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "clicks"))
-        return tvShowClicksRepository.findAllTVShowsWithClicks(pageable)
+        val tvShowWithClicks = tvShowClicksRepository.findAllTVShowsWithClicks(pageable)
+        tvShowWithClicks.content.forEach { tvShowWithClicks ->
+            val tvShowId = tvShowWithClicks.tvShowId
+            val redisKey = "$tvShowClicksKeyPrefix$tvShowId"
+            val currentClicks = redisService.getValue(redisKey)?.toLong() ?: 0L
+            tvShowWithClicks.clicks += currentClicks.toInt()
+        }
+
+        return tvShowWithClicks
     }
 
     // 배치로 빼는 게 더 좋을 듯
