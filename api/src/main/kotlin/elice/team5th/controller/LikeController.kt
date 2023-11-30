@@ -7,6 +7,7 @@ import elice.team5th.domain.like.service.LikeService
 import elice.team5th.domain.tmdb.dto.MovieDto
 import elice.team5th.domain.tmdb.dto.TVShowDto
 import elice.team5th.domain.tmdb.enumtype.ContentType
+import elice.team5th.domain.tmdb.exception.ContentNotFoundException
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import org.springframework.data.domain.Page
@@ -85,6 +86,18 @@ class LikeController(
         )
     }
 
+    @Operation(summary = "좋아요 여부 조회", description = "로그인한 유저가 특정 컨텐츠를 좋아요 했는지 여부를 조회합니다.")
+    @GetMapping("my-content")
+    fun isLikedContent(
+        @CurrentUser userPrincipal: UserPrincipal,
+        @RequestParam("content_type") contentType: ContentType,
+        @RequestParam("content_id") contentId: Int
+    ): ResponseEntity<Boolean> {
+        val userId = userPrincipal.userId
+        val isLiked = likeService.isLikedContent(userId, contentType, contentId)
+        return ResponseEntity.ok().body(isLiked)
+    }
+
     @Operation(summary = "좋아요 기능", description = "로그인한 유저가 특정 컨텐츠를 좋아요 표시합니다.")
     @PostMapping("")
     fun likeContent(
@@ -93,8 +106,8 @@ class LikeController(
         @RequestParam("content_id") contentId: Int
     ): ResponseEntity<LikeDto.Response> {
         val userId = userPrincipal.userId
-        val like = likeService.likeContent(userId, contentType, contentId)
-        return ResponseEntity.ok().body(LikeDto.Response(like!!))
+        val like = likeService.likeContent(userId, contentType, contentId) ?: throw ContentNotFoundException("해당 컨텐츠를 찾을 수 없습니다.")
+        return ResponseEntity.ok().body(LikeDto.Response(like))
     }
 
     @Operation(summary = "좋아요 취소 기능", description = "로그인한 유저가 특정 컨텐츠의 좋아요를 취소합니다.")

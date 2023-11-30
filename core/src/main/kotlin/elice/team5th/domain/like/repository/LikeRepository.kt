@@ -13,6 +13,8 @@ interface LikeRepository : JpaRepository<Like, Long> {
     fun findByUserUserIdAndTvShowIsNotNull(userId: String, pageable: Pageable): Page<Like>
     fun findByUserAndMovie(user: User, movie: MovieEntity): Like?
     fun findByUserAndTvShow(user: User, tvShow: TVShowEntity): Like?
+    fun existsByUserUserIdAndMovie(userId: String, movie: MovieEntity): Boolean
+    fun existsByUserUserIdAndTvShow(userId: String, tvShow: TVShowEntity): Boolean
     fun deleteByUserUserIdAndMovie(userId: String, movie: MovieEntity)
     fun deleteByUserUserIdAndTvShow(userId: String, tvShow: TVShowEntity)
 }
