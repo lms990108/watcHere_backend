@@ -87,4 +87,19 @@ class LikeService(
             }
         }
     }
+
+    fun isLikedContent(userId: String, contentType: ContentType, contentId: Int): Boolean {
+        return when (contentType) {
+            ContentType.MOVIE -> {
+                val movie = movieRepository.findById(contentId)
+                    .orElseThrow { MovieNotFoundException("해당 영화를 찾을 수 없습니다.") }
+                likeRepository.existsByUserUserIdAndMovie(userId, movie)
+            }
+            ContentType.TV -> {
+                val tvShow = tvShowRepository.findById(contentId)
+                    .orElseThrow { TVShowNotFoundException("해당 TV 프로그램을 찾을 수 없습니다.") }
+                likeRepository.existsByUserUserIdAndTvShow(userId, tvShow)
+            }
+        }
+    }
 }

@@ -30,6 +30,7 @@ enum class ErrorType(
     MOVIE_NOT_FOUND(4004, HttpStatus.NOT_FOUND),
     TV_SHOW_NOT_FOUND(4005, HttpStatus.NOT_FOUND),
     LIKE_NOT_FOUND(4006, HttpStatus.NOT_FOUND),
+    CONTENT_NOT_FOUND(4007, HttpStatus.NOT_FOUND),
 
     // 409
     CONFLICT(5000, HttpStatus.CONFLICT),
