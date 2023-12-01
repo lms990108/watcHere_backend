@@ -69,7 +69,7 @@ class SecurityConfig(
             it.accessDeniedHandler(tokenAccessDeniedHandler)
         }
 
-        // 인증 설정
+        // 인가 설정
         http.authorizeHttpRequests { auth ->
             auth
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()

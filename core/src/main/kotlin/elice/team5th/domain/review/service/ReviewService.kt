@@ -11,6 +11,9 @@ import elice.team5th.domain.review.exception.UnauthorizedReviewAccessException
 import elice.team5th.domain.review.model.Review
 import elice.team5th.domain.review.repository.ReviewRepository
 import elice.team5th.domain.tmdb.enumtype.ContentType
+import elice.team5th.domain.tmdb.exception.ContentNotFoundException
+import elice.team5th.domain.tmdb.repository.MovieRepository
+import elice.team5th.domain.tmdb.repository.TVShowRepository
 import elice.team5th.domain.user.model.RoleType
 import elice.team5th.domain.user.service.UserService
 import org.springframework.data.domain.Page
@@ -23,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class ReviewService(
     private val reviewRepository: ReviewRepository,
+    private val movieRepository: MovieRepository,
+    private val tvShowRepository: TVShowRepository,
     private val userService: UserService
 ) {
 
@@ -149,6 +154,12 @@ class ReviewService(
 
     // 특정 컨텐츠에서 내 리뷰 찾기
     fun findMyReviewByContentId(contentId: Long, contentType: ContentType, user: UserPrincipal): Review {
+        if (contentType == ContentType.MOVIE && movieRepository.findById(contentId.toInt()).isEmpty) {
+            throw ContentNotFoundException("Content not found with ID: $contentId")
+        }
+        if (contentType == ContentType.TV && tvShowRepository.findById(contentId.toInt()).isEmpty) {
+            throw ContentNotFoundException("Content not found with ID: $contentId")
+        }
         return reviewRepository.findByUserUserIdAndContentIdAndContentType(user.userId, contentId.toInt(), contentType)
             ?: throw ReviewNotFoundException("Review not found with contentId: $contentId and contentType: $contentType")
     }
