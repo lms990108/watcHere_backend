@@ -154,6 +154,18 @@ class ReviewController(private val reviewService: ReviewService) {
         return ResponseEntity.ok(ratingCounts)
     }
 
+    @GetMapping("/search")
+    @Operation(summary = "리뷰 검색", description = "리뷰 내용을 검색합니다. 해당 내용이 있는 리뷰들을 최신순으로 정렬합니다.")
+    fun searchReview(
+        @RequestParam(defaultValue = "") query: String,
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int
+    ): ResponseEntity<Page<ReviewDTO>> {
+        val pageOfReviews = reviewService.searchReview(query, page, size)
+        val reviewDTOs = pageOfReviews.map { ReviewDTO(it) }
+        return ResponseEntity.ok(reviewDTOs)
+    }
+
     // 추천 기능
     @PutMapping("/{id}/like")
     @Operation(summary = "추천 버튼")

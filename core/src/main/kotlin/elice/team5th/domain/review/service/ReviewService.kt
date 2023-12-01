@@ -157,4 +157,9 @@ class ReviewService(
         val pageable: Pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending())
         return reviewRepository.findAll(pageable)
     }
+
+    fun searchReview(query: String, page: Int, size: Int): Page<Review> {
+        val pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending())
+        return reviewRepository.findByDetailContaining(query, pageable)
+    }
 }

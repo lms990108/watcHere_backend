@@ -22,7 +22,7 @@ interface ReviewRepository : JpaRepository<Review, Long> {
         @Param("contentId") contentId: Long?,
         @Param("contentType") contentType: ContentType?
     ): Double?
-
+    fun findByDetailContaining(detail: String, pageable: Pageable): Page<Review>
 
     fun findByUserUserIdAndContentId(userId: String, contentId: Long): Review?
     @Query("SELECT AVG(r.rating) FROM Review r WHERE r.contentId = :contentId")
