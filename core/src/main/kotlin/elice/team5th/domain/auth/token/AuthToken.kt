@@ -12,7 +12,7 @@ import java.security.Key
 import java.util.Date
 
 class AuthToken(
-    val token: String,
+    val token: String?,
     private val key: Key
 ) {
     companion object {

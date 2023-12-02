@@ -1,8 +1,10 @@
 package elice.team5th.domain.auth.service
 
 import elice.team5th.domain.auth.entity.UserPrincipal
+import elice.team5th.domain.auth.exception.BanUserException
 import elice.team5th.domain.auth.info.OAuth2UserInfo
 import elice.team5th.domain.auth.info.OAuth2UserInfoFactory
+import elice.team5th.domain.user.exception.DeletedUserException
 import elice.team5th.domain.user.model.ProviderType
 import elice.team5th.domain.user.model.RoleType
 import elice.team5th.domain.user.model.User
@@ -20,7 +22,7 @@ class CustomOAuth2UserService(
     private val userRepository: UserRepository
 ) : DefaultOAuth2UserService() {
     override fun loadUser(userRequest: OAuth2UserRequest): OAuth2User {
-        val user = super.loadUser(userRequest)
+        val user = super.loadUser(userRequest) // OAuth2User 객체를 받아온다.
         return try {
             process(userRequest, user)
         } catch (e: AuthenticationException) {
@@ -34,12 +36,18 @@ class CustomOAuth2UserService(
     // 받은 유저 정보를 가지고 DB에 저장하고, UserPrincipal 객체를 반환한다.
     private fun process(userRequest: OAuth2UserRequest, user: OAuth2User): OAuth2User {
         val providerType = ProviderType.valueOf(
-            userRequest.clientRegistration.registrationId.uppercase(Locale.getDefault())
+            userRequest.clientRegistration.registrationId.uppercase(Locale.getDefault()) // OAuth2 공급자 이름
         )
         val userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.attributes)
         var savedUser = userRepository.findByUserId(userInfo.getId())
 
         if (savedUser != null) {
+            if (savedUser.deletedAt != null) {
+                throw DeletedUserException("탈퇴한 유저입니다.")
+            }
+            if (savedUser.ban) {
+                throw BanUserException("밴 처리된 유저입니다.")
+            }
             updateUser(savedUser, userInfo)
         } else {
             savedUser = createUser(userInfo, providerType)

@@ -1,20 +1,37 @@
 package elice.team5th.domain.auth.token
 
+import elice.team5th.domain.auth.entity.UserPrincipal
 import elice.team5th.domain.auth.exception.TokenValidationFailedException
+import elice.team5th.domain.user.service.UserService
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.security.Keys
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.core.userdetails.User
 import java.security.Key
 import java.util.Date
 
-class AuthTokenProvider(secret: String) {
-
+class AuthTokenProvider(
+    private val userService: UserService,
+    secret: String
+) {
+    @Value("\${app.auth.token-expiry}")
+    private val expiry: Long = 0
     private val key: Key = Keys.hmacShaKeyFor(secret.toByteArray())
     private val AUTHORITIES_KEY = "role"
+
+    fun createAuthToken(authentication: Authentication): AuthToken {
+        val userPrincipal = authentication.principal as UserPrincipal
+        val now = Date()
+        return AuthToken.createAuthToken(
+            userPrincipal.userId,
+            userPrincipal.roleType.code,
+            Date(now.time + expiry),
+            key
+        )
+    }
 
     fun createAuthToken(id: String, expiry: Date): AuthToken {
         return AuthToken.createAuthToken(id, expiry, key)
@@ -24,7 +41,7 @@ class AuthTokenProvider(secret: String) {
         return AuthToken.createAuthToken(id, role, expiry, key)
     }
 
-    fun convertAuthToken(token: String): AuthToken {
+    fun convertAuthToken(token: String?): AuthToken {
         return AuthToken(token, key)
     }
 
@@ -35,7 +52,8 @@ class AuthTokenProvider(secret: String) {
             val authorities: Collection<GrantedAuthority> = claims[AUTHORITIES_KEY].toString()
                 .split(",")
                 .map { SimpleGrantedAuthority(it.trim()) }
-            val principal = User(claims.subject, "", authorities)
+            val user = userService.findUserById(claims.subject)
+            val principal = UserPrincipal.create(user, claims)
 
             return UsernamePasswordAuthenticationToken(principal, authToken, authorities)
         } else {

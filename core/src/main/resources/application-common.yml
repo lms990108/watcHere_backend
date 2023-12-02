@@ -5,7 +5,7 @@ spring:
       password: elice
     jpa:
         hibernate:
-          ddl-auto: create
+          ddl-auto: update
             # create: 시작 시 테이블 drop 후 재생성
             # update: 시작 시 자동 migrate
             # validate: 현재 스프링에 정의된 엔티티와 테이블을 비교, 차이가 있으면 예외 출력하고 종료
@@ -17,16 +17,11 @@ spring:
       redis:
           host: localhost
           timeout: 3s
+          default-ttl: 5m
     profiles:
         default: local
     config:
         import: classpath:application-info.yml
-
-springdoc:
-    swagger-ui:
-        path: /api/v1/api-docs
-    api-docs:
-        path: /api/v1/api-docs
 
 logging:
     level:
@@ -39,3 +34,6 @@ spring:
     config:
         activate:
             on-profile: dev
+    data:
+      redis:
+        default-ttl: 5m

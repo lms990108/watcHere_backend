@@ -5,6 +5,7 @@ import elice.team5th.domain.tmdb.dto.ListResponseDto
 import elice.team5th.domain.tmdb.enumtype.ContentType
 import elice.team5th.domain.tmdb.enumtype.ProviderType
 import elice.team5th.domain.tmdb.enumtype.SortType
+import elice.team5th.domain.tmdb.util.ErrorUtil
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
@@ -16,14 +17,20 @@ class ContentListService(private val webClient: WebClient) {
     @Value("\${tmdb.api.access-token}")
     private lateinit var accessToken: String
 
-    // 이제 영화와 TV 시리즈 모두를 처리할 수 있는 메서드
-    fun getPopularContent(page: Int, sortType: SortType, providerName: String, contentType: ContentType): Mono<ListResponseDto> {
+    fun getPopularContent(page: Int, sortType: SortType, providerName: String, contentType: ContentType, anime: Boolean): Mono<ListResponseDto> {
         val path = when (contentType) {
             ContentType.MOVIE -> "/discover/movie"
             ContentType.TV -> "/discover/tv"
         }
 
-        val providerId = providerName.let { ProviderType.getIdByName(it) }
+        println("Path: $path") // 로그 출력
+
+        val providerId = providerName.let {
+            val id = ProviderType.getIdByName(it)
+            id
+        }
+
+        val genresParam = if (anime) "with_genres" else "without_genres"
 
         return webClient.get()
             .uri { uriBuilder ->
@@ -33,25 +40,27 @@ class ContentListService(private val webClient: WebClient) {
                     .queryParam("language", "ko-KR")
                     .queryParam("page", page.toString())
                     .queryParam("sort_by", sortType.queryParam)
+                    .queryParam("watch_region", "KR")
+                    .queryParam(genresParam, "16") // 애니메이션 관련 쿼리 파라미터 추가
                     .apply {
                         providerId?.let {
                             queryParam("with_watch_providers", it)
                         }
                     }
-                    .queryParam("watch_region", "KR")
                     .build()
             }
             .header("Authorization", accessToken)
             .header("accept", "application/json")
             .retrieve()
             .bodyToMono(ListResponseDto::class.java)
+            .onErrorMap(ErrorUtil::handleCommonErrors)
             .map { response ->
                 ListResponseDto(
                     results = response.results.map { content ->
                         ListInfoDto(
                             id = content.id,
-                            title = if (contentType == ContentType.MOVIE) content.title else null,
-                            name = if (contentType == ContentType.TV) content.name else null,
+                            title = content.title ?: content.name, // 영화든 TV든 'title' 필드에 제목을 저장
+                            name = null,
                             poster_path = "https://image.tmdb.org/t/p/w500${content.poster_path}"
                         )
                     }

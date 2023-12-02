@@ -44,9 +44,15 @@ subprojects {
         implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
         implementation("org.springframework.boot:spring-boot-starter-security")
         implementation("org.springframework.boot:spring-boot-starter-web")
+        implementation("org.springframework.boot:spring-boot-starter-websocket")
+        implementation("org.springframework.security:spring-security-messaging")
+        implementation("org.springframework.boot:spring-boot-starter-log4j2")
         implementation("org.springframework.boot:spring-boot-starter-webflux")
         implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+        compileOnly("io.jsonwebtoken:jjwt-api:0.11.2")
+        runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
+        runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
         implementation("com.amazonaws:aws-java-sdk-s3:1.12.583")
@@ -70,5 +76,13 @@ subprojects {
 
     tasks.withType<Test> {
         useJUnitPlatform()
+    }
+
+    configurations {
+        all {
+            exclude(module = "spring-boot-starter-logging")
+            exclude(module = "logback-classic")
+            exclude(module = "logback-core")
+        }
     }
 }

@@ -1,10 +1,12 @@
 package elice.team5th.domain.tmdb.dto
 
+import elice.team5th.domain.tmdb.entity.GenreEntity
+
 data class MovieDetailsDto(
     val adult: Boolean,
     val backdrop_path: String?,
-    val genres: List<Genre>,
-    val id: Int,
+    val genres: List<GenreEntity>,
+    val id: Long,
     val original_language: String,
     val original_title: String,
     val overview: String,
@@ -15,22 +17,15 @@ data class MovieDetailsDto(
     val title: String,
     val video: Boolean,
     val vote_average: Double,
-    val vote_count: Int
-){
+    val vote_count: Int,
+    val actors: List<ActorDto>,
+    val videos: List<VideoDto>,
+    val directorName: String?, // 감독 이름 필드 추가
+    val directorProfilePath: String? // 감독 프로필 경로 필드 추가
+) {
     val fullBackdropPath: String
-        get() = "https://image.tmdb.org/t/p/w500${backdrop_path}"
+        get() = "https://image.tmdb.org/t/p/w500$backdrop_path"
 
     val fullPosterPath: String
-        get() = "https://image.tmdb.org/t/p/w500${poster_path}"
+        get() = "https://image.tmdb.org/t/p/w500$poster_path"
 }
-
-data class Genre(
-    val id: Int,
-    val name: String
-)
-
-data class SpokenLanguage(
-    val english_name: String,
-    val iso_639_1: String,
-    val name: String
-)

@@ -2,6 +2,7 @@ package elice.team5th.config
 
 import elice.team5th.config.properties.AppProperties
 import elice.team5th.config.properties.CorsProperties
+import elice.team5th.domain.auth.exception.RestAuthenticationEntryPoint
 import elice.team5th.domain.auth.filter.TokenAuthenticationFilter
 import elice.team5th.domain.auth.handler.OAuth2AuthenticationFailureHandler
 import elice.team5th.domain.auth.handler.OAuth2AuthenticationSuccessHandler
@@ -10,8 +11,10 @@ import elice.team5th.domain.auth.repository.OAuth2AuthorizationRequestBasedOnCoo
 import elice.team5th.domain.auth.repository.UserRefreshTokenRepository
 import elice.team5th.domain.auth.service.CustomOAuth2UserService
 import elice.team5th.domain.auth.token.AuthTokenProvider
+import elice.team5th.domain.user.model.RoleType
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.BeanIds
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
@@ -19,7 +22,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsUtils
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
@@ -29,6 +34,7 @@ class SecurityConfig(
     private val appProperties: AppProperties,
     private val tokenProvider: AuthTokenProvider,
     private val oAuth2UserService: CustomOAuth2UserService,
+    private val restAuthenticationEntryPoint: RestAuthenticationEntryPoint,
     private val tokenAccessDeniedHandler: TokenAccessDeniedHandler,
     private val userRefreshTokenRepository: UserRefreshTokenRepository
 ) {
@@ -58,12 +64,23 @@ class SecurityConfig(
             it.disable()
         }
 
-        // 인증 설정
+        http.exceptionHandling {
+            it.authenticationEntryPoint(restAuthenticationEntryPoint)
+            it.accessDeniedHandler(tokenAccessDeniedHandler)
+        }
+
+        // 인가 설정
         http.authorizeHttpRequests { auth ->
             auth
-                .requestMatchers("**").permitAll()
-//                .requestMatchers().hasAnyAuthority(RoleType.USER.code)
-                .anyRequest().authenticated()
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                .requestMatchers("/api/v1/users/admin/**").hasAnyAuthority(RoleType.ADMIN.code)
+                .requestMatchers("/api/v1/users/**").hasAnyAuthority(RoleType.USER.code, RoleType.ADMIN.code)
+                .requestMatchers(HttpMethod.POST,"api/v1/reviews/**").hasAnyAuthority(RoleType.USER.code, RoleType.ADMIN.code)
+                .requestMatchers(HttpMethod.DELETE,"api/v1/reviews/**").hasAnyAuthority(RoleType.USER.code, RoleType.ADMIN.code)
+                .requestMatchers(HttpMethod.PUT,"api/v1/reviews/**").hasAnyAuthority(RoleType.USER.code, RoleType.ADMIN.code)
+                .requestMatchers(HttpMethod.POST,"api/v1/likes/**").hasAnyAuthority(RoleType.USER.code, RoleType.ADMIN.code)
+                .requestMatchers(HttpMethod.DELETE,"api/v1/likes/**").hasAnyAuthority(RoleType.USER.code, RoleType.ADMIN.code)
+                .anyRequest().permitAll()
         }
 
         // OAuth2 설정
@@ -82,6 +99,8 @@ class SecurityConfig(
             it.failureHandler(oAuth2AuthenticationFailureHandler())
         }
 
+        http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter::class.java)
+
         return http.build()
     }
 
@@ -94,7 +113,8 @@ class SecurityConfig(
     }
 
     @Bean
-    fun tokenAuthenticationFilter(): TokenAuthenticationFilter = TokenAuthenticationFilter(tokenProvider)
+    fun tokenAuthenticationFilter(): TokenAuthenticationFilter =
+        TokenAuthenticationFilter(tokenProvider)
 
     /*
      * 쿠키 기반 인가 Request Repository 설정
@@ -128,10 +148,10 @@ class SecurityConfig(
         val corsConfigSource = UrlBasedCorsConfigurationSource()
 
         val corsConfig = CorsConfiguration()
-        corsConfig.allowedHeaders = corsProperties.allowedHeaders.split(",")
-        corsConfig.allowedMethods = corsProperties.allowedMethods.split(",")
-        corsConfig.allowedOrigins = corsProperties.allowedOrigins.split(",")
-        corsConfig.allowCredentials = true
+        corsConfig.allowedHeaders = mutableListOf("*")
+        corsConfig.allowedMethods = mutableListOf("*")
+        corsConfig.allowedOrigins = mutableListOf("*")
+        corsConfig.allowCredentials = false
         corsConfig.maxAge = corsProperties.maxAge
 
         corsConfigSource.registerCorsConfiguration("/**", corsConfig)

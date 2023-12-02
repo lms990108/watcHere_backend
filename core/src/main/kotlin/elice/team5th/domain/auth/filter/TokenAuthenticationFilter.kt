@@ -1,29 +1,37 @@
 package elice.team5th.domain.auth.filter
 
 import elice.team5th.domain.auth.token.AuthTokenProvider
+import elice.team5th.domain.user.model.RoleType
 import elice.team5th.util.HeaderUtil
 import jakarta.servlet.FilterChain
-import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.slf4j.LoggerFactory
+import org.springframework.security.authentication.AnonymousAuthenticationToken
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.OncePerRequestFilter
-import java.io.IOException
 
 class TokenAuthenticationFilter(
     private val tokenProvider: AuthTokenProvider
 ) : OncePerRequestFilter() {
-    @Throws(ServletException::class, IOException::class)
+    val logger = LoggerFactory.getLogger(this::class.java)
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
         val tokenStr = HeaderUtil.getAccessToken(request)
-        if (tokenStr != null) {
+
+        if (!tokenStr.isNullOrEmpty()) {
             val token = tokenProvider.convertAuthToken(tokenStr)
             if (token.validate()) {
                 val authentication = tokenProvider.getAuthentication(token)
                 SecurityContextHolder.getContext().authentication = authentication
             }
         } else {
-            logger.debug("TokenAuthenticationFilter: token is null")
+            val authentication = AnonymousAuthenticationToken(
+                "anonymous",
+                "anonymous",
+                listOf(SimpleGrantedAuthority(RoleType.GUEST.code))
+            )
+            SecurityContextHolder.getContext().authentication = authentication
         }
 
         filterChain.doFilter(request, response)
