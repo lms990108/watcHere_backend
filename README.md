@@ -33,7 +33,7 @@
 - JWT 토큰을 활용한 인증 프로세스 구성
 
 4. 컨텐츠 카테고리/리스트
-<center><img width="825" alt="image" src="https://github.com/lms990108/watcHere_backend/assets/103021300/d92bdb77-f9c3-4894-ba8d-2b3662e52ca4"></center>
+<center><img width="600" alt="image" src="https://github.com/lms990108/watcHere_backend/assets/103021300/d92bdb77-f9c3-4894-ba8d-2b3662e52ca4"></center>
 
 - TMDB Discover API 활용
 - 대량의 이미지 출력을 위해 지연로딩 구현 (FE)
